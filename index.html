@@ -5396,7 +5396,6 @@ PciRoot(0x0)/Pci(0x2,0x0)
             recList.innerHTML = ''; // Clear previous
 
             // 1. EXTRACT DATA - ULTRA SAFE MODE
-            // Function to safely get string or default
             const safeStr = (val, def = "") => (val !== undefined && val !== null) ? String(val) : def;
 
             const cpuName = safeStr(data.CPU?.Name, "Unknown CPU");
@@ -5404,26 +5403,56 @@ PciRoot(0x0)/Pci(0x2,0x0)
             const moboName = safeStr(data.Motherboard?.Name, "Unknown Motherboard");
 
             // GPU: Handle array or object
-            const gpuData = Array.isArray(data.GPU) ? data.GPU : (data.GPU ? [data.GPU] : []);
-            // Safety check: ensure Name exists
-            const gpuName = (gpuData.length > 0) ? safeStr(gpuData[0].Name, "Unknown GPU") : "Unknown GPU";
-
-            // Ethernet
-            let ethName = "Unknown";
-            const net = data.Network;
-            if (net && net.Ethernet && Array.isArray(net.Ethernet) && net.Ethernet.length > 0) {
-                ethName = safeStr(net.Ethernet[0].Name, "Generic Ethernet");
+            let gpuList = [];
+            if (Array.isArray(data.GPU)) {
+                gpuList = data.GPU;
+            } else if (data.GPU) {
+                // Could be object with keys as names or single object
+                if (data.GPU.Name) gpuList = [data.GPU];
+                else gpuList = Object.entries(data.GPU).map(([k, v]) => ({ Name: k, ...v }));
             }
+            const gpuName = (gpuList.length > 0) ? safeStr(gpuList[0].Name, "Unknown GPU") : "Unknown GPU";
 
-            // Audio
-            let audioName = "Unknown/USB";
-            if (data.Audio) {
-                if (Array.isArray(data.Audio) && data.Audio.length > 0) {
-                    audioName = safeStr(data.Audio[0].Name, "Generic Audio");
-                } else if (data.Audio.Codec) {
-                    audioName = safeStr(data.Audio.Codec, "Generic Codec");
+            // Ethernet & Network (Handle Object structure where Key = Name)
+            let ethName = "Unknown";
+            let netItems = [];
+            if (data.Network) {
+                if (Array.isArray(data.Network)) {
+                    netItems = data.Network;
+                } else if (data.Network.Ethernet) {
+                    // Check if Ethernet is Array or Object
+                    if (Array.isArray(data.Network.Ethernet)) netItems = data.Network.Ethernet;
+                    else netItems = Object.entries(data.Network.Ethernet).map(([k, v]) => ({ Name: k, ...v }));
+                } else {
+                    // Network is likely { "Realtek...": { ... }, "WiFi...": { ... } }
+                    netItems = Object.entries(data.Network).map(([k, v]) => ({ Name: k, ...v }));
                 }
             }
+
+            // Find first PCI/Ethernet device
+            const ethDevice = netItems.find(n => safeStr(n.Name).toLowerCase().includes("ethernet") || safeStr(n.Name).toLowerCase().includes("controller")) || netItems[0];
+            if (ethDevice) ethName = safeStr(ethDevice.Name, "Generic Ethernet");
+
+            // Audio (Handle "Sound" key and Object structure)
+            let audioName = "Unknown/USB";
+            let audioItems = [];
+            const rawAudio = data.Audio || data.Sound;
+
+            if (rawAudio) {
+                if (Array.isArray(rawAudio)) {
+                    audioItems = rawAudio;
+                } else if (rawAudio.Codec) {
+                    audioItems = [{ Name: rawAudio.Codec }];
+                } else {
+                    // Object where Key = Device Name
+                    audioItems = Object.entries(rawAudio).map(([k, v]) => ({ Name: k, ...v }));
+                }
+            }
+
+            // Prioritize PCI Audio over USB
+            const pciAudio = audioItems.find(a => (a["Bus Type"] && a["Bus Type"] === "PCI") || (!safeStr(a.Name).includes("Webcam") && !safeStr(a.Name).includes("USB")));
+            if (pciAudio) audioName = safeStr(pciAudio.Name);
+            else if (audioItems.length > 0) audioName = safeStr(audioItems[0].Name);
 
             // 2. DISPLAY DATA
             document.getElementById('res-cpu-val').innerText = cpuName + (cpuCodename ? ` (${cpuCodename})` : '');
