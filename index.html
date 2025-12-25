@@ -1409,16 +1409,16 @@
                 style="border: 1px dashed var(--primary); background: rgba(0, 199, 253, 0.05);">
                 <div class="card-icon"><i class="fas fa-microscope" style="color: var(--primary);"></i></div>
                 <h3 data-i18n="sniff-title">Hardware Sniffer Analysis</h3>
-                <p data-i18n="sniff-desc">Drag and drop your 'Report.json' here to get instant recommendations.</p>
+                <p data-i18n="sniff-desc">Drag and drop your 'Report.json' or AIDA64 'Report.htm' here.</p>
 
                 <div id="drop-zone"
                     style="border: 2px dashed rgba(255,255,255,0.2); border-radius: 10px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem;">
                     <i class="fas fa-file-upload"
                         style="font-size: 2rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
-                    <p style="margin: 0; color: var(--text-secondary);" data-i18n="sniff-drop-text">Drop Report.json
-                        here</p>
+                    <p style="margin: 0; color: var(--text-secondary);" data-i18n="sniff-drop-text">Drop Report.json or
+                        Report.htm here</p>
                 </div>
-                <input type="file" id="file-input" accept=".json" style="display: none;">
+                <input type="file" id="file-input" accept=".json,.htm,.html" style="display: none;">
 
                 <!-- Analysis Result -->
                 <div id="analysis-result" style="display: none; margin-top: 1.5rem;">
@@ -3829,9 +3829,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'smbios-rule-4': 'Sem iGPU: Use MacPro7,1 ou iMacPro1,1',
                 'smbios-rule-5': 'Gere novos seriais: Use GenSMBIOS para criar seriais únicos',
 
-                'sniff-title': 'Análise de Hardware (JSON)',
-                'sniff-desc': 'Arraste e solte seu arquivo \'Report.json\' aqui para recomendações automáticas.',
-                'sniff-drop-text': 'Solte o Report.json aqui',
+                'sniff-title': 'Análise de Hardware (JSON/AIDA64)',
+                'sniff-desc': 'Arraste seu \'Report.json\' ou relatório HTML do AIDA64 aqui.',
+                'sniff-drop-text': 'Solte o arquivo (JSON ou HTML) aqui',
                 'sniff-results': 'Resultados da Análise',
                 'sniff-rec-title': 'Recomendações',
 
@@ -4368,9 +4368,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'smbios-rule-4': 'No iGPU: Use MacPro7,1 or iMacPro1,1',
                 'smbios-rule-5': 'Generate new serials: Use GenSMBIOS to create unique serials',
 
-                'sniff-title': 'Hardware Analysis (JSON)',
-                'sniff-desc': 'Drag and drop your \'Report.json\' here to get instant recommendations.',
-                'sniff-drop-text': 'Drop Report.json here',
+                'sniff-title': 'Hardware Analysis (JSON/AIDA64)',
+                'sniff-desc': 'Drag and drop your \'Report.json\' or AIDA64 HTML Report here.',
+                'sniff-drop-text': 'Drop file (JSON or HTML) here',
                 'sniff-results': 'Analysis Results',
                 'sniff-rec-title': 'Recommendations',
 
@@ -4899,9 +4899,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'smbios-rule-4': 'Sin iGPU: Use MacPro7,1 o iMacPro1,1',
                 'smbios-rule-5': 'Generar nuevos seriales: Use GenSMBIOS para crear seriales únicos',
 
-                'sniff-title': 'Análisis de Hardware (JSON)',
-                'sniff-desc': 'Arrastre y suelte su archivo \'Report.json\' aquí para recomendaciones automáticas.',
-                'sniff-drop-text': 'Suelte el Report.json aquí',
+                'sniff-title': 'Análisis de Hardware (JSON/AIDA64)',
+                'sniff-desc': 'Arrastre su \'Report.json\' o reporte HTML de AIDA64 aquí.',
+                'sniff-drop-text': 'Suelte el archivo (JSON o HTML) aquí',
                 'sniff-results': 'Resultados del Análisis',
                 'sniff-rec-title': 'Recomendaciones',
 
@@ -5320,22 +5320,74 @@ PciRoot(0x0)/Pci(0x2,0x0)
             if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
         });
 
+        // Detect file type and accept JSON or HTML
+        fileInput.accept = ".json,.htm,.html";
+
         function handleFile(file) {
-            if (file.type !== "application/json" && !file.name.endsWith('.json')) {
-                alert("Please drop a valid JSON file (Report.json)");
+            const fileName = file.name.toLowerCase();
+            const isJson = fileName.endsWith('.json');
+            const isHtml = fileName.endsWith('.htm') || fileName.endsWith('.html');
+
+            if (!isJson && !isHtml) {
+                alert("Please drop a valid file (Report.json or AIDA64 Report.htm)");
                 return;
             }
 
             const reader = new FileReader();
             reader.onload = (e) => {
                 try {
-                    const json = JSON.parse(e.target.result);
-                    analyzeJSON(json);
+                    if (isJson) {
+                        const json = JSON.parse(e.target.result);
+                        analyzeJSON(json);
+                    } else if (isHtml) {
+                        parseAIDA64(e.target.result);
+                    }
                 } catch (err) {
-                    alert("Error parsing JSON: " + err.message);
+                    alert("Error parsing file: " + err.message);
                 }
             };
             reader.readAsText(file);
+        }
+
+        function parseAIDA64(htmlContent) {
+            // Create a virtual DOM to parse the HTML string
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(htmlContent, 'text/html');
+
+            // Helper to find value by possible property names (multilingual support)
+            // AIDA64 tables usually have row: [Property] [Value]
+            const findValue = (keywords) => {
+                const tds = Array.from(doc.querySelectorAll('td'));
+                for (let i = 0; i < tds.length; i++) {
+                    const text = tds[i].textContent.trim();
+                    // Check if this TD matches one of our keywords
+                    if (keywords.some(k => text.includes(k) && text.length < 50)) {
+                        // The value is usually in the NEXT td
+                        if (tds[i + 1]) return tds[i + 1].textContent.trim();
+                    }
+                }
+                return null;
+            };
+
+            // Extract Data using keywords (EN/PT/ES)
+            const cpu = findValue(['CPU Type', 'Tipo de processador', 'Tipo de CPU']) || "Unknown CPU";
+            const mobo = findValue(['Motherboard Name', 'Nome da Placa Mãe']) || "Unknown Motherboard";
+            const gpu = findValue(['3D Accelerator', 'Adaptador gráfico', 'Video Adapter']) || "Unknown GPU";
+            const audio = findValue(['Audio Adapter', 'Adaptador de som', 'Adaptador de áudio']) || "Unknown Audio";
+            // Ethernet is harder in AIDA64 summary, usually under Network
+            const eth = findValue(['Network Adapter', 'Adaptador de Rede']) || "Unknown Ethernet";
+
+            // Construct a data object compatible with our existing analyzer
+            // We mock the JSON structure so analyzeJSON can do the rest
+            const mockData = {
+                CPU: { Name: cpu, Codename: "" },
+                Motherboard: { Name: mobo },
+                GPU: [{ Name: gpu }],
+                Audio: [{ Name: audio }],
+                Network: { Ethernet: [{ Name: eth }] }
+            };
+
+            analyzeJSON(mockData);
         }
 
         function analyzeJSON(data) {
