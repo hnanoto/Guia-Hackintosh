@@ -8,21 +8,6 @@
         content="Guia Completo e Profissional de Hackintosh - OpenCore 1.0.5+ | Atualizado Dezembro 2024">
     <title>Guia Completo de Hackintosh | OpenCore 2024-2025</title>
 
-    <!-- Discord Integration / Open Graph Meta Tags -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Guia Hackintosh and Beyond 2025">
-    <meta property="og:description"
-        content="Guia definitivo para macOS Sequoia/Tahoe. Configurações para Intel (Desktop/Laptop) e AMD. Ferramentas, Kexts e Suporte Premium.">
-    <meta property="og:image" content="https://github.com/hnanoto/macOS-Recovery/raw/main/icon.png">
-    <!-- Placeholder or Real Icon -->
-    <meta property="og:site_name" content="Hackintosh and Beyond">
-    <meta name="theme-color" content="#00C7FD"> <!-- Hackintosh Blue -->
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Guia Hackintosh and Beyond">
-    <meta name="twitter:description" content="Tudo o que você precisa para seu Hackintosh em um só lugar.">
-
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
@@ -742,116 +727,6 @@
             color: var(--success);
             margin-right: 0.5rem;
         }
-
-        /* Accordion */
-        .accordion {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .accordion-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .accordion-header {
-            padding: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.02);
-            transition: background 0.3s ease;
-        }
-
-        .accordion-header:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .accordion-body {
-            padding: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .accordion-icon {
-            transition: transform 0.3s ease;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .tab-buttons {
-            display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-            scrollbar-width: none;
-        }
-
-        .tab-buttons::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tab-btn {
-            padding: 0.75rem 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text);
-        }
-
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 15px rgba(0, 113, 227, 0.3);
-        }
-
-        .tab-content {
-            display: none;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: fadeIn 0.5s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
     </style>
 </head>
 
@@ -884,12 +759,9 @@
             <ul class="nav-links">
                 <li><a href="#inicio" data-i18n="nav-home">Início</a></li>
                 <li><a href="#requisitos" data-i18n="nav-req">Requisitos</a></li>
+                <li><a href="#kexts" data-i18n="nav-kexts">Kexts</a></li>
                 <li><a href="#smbios" data-i18n="nav-smbios">SMBIOS</a></li>
-                <li><a href="#hardware-configs" data-i18n="sec-hw-title">Hardware</a></li>
                 <li><a href="#instalacao" data-i18n="nav-install">Instalação</a></li>
-                <li><a href="#pos-instalacao" data-i18n="post-install-title">Pós-Instalação</a></li>
-                <li><a href="#acpi" data-i18n="lbl-acpi">ACPI</a></li>
-                <li><a href="#troubleshooting-adv" data-i18n="trouble-adv-title">Troubleshooting</a></li>
                 <li><a href="#ferramentas-hnanoto" data-i18n="nav-tools">Ferramentas</a></li>
                 <li><a href="#recursos" data-i18n="nav-resources">Recursos</a></li>
             </ul>
@@ -1501,104 +1373,6 @@
                         </div>
                     </details>
                 </div>
-
-                <!-- Laptops Card -->
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-laptop" style="color: #A855F7;"></i></div>
-                    <h3 data-i18n="hw-laptop-title">Intel Laptops</h3>
-                    <p data-i18n="hw-laptop-desc">3rd Gen - 10th Gen (iGPU)</p>
-
-                    <!-- ACPI -->
-                    <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">ACPI
-                        </summary>
-                        <div style="padding: 10px;">
-                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li>SSDT-PLUG.aml / SSDT-PLUG-DRTNIA.aml</li>
-                                <li>SSDT-EC-USBX-LAPTOP.aml</li>
-                                <li><span data-i18n="lap-acpi-note">SSDT-PNLF.aml (Backlight)</span></li>
-                                <li><span data-i18n="lap-acpi-xosi">SSDT-XOSI.aml (Trackpad)</span></li>
-                            </ul>
-                        </div>
-                    </details>
-
-                    <!-- Graphics DeviceProperties (The main request) -->
-                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            <span data-i18n="lap-gfx-title">Graphics (HD/UHD)</span>
-                        </summary>
-                        <div style="padding: 10px;">
-                            <p style="font-size:0.8rem; margin-bottom:10px;" data-i18n="lap-gfx-desc">Copy ID:</p>
-
-                            <!-- Ivy Bridge -->
-                            <div class="code-block" style="margin-bottom:10px;">
-                                <span data-i18n="lap-gfx-ivy" style="color:var(--text-secondary); font-size:0.8rem;">Ivy
-                                    Bridge</span>
-                                <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                                <code>AAPL,ig-platform-id: 04006601</code>
-                            </div>
-                            <!-- Haswell -->
-                            <div class="code-block" style="margin-bottom:10px;">
-                                <span data-i18n="lap-gfx-haswell"
-                                    style="color:var(--text-secondary); font-size:0.8rem;">Haswell</span>
-                                <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                                <code>AAPL,ig-platform-id: 0600260A</code>
-                            </div>
-                            <!-- Skylake -->
-                            <div class="code-block" style="margin-bottom:10px;">
-                                <span data-i18n="lap-gfx-skylake"
-                                    style="color:var(--text-secondary); font-size:0.8rem;">Skylake</span>
-                                <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                                <code>AAPL,ig-platform-id: 00001B19</code>
-                            </div>
-                            <!-- Kaby Lake -->
-                            <div class="code-block" style="margin-bottom:10px;">
-                                <span data-i18n="lap-gfx-kaby"
-                                    style="color:var(--text-secondary); font-size:0.8rem;">Kaby Lake</span>
-                                <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                                <code>AAPL,ig-platform-id: 00001659</code>
-                            </div>
-                            <!-- Coffee/Comet Lake -->
-                            <div class="code-block" style="margin-bottom:10px;">
-                                <span data-i18n="lap-gfx-coffee"
-                                    style="color:var(--text-secondary); font-size:0.8rem;">Coffee/Comet</span>
-                                <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                                <code>AAPL,ig-platform-id: 00009B3E</code>
-                            </div>
-                            <!-- Ice Lake -->
-                            <div class="code-block">
-                                <span data-i18n="lap-gfx-ice" style="color:var(--text-secondary); font-size:0.8rem;">Ice
-                                    Lake</span>
-                                <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                                <code>AAPL,ig-platform-id: 0000528A</code>
-                            </div>
-                            <p style="font-size:0.8rem; color:var(--danger); margin-top:5px; font-weight:bold;"
-                                data-i18n="lap-gfx-warning">* 11th Gen+ NOT supported!</p>
-                        </div>
-                    </details>
-
-                    <!-- Audio & Quirks -->
-                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            <span data-i18n="lap-audio-title">Audio & Quirks</span>
-                        </summary>
-                        <div style="padding: 10px;">
-                            <h5 style="color: var(--primary); font-size: 0.9em;" data-i18n="lbl-nvram">NVRAM</h5>
-                            <div style="font-size:0.85rem; margin-bottom:10px;">
-                                <span data-i18n="lap-audio-layout">Common Layouts:</span> <span
-                                    style="color:var(--success)">3, 11, 13, 21, 28, 29</span><br>
-                                Boot-arg: <code>alcid=13</code>
-                            </div>
-                            <h5 style="color: var(--primary); font-size: 0.9em;">UEFI -> Quirks</h5>
-                            <div style="font-size:0.85rem;">
-                                <span data-i18n="lap-quirk-usb">ReleaseUsbOwnership: True</span>
-                            </div>
-                        </div>
-                    </details>
-                </div>
             </div>
         </section>
         <section id="instalacao">
@@ -1608,17 +1382,6 @@
             </div>
 
             <div class="cards">
-                <div class="card" style="border: 1px solid var(--primary);">
-                    <div class="card-icon"><i class="fab fa-windows" style="color: #00a4ef;"></i></div>
-                    <h3 data-i18n="install-step-0-title">0. Criar USB (Windows/macOS)</h3>
-                    <p data-i18n="install-step-0-desc">Use nossa ferramenta exclusiva para baixar e criar o instalador:
-                    </p>
-                    <a href="https://github.com/hnanoto/macOS-Recovery/releases" target="_blank" class="btn"
-                        style="width:100%; text-align:center; margin-top:10px; display:block; padding:10px; background:var(--gradient-primary); color:white; border-radius:8px; text-decoration:none;">
-                        <i class="fas fa-download"></i> <span data-i18n="btn-download-tool">Baixar macOS Recovery</span>
-                    </a>
-                </div>
-
                 <div class="card">
                     <div class="card-icon"><i class="fas fa-download"></i></div>
                     <h3 data-i18n="install-step-1-title">1. Download do OpenCore</h3>
@@ -1773,8 +1536,6 @@
                 </div>
             </div>
         </section>
-
-
 
         <!-- Boot-args -->
         <section>
@@ -2482,932 +2243,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- ========================================
-             PÓS-INSTALAÇÃO - SEÇÃO COMPLETA
-             ======================================== -->
-        <section id="pos-instalacao">
-            <div class="section-header">
-                <h2 data-i18n="post-install-title">Pós-Instalação</h2>
-                <p data-i18n="post-install-desc">Configurações essenciais após instalar o macOS</p>
-            </div>
-
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i>
-                <div>
-                    <strong data-i18n="post-install-success">Parabéns! macOS instalado com sucesso!</strong><br>
-                    <span data-i18n="post-install-next">Agora vamos configurar funcionalidades essenciais para um
-                        Hackintosh perfeito.</span>
-                </div>
-            </div>
-
-            <!-- USB Mapping -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-usb"></i></div>
-                <h3 data-i18n="post-usb-title">1. Mapeamento USB (CRÍTICO)</h3>
-                <p data-i18n="post-usb-desc">O mapeamento USB é ESSENCIAL para estabilidade, sleep e compatibilidade de
-                    dispositivos.</p>
-
-                <h4 data-i18n="post-usb-why">Por que mapear USB?</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-usb-reason-1">macOS tem limite de 15
-                            portas USB</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-usb-reason-2">Previne problemas de
-                            sleep/wake</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-usb-reason-3">Melhora estabilidade
-                            geral do sistema</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-usb-reason-4">Corrige problemas com
-                            Bluetooth/WiFi</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-usb-reason-5">Necessário para
-                            iServices funcionarem</span></li>
-                </ul>
-
-                <h4>Ferramentas para Mapeamento</h4>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ferramenta</th>
-                                <th>Plataforma</th>
-                                <th>Dificuldade</th>
-                                <th>Recomendado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>USBToolBox</strong></td>
-                                <td>Windows + macOS</td>
-                                <td>Fácil</td>
-                                <td>✅ Sim</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Hackintool</strong></td>
-                                <td>macOS</td>
-                                <td>Média</td>
-                                <td>✅ Sim</td>
-                            </tr>
-                            <tr>
-                                <td><strong>USBMap</strong></td>
-                                <td>macOS</td>
-                                <td>Avançada</td>
-                                <td>⚠️ Avançado</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copiar</button>
-                    <code># USBToolBox - Método Recomendado
-# Download: https://github.com/USBToolBox/tool
-
-# No Windows: execute Windows.exe
-# No macOS: python3 USBToolBox.py
-
-# Passos:
-# 1. Escolha "D" para descobrir portas
-# 2. Conecte dispositivos em cada porta
-# 3. Escolha "S" para selecionar portas
-# 4. Escolha "K" para gerar kext
-# 5. Copie UTBMap.kext para EFI/OC/Kexts/</code>
-                </div>
-
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <div>
-                        <strong data-i18n="post-usb-warning">Importante:</strong>
-                        <span data-i18n="post-usb-warning-desc">Remova XhciPortLimit quirk após mapear USB!</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sleep/Wake -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-moon"></i></div>
-                <h3 data-i18n="post-sleep-title">2. Corrigindo Sleep/Wake</h3>
-                <p data-i18n="post-sleep-desc">Configurações para sleep e wake funcionarem perfeitamente.</p>
-
-                <h4 data-i18n="post-sleep-pmset">Configurações pmset</h4>
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copiar</button>
-                    <code># Desabilitar hibernação
-sudo pmset -a hibernatemode 0
-sudo rm /var/vm/sleepimage
-sudo mkdir /var/vm/sleepimage
-
-# Desabilitar Power Nap
-sudo pmset -a powernap 0
-
-# Desabilitar wake on LAN
-sudo pmset -a womp 0
-
-# Configurar darkwake
-sudo pmset -a darkwake 0
-
-# Verificar configurações
-pmset -g</code>
-                </div>
-
-                <h4 data-i18n="post-sleep-bios">Configurações BIOS para Sleep</h4>
-                <ul>
-                    <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span
-                            data-i18n="post-sleep-bios-1">Desabilitar Wake on LAN</span></li>
-                    <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span
-                            data-i18n="post-sleep-bios-2">Desabilitar USB Wake</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-sleep-bios-3">Habilitar XHCI
-                            Hand-off</span></li>
-                    <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span
-                            data-i18n="post-sleep-bios-4">Desabilitar ErP (se disponível)</span></li>
-                </ul>
-
-                <hr style="border-top: 1px solid rgba(255,255,255,0.1); margin: 1.5rem 0;">
-
-                <h4 data-i18n="post-sleep-advanced" style="color: var(--warning);"><i class="fas fa-microscope"></i>
-                    Troubleshooting Avançado (Culprits)</h4>
-
-                <!-- Advanced Details Accordion -->
-                <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                        <span data-i18n="sleep-culprit-disp-title">Displays & Laptops</span>
-                    </summary>
-                    <div style="padding: 10px;">
-                        <ul style="font-size: 0.9rem; padding-left: 1rem;">
-                            <li><strong data-i18n="sleep-lid-title">Lid Wake (HP/Skylake+):</strong> <span
-                                    data-i18n="sleep-lid-desc">Fix random wake caused by lid. Use
-                                    SSDT-HP-FixLidSleep.</span></li>
-                            <li><strong>Fix Temp:</strong> <code>sudo pmset -a lidwake 0</code></li>
-                        </ul>
-                    </div>
-                </details>
-
-                <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                        <span data-i18n="sleep-culprit-rtc-title">RTC (Real Time Clock)</span>
-                    </summary>
-                    <div style="padding: 10px;">
-                        <p data-i18n="sleep-rtc-desc" style="font-size: 0.9rem;">Fix "BIOS Restarted in
-                            Safemode" on Z390+.</p>
-                        <ul style="font-size: 0.9rem; padding-left: 1rem;">
-                            <li><strong>Fix 1:</strong> <span data-i18n="sleep-rtc-fix1">DisableRtcChecksum
-                                    (Kernel -> Quirks)</span></li>
-                            <li><strong>Fix 2:</strong> <span data-i18n="sleep-rtc-fix2">RTCMemoryFixup.kext +
-                                    rtcfx_exclude=58-59</span></li>
-                        </ul>
-                    </div>
-                </details>
-
-                <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                        <span data-i18n="sleep-culprit-nvme-title">NVMe & USB</span>
-                    </summary>
-                    <div style="padding: 10px;">
-                        <ul style="font-size: 0.9rem; padding-left: 1rem;">
-                            <li><span data-i18n="sleep-nvme-warn" style="color: var(--danger)">Avoid:
-                                    Samsung PM981/PM991, Micron 2200S</span></li>
-                            <li><strong>Fix:</strong> <span data-i18n="sleep-nvme-fix">Use
-                                    NVMeFix.kext</span></li>
-                            <li><strong>USB:</strong> <span data-i18n="sleep-usb-fix">Map USB ports properly
-                                    (Max 15)</span></li>
-                        </ul>
-                    </div>
-                </details>
-
-                <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                        <span data-i18n="sleep-darkwake-title">Darkwake boot-args</span>
-                    </summary>
-                    <div style="padding: 10px;">
-                        <p style="font-size: 0.9rem;" data-i18n="sleep-darkwake-desc">Try different values
-                            if sleep fails 1 sec after wake:</p>
-                        <code style="font-size: 0.8rem;">darkwake=0, 1, 2, 3, 8, 10, 512</code>
-                    </div>
-                </details>
-            </div>
-
-            <!-- iServices -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-comments"></i></div>
-                <h3 data-i18n="post-iservices-title">3. Configurando iServices (iMessage, FaceTime)</h3>
-                <p data-i18n="post-iservices-desc">Passos para fazer iMessage e FaceTime funcionarem.</p>
-
-                <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <div>
-                        <strong data-i18n="post-iservices-warning">ATENÇÃO:</strong>
-                        <span data-i18n="post-iservices-warning-desc">Use seriais ÚNICOS! Nunca use seriais de outras
-                            pessoas ou de EFIs prontas!</span>
-                    </div>
-                </div>
-
-                <h4 data-i18n="post-iservices-steps">Passo a Passo</h4>
-                <ol>
-                    <li>
-                        <strong data-i18n="post-iservices-step-1-title">Gerar SMBIOS único</strong>
-                        <div class="code-block">
-                            <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copiar</button>
-                            <code># Usar GenSMBIOS
-python3 GenSMBIOS.command
-# Escolha opção 1 para baixar MacSerial
-# Escolha opção 2 para selecionar SMBIOS
-# Escolha opção 3 para gerar serial
-# Use MacPro7,1 ou iMac20,1</code>
-                        </div>
-                    </li>
-                    <li><strong data-i18n="post-iservices-step-2-title">Verificar serial</strong> - <span
-                            data-i18n="post-iservices-step-2-desc">Acesse checkcoverage.apple.com e verifique. Deve
-                            mostrar "Não é possível verificar".</span></li>
-                    <li><strong data-i18n="post-iservices-step-3-title">Configurar ROM</strong> - <span
-                            data-i18n="post-iservices-step-3-desc">Use o endereço MAC da sua placa de rede Ethernet (sem
-                            os dois pontos).</span></li>
-                    <li><strong data-i18n="post-iservices-step-4-title">Limpar NVRAM</strong> - <span
-                            data-i18n="post-iservices-step-4-desc">Reinicie e escolha "Reset NVRAM" no boot
-                            picker.</span></li>
-                    <li><strong data-i18n="post-iservices-step-5-title">Fazer login no iCloud</strong> - <span
-                            data-i18n="post-iservices-step-5-desc">Aguarde 24-48h para ativação completa.</span></li>
-                </ol>
-            </div>
-
-            <!-- Power Management -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-bolt"></i></div>
-                <h3 data-i18n="post-power-title">4. Power Management (Gerenciamento de Energia)</h3>
-                <p data-i18n="post-power-desc">Otimizar consumo de energia e performance da CPU.</p>
-
-                <h4 data-i18n="post-power-intel">Intel Power Management</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-power-intel-1">Use SSDT-PLUG.aml
-                            (obrigatório)</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-power-intel-2">CPUFriend.kext para
-                            ajuste fino</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span
-                            data-i18n="post-power-intel-3">CPUFriendDataProvider.kext (gerado)</span></li>
-                </ul>
-
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copiar</button>
-                    <code># Gerar CPUFriendDataProvider
-git clone https://github.com/corpnewt/CPUFriendFriend
-cd CPUFriendFriend
-python3 CPUFriendFriend.command
-
-# Escolha LFM (Low Frequency Mode):
-# - 800 MHz para melhor economia
-# - 1200 MHz para balanced
-# - Frequência base para performance</code>
-                </div>
-
-                <h4 data-i18n="post-power-amd">AMD Power Management</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-power-amd-1">Use DummyPowerManagement
-                            = True</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span
-                            data-i18n="post-power-amd-2">AMDRyzenCPUPowerManagement.kext (opcional)</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-power-amd-3">SMCAMDProcessor.kext para
-                            sensores</span></li>
-                </ul>
-            </div>
-
-            <!-- DRM -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-film"></i></div>
-                <h3 data-i18n="post-drm-title">5. DRM (Netflix, Apple TV+, Amazon Prime)</h3>
-                <p data-i18n="post-drm-desc">Configurar DRM para streaming funcionar.</p>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="post-drm-th-service">Serviço</th>
-                                <th data-i18n="post-drm-th-requirement">Requisito</th>
-                                <th data-i18n="post-drm-th-solution">Solução</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Netflix (Safari)</strong></td>
-                                <td data-i18n="post-drm-netflix-req">DRM nativo</td>
-                                <td data-i18n="post-drm-netflix-sol">Funciona com iGPU ou AMD GPU</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Apple TV+</strong></td>
-                                <td data-i18n="post-drm-appletv-req">FairPlay DRM</td>
-                                <td data-i18n="post-drm-appletv-sol">Requer iGPU ou AMD Polaris+</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Amazon Prime</strong></td>
-                                <td data-i18n="post-drm-prime-req">Widevine</td>
-                                <td data-i18n="post-drm-prime-sol">Funciona em qualquer GPU</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i>
-                    <div>
-                        <strong data-i18n="post-drm-tip">Dica:</strong>
-                        <span data-i18n="post-drm-tip-desc">Para testar DRM, use o site drm-test.appspot.com</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Dual Boot -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-exchange-alt"></i></div>
-                <h3 data-i18n="post-dualboot-title">6. Dual Boot (macOS + Windows/Linux)</h3>
-                <p data-i18n="post-dualboot-desc">Configurar dual boot corretamente.</p>
-
-                <h4 data-i18n="post-dualboot-best">Melhores Práticas</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-dualboot-1">Instale cada OS em discos
-                            separados (recomendado)</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-dualboot-2">Use OpenCore como
-                            bootloader principal</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-dualboot-3">Configure LauncherOption =
-                            Full em config.plist</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="post-dualboot-4">Adicione OpenShell.efi
-                            para debug</span></li>
-                </ul>
-
-                <h4 data-i18n="post-dualboot-time">Sincronizar Horário</h4>
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copiar</button>
-                    <code># No Windows (como Administrador):
-reg add "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /d 1 /t REG_DWORD /f
-
-# Ou no macOS:
-sudo systemsetup -setusingnetworktime on</code>
-                </div>
-            </div>
-        </section>
-
-        <!-- ========================================
-             ACPI E SSDTs EXPLICADOS
-             ======================================== -->
-        <!-- ========================================
-             MANUTENÇÃO E SEGURANÇA
-             ======================================== -->
-        <section id="manutencao">
-            <div class="section-header">
-                <h2 data-i18n="maint-title">Manutenção e Segurança</h2>
-                <p data-i18n="maint-update-desc">Guia para manter seu Hackintosh seguro e atualizado</p>
-            </div>
-
-            <!-- Como Atualizar -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-sync-alt"></i></div>
-                <h3 data-i18n="maint-update-title">Como Atualizar (Seguro)</h3>
-                <p data-i18n="maint-update-desc">Siga esta ordem para evitar quebra do sistema:</p>
-
-                <ul>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="maint-step-1">1. Faça backup da pasta EFI
-                            funcional no pendrive.</span></li>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="maint-step-2">2. Atualize Kexts
-                            primeiro.</span></li>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="maint-step-3">3. Atualize OpenCore
-                            (BOOTx64.efi, OpenCore.efi, Drivers).</span></li>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="maint-step-4">4. Valide config.plist com
-                            OCConfigCompare.</span></li>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="maint-step-5">5. Só então atualize o
-                            macOS.</span></li>
-                </ul>
-            </div>
-
-            <!-- Segurança -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
-                <h3 data-i18n="sec-security-title">Segurança (SIP & FileVault)</h3>
-
-                <h4 data-i18n="sec-sip-title">SIP (System Integrity Protection)</h4>
-                <p data-i18n="sec-sip-desc">Desabilite (csr-active-config: FF0F0000) apenas para instalar kexts em
-                    /System (Root Patching). Para uso normal, mantenha habilitado (00000000).</p>
-
-                <h4 style="margin-top: 1.5rem;" data-i18n="sec-fv-title">FileVault (Criptografia)</h4>
-                <div class="alert alert-danger" style="margin-top: 0.5rem;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <div>
-                        <span data-i18n="sec-fv-desc">Requer configuração complexa (Misc -> Security -> Vault). Não
-                            ative sem ler a documentação oficial, ou você perderá acesso aos dados.</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="acpi">
-            <div class="section-header">
-                <h2 data-i18n="acpi-title">ACPI e SSDTs Explicados</h2>
-                <p data-i18n="acpi-desc">Entenda o que cada SSDT faz e quando usar</p>
-            </div>
-
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i>
-                <div>
-                    <strong data-i18n="acpi-what">O que é ACPI?</strong><br>
-                    <span data-i18n="acpi-what-desc">ACPI (Advanced Configuration and Power Interface) é uma
-                        especificação que define tabelas de hardware para o sistema operacional. SSDTs são tabelas
-                        secundárias que adicionam ou modificam funcionalidades.</span>
-                </div>
-            </div>
-
-            <!-- SSDT-EC-USBX -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-microchip"></i></div>
-                <h3>SSDT-EC-USBX</h3>
-
-                <h4 data-i18n="acpi-ec-what">O que faz:</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-ec-1">Cria um Embedded Controller (EC)
-                            fake</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-ec-2">Injeta propriedades USB
-                            power</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-ec-3">Necessário para boot no
-                            Catalina+</span></li>
-                </ul>
-
-                <h4 data-i18n="acpi-ec-when">Quando usar:</h4>
-                <ul>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-ec-when-1">Desktop: SEMPRE
-                            (obrigatório)</span></li>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-ec-when-2">Laptop: Use
-                            SSDT-EC-LAPTOP</span></li>
-                </ul>
-            </div>
-
-            <!-- SSDT-PLUG -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-bolt"></i></div>
-                <h3>SSDT-PLUG</h3>
-
-                <h4 data-i18n="acpi-plug-what">O que faz:</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-plug-1">Habilita XCPM (XNU CPU Power
-                            Management)</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-plug-2">Permite gerenciamento nativo
-                            de energia da CPU</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-plug-3">Melhora performance e economia
-                            de energia</span></li>
-                </ul>
-
-                <h4 data-i18n="acpi-plug-when">Quando usar:</h4>
-                <ul>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-plug-when-1">Intel Haswell (4ª gen) ou
-                            superior</span></li>
-                    <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span
-                            data-i18n="acpi-plug-when-2">NÃO usar em AMD (use DummyPowerManagement)</span></li>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-plug-when-3">Para Alder/Raptor Lake:
-                            use SSDT-PLUG-ALT</span></li>
-                </ul>
-            </div>
-
-            <!-- SSDT-AWAC -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-clock"></i></div>
-                <h3>SSDT-AWAC</h3>
-
-                <h4 data-i18n="acpi-awac-what">O que faz:</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-awac-1">Força uso do RTC (Real Time
-                            Clock) legado</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-awac-2">Desabilita AWAC (novo clock do
-                            firmware)</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-awac-3">Previne kernel panic no
-                            boot</span></li>
-                </ul>
-
-                <h4 data-i18n="acpi-awac-when">Quando usar:</h4>
-                <ul>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-awac-when-1">Intel 300 series (Z390,
-                            B360, H370)</span></li>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-awac-when-2">Intel 400/500/600
-                            series</span></li>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-awac-when-3">Se tiver kernel panic
-                            relacionado a RTC</span></li>
-                </ul>
-            </div>
-
-            <!-- SSDT-PMC -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-memory"></i></div>
-                <h3>SSDT-PMC</h3>
-
-                <h4 data-i18n="acpi-pmc-what">O que faz:</h4>
-                <ul>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-1">Adiciona device PMCR ao
-                            ACPI</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-2">Corrige NVRAM nativo em 300
-                            series</span></li>
-                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-3">Melhora compatibilidade de
-                            sleep</span></li>
-                </ul>
-
-                <h4 data-i18n="acpi-pmc-when">Quando usar:</h4>
-                <ul>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-pmc-when-1">Intel 300 series (Z390,
-                            B360, H370)</span></li>
-                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-pmc-when-2">Se NVRAM não funcionar
-                            nativamente</span></li>
-                </ul>
-            </div>
-
-            <!-- Tabela de SSDTs por Plataforma -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-table"></i></div>
-                <h3 data-i18n="acpi-platform-title">SSDTs por Plataforma</h3>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th data-i18n="acpi-platform-th-platform">Plataforma</th>
-                                <th data-i18n="acpi-platform-th-ssdts">SSDTs Necessários</th>
-                                <th data-i18n="acpi-platform-th-optional">Opcionais</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Intel 8ª-10ª Gen (Desktop)</strong></td>
-                                <td>
-                                    • SSDT-PLUG<br>
-                                    • SSDT-EC-USBX<br>
-                                    • SSDT-AWAC (300 series)
-                                </td>
-                                <td>
-                                    • SSDT-PMC (300 series)<br>
-                                    • SSDT-SBUS-MCHC
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Intel 12ª-14ª Gen (Desktop)</strong></td>
-                                <td>
-                                    • SSDT-PLUG-ALT<br>
-                                    • SSDT-EC-USBX<br>
-                                    • SSDT-AWAC
-                                </td>
-                                <td>
-                                    • SSDT-RHUB<br>
-                                    • SSDT-SBUS-MCHC
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>AMD Ryzen (Desktop)</strong></td>
-                                <td>
-                                    • SSDT-EC-USBX-DESKTOP<br>
-                                    • SSDT-CPUR (B550/A520)
-                                </td>
-                                <td>
-                                    • SSDT-SBUS-MCHC
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Laptop (Intel)</strong></td>
-                                <td>
-                                    • SSDT-PLUG<br>
-                                    • SSDT-EC-LAPTOP<br>
-                                    • SSDT-PNLF (backlight)
-                                </td>
-                                <td>
-                                    • SSDT-GPI0 (touchpad)<br>
-                                    • SSDT-SBUS-MCHC
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Como Compilar -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-code"></i></div>
-                <h3 data-i18n="acpi-compile-title">Como Compilar SSDTs</h3>
-                <p data-i18n="acpi-compile-desc">Use SSDTTime para gerar automaticamente</p>
-
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copiar</button>
-                    <code># Download SSDTTime
-git clone https://github.com/corpnewt/SSDTTime
-cd SSDTTime
-python3 SSDTTime.command
-
-# Opções disponíveis:
-# 1. FixHPET - Fix HPET IRQ conflicts
-# 2. FakeEC - Cria fake EC
-# 3. PluginType - Gera SSDT-PLUG
-# 4. PMC - Gera SSDT-PMC
-# 5. AWAC - Gera SSDT-AWAC
-# 6. USB Reset - Gera SSDT-RHUB</code>
-                </div>
-            </div>
-        </section>
-
-        <!-- ========================================
-             CONFIG.PLIST DETALHADO
-             ======================================== -->
-        <section id="config-plist">
-            <div class="section-header">
-                <h2 data-i18n="config-title">Config.plist Detalhado</h2>
-                <p data-i18n="config-desc">Ajustes finos para máxima estabilidade e performance</p>
-            </div>
-
-            <!-- Booter Quirks -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-cog"></i></div>
-                <h3 data-i18n="config-booter-title">Booter Quirks</h3>
-                <p data-i18n="config-booter-desc">Correções essenciais para o bootloader carregar o kernel.</p>
-
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Quirk</th>
-                                <th data-i18n="th-description">Descrição</th>
-                                <th data-i18n="th-platform">Plataforma</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>AvoidRuntimeDefrag</strong></td>
-                                <td data-i18n="quirk-defrag">Corrige serviços de tempo de execução UEFI</td>
-                                <td>Todas</td>
-                            </tr>
-                            <tr>
-                                <td><strong>EnableSafeModeSlide</strong></td>
-                                <td data-i18n="quirk-slide">Permite uso de safe mode (Shift)</td>
-                                <td>Todas</td>
-                            </tr>
-                            <tr>
-                                <td><strong>EnableWriteUnprotector</strong></td>
-                                <td data-i18n="quirk-write">Permite escrita em memórias protegidas</td>
-                                <td>Intel < 9ª Gen</td>
-                            </tr>
-                            <tr>
-                                <td><strong>RebuildAppleMemoryMap</strong></td>
-                                <td data-i18n="quirk-map">Reconstroi mapa de memória p/ compatibilidade</td>
-                                <td>Intel > 9ª Gen</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- DeviceProperties & Framebuffer -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-desktop"></i></div>
-                <h3 data-i18n="config-gpu-title">DeviceProperties (GPU Patching)</h3>
-                <p data-i18n="config-gpu-desc">Configuração essencial para iGPU Intel (Intel HD/UHD Graphics).</p>
-
-                <h4 data-i18n="config-gpu-igpur">Aceleradora Gráfica (iGPU)</h4>
-                <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copiar</button>
-                    <code><!-- Exemplo para UHD 630 (Desktop) -->
-PciRoot(0x0)/Pci(0x2,0x0)
-├── AAPL,ig-platform-id | Data | 07009B3E
-├── device-id           | Data | 9B3E0000
-├── framebuffer-patch-enable | Data | 01000000</code>
-                </div>
-
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <div>
-                        <strong data-i18n="config-gpu-warning">Atenção:</strong>
-                        <span data-i18n="config-gpu-warning-note">GPUs AMD dedicadas geralmente não precisam de
-                            DeviceProperties, apenas boot-args ou SSDTs!</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Kernel Quirks -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-microchip"></i></div>
-                <h3 data-i18n="config-kernel-title">Kernel Quirks</h3>
-                <p data-i18n="config-kernel-desc">Patches aplicados diretamente ao kernel do macOS.</p>
-
-                <ul>
-                    <li><strong>AppleXcpmCfgLock:</strong> <span data-i18n="quirk-cfg">Necessário se CFG-Lock estiver
-                            habilitado na BIOS</span></li>
-                    <li><strong>DisableIoMapper:</strong> <span data-i18n="quirk-iomapper">Necessário se VT-d estiver
-                            habilitado na BIOS</span></li>
-                    <li><strong>PanicNoKextDump:</strong> <span data-i18n="quirk-panic">Evita reboot instantâneo em
-                            Kernel Panic (essencial para debug)</span></li>
-                    <li><strong>XhciPortLimit:</strong> <span data-i18n="quirk-xhci">Desabilite após mapear USBs (macOS
-                            11.3+)</span></li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- ========================================
-             TROUBLESHOOTING AVANÇADO
-             ======================================== -->
-        <section id="troubleshooting-adv">
-            <div class="section-header">
-                <h2 data-i18n="trouble-adv-title">Troubleshooting Avançado</h2>
-                <p data-i18n="trouble-adv-desc">Diagnóstico e solução de problemas complexos</p>
-            </div>
-
-            <!-- Kernel Panics -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-bug"></i></div>
-                <h3 data-i18n="trouble-panic-title">Entendendo Kernel Panics</h3>
-
-                <h4 data-i18n="trouble-panic-boot">Se o PC reinicia antes de carregar:</h4>
-                <ol>
-                    <li><span data-i18n="trouble-panic-1">Adicione <code>debug=0x100 keepsyms=1</code> aos
-                            boot-args</span></li>
-                    <li><span data-i18n="trouble-panic-2">Adicione <code>-v</code> para modo verbose</span></li>
-                    <li><span data-i18n="trouble-panic-3">Filme a tela no momento do travamento</span></li>
-                </ol>
-
-                <h4 data-i18n="trouble-common-errors">Erros Comuns:</h4>
-                <ul class="advanced-list">
-                    <li>
-                        <strong>[EB|#LOG:EXITBS:START]</strong>
-                        <p data-i18n="trouble-err-eb">Erro de Booter Quirks. Verifique
-                            <code>RebuildAppleMemoryMap</code>, <code>SetupVirtualMap</code> ou
-                            <code>EnableWriteUnprotector</code>.
-                        </p>
-                    </li>
-                    <li>
-                        <strong>AppleNVMe Assert failed</strong>
-                        <p data-i18n="trouble-err-nvme">Use NVMeFix.kext ou verifique compatibilidade do SSD.</p>
-                    </li>
-                    <li>
-                        <strong>apfs_module_start...</strong>
-                        <p data-i18n="trouble-err-apfs">Erro no driver APFS ou BIOS (EC não configurado corretamente).
-                        </p>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Problemas Gráficos -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-tv"></i></div>
-                <h3 data-i18n="trouble-gpu-title">Problemas Gráficos (GPU)</h3>
-
-                <ul>
-                    <li><strong>Tela Preta (Boot):</strong> <span data-i18n="trouble-gpu-black">Adicione
-                            <code>agdpmod=pikera</code> (APENAS se não usar NootRX). Verifique se WhateverGreen está
-                            carregado.</span></li>
-                    <li><strong>Sem Aceleração (Dock opaco):</strong> <span data-i18n="trouble-gpu-accel">GPU não
-                            suportada ou kexts não carregados. AMD requer Lilu+WhateverGreen (ou NootRX). Intel requer
-                            DeviceProperties corretos.</span></li>
-                    <li><strong>Tela Rosa/Verde:</strong> <span data-i18n="trouble-gpu-color">Force modo RGB nas
-                            configurações do monitor ou use patch EDID.</span></li>
-                </ul>
-            </div>
-
-            <!-- Audio -->
-            <div class="card">
-                <div class="card-icon"><i class="fas fa-volume-up"></i></div>
-                <h3 data-i18n="trouble-audio-title-adv">Áudio (AppleALC)</h3>
-                <p data-i18n="trouble-audio-desc">Se o áudio não funcionar mesmo com AppleALC e alcid:</p>
-
-                <ol>
-                    <li><span data-i18n="trouble-audio-1">Verifique se o HPET está corrigido (SSDTTime FixHPET)</span>
-                    </li>
-                    <li><span data-i18n="trouble-audio-2">Confirme se o controlador de áudio aparece no
-                            Hackintool</span></li>
-                    <li><span data-i18n="trouble-audio-3">Tente boot-arg <code>alcdelay=1000</code> (atrasa
-                            carregamento)</span></li>
-                </ol>
-            </div>
-        </section>
-
-        <section id="glossario">
-            <div class="section-header">
-                <h2 data-i18n="glossary-title">Glossário de Termos</h2>
-                <p data-i18n="glossary-desc">Definições de termos técnicos do Hackintosh</p>
-            </div>
-
-            <div class="card">
-                <h3>A</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;" data-i18n="glossary-acpi">ACPI</h4>
-                    <p data-i18n="glossary-acpi-def">Advanced Configuration and Power Interface - Interface padrão para
-                        gerenciamento de energia e configuração de hardware</p>
-                </div>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">AML</h4>
-                    <p data-i18n="glossary-aml-def">ACPI Machine Language - Formato compilado de arquivos SSDT/DSDT</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>B</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Boot-args</h4>
-                    <p data-i18n="glossary-bootargs-def">Argumentos de inicialização passados ao kernel do macOS para
-                        modificar comportamento</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>D</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">DSDT</h4>
-                    <p data-i18n="glossary-dsdt-def">Differentiated System Description Table - Tabela principal do ACPI
-                        que descreve o hardware</p>
-                </div>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">DRM</h4>
-                    <p data-i18n="glossary-drm-def">Digital Rights Management - Tecnologia de proteção de conteúdo
-                        digital (Netflix, Apple TV+)</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>E</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">EFI</h4>
-                    <p data-i18n="glossary-efi-def">Extensible Firmware Interface - Partição especial que contém o
-                        bootloader e arquivos de configuração</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>K</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;" data-i18n="glossary-kext">Kext</h4>
-                    <p data-i18n="glossary-kext-def">Kernel Extension - Drivers do macOS que estendem funcionalidades do
-                        kernel</p>
-                </div>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Kernel Panic</h4>
-                    <p data-i18n="glossary-kp-def">Erro crítico do kernel que causa reinicialização do sistema</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>N</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;" data-i18n="glossary-nvram">NVRAM</h4>
-                    <p data-i18n="glossary-nvram-def">Non-Volatile Random Access Memory - Memória que armazena
-                        configurações do sistema mesmo após desligar</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>O</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">OpenCore</h4>
-                    <p data-i18n="glossary-oc-def">Bootloader moderno e seguro para Hackintosh, sucessor do Clover</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Q</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;" data-i18n="glossary-quirk">Quirk</h4>
-                    <p data-i18n="glossary-quirk-def">Correção ou patch específico para resolver incompatibilidades de
-                        hardware</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>S</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;" data-i18n="glossary-smbios">SMBIOS</h4>
-                    <p data-i18n="glossary-smbios-def">System Management BIOS - Define qual modelo de Mac seu Hackintosh
-                        vai emular</p>
-                </div>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">SSDT</h4>
-                    <p data-i18n="glossary-ssdt-def">Secondary System Description Table - Tabelas secundárias do ACPI
-                        que adicionam ou modificam funcionalidades</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>U</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">UEFI</h4>
-                    <p data-i18n="glossary-uefi-def">Unified Extensible Firmware Interface - Substituto moderno do BIOS
-                        legado</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>V</h3>
-                <div
-                    style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
-                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Verbose Mode</h4>
-                    <p data-i18n="glossary-verbose-def">Modo de inicialização que mostra log detalhado do boot
-                        (boot-arg: -v)</p>
-                </div>
-            </div>
-        </section>
     </div>
 
     <!-- Footer -->
@@ -3449,7 +2284,6 @@ PciRoot(0x0)/Pci(0x2,0x0)
         <i class="fas fa-arrow-up"></i>
     </div>
 
-
     <script>
         // ========================================
         // MULTI-LANGUAGE SYSTEM
@@ -3466,7 +2300,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'december': 'Dezembro',
                 'auto-update': 'Auto-atualização',
                 'main-title': 'Guia Completo de Hackintosh',
-                'main-description': 'O guia mais completo e atualizado para criar sua EFI do zero usando OpenCore. Compatível com macOS Sequoia 15.x e preparado para macOS Tahoe 26.x(2025).',
+                'main-description': 'O guia mais completo e atualizado para criar sua EFI do zero usando OpenCore. Compatível com macOS Sequoia 15.x e preparado para macOS Tahoe 26.x (2025).',
 
                 // Navigation
                 'nav-home': 'Início',
@@ -3600,25 +2434,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'val-true': 'True (Verdadeiro)',
                 'val-false': 'False (Falso)',
-                'val-minus-one': '-1 (Desactivado)',
-
-                // LAPTOP CONFIGS
-                'hw-laptop-title': 'Laptops Intel (3ª-10ª Gen)',
-                'hw-laptop-desc': 'Configurações completas para Notebooks (Ivy Bridge até Comet Lake)',
-                'lap-acpi-note': '<strong>SSDT-PNLF:</strong> Essencial para controle de brilho',
-                'lap-acpi-xosi': '<strong>SSDT-XOSI:</strong> Necessário para Trackpads I2C',
-                'lap-gfx-title': 'Gráficos (iGPU Configuration)',
-                'lap-gfx-desc': 'Copie o AAPL,ig-platform-id correto para sua geração:',
-                'lap-gfx-ivy': 'Ivy Bridge (HD 4000)',
-                'lap-gfx-haswell': 'Haswell (HD 4400/4600)',
-                'lap-gfx-skylake': 'Skylake (HD 520/530)',
-                'lap-gfx-kaby': 'Kaby Lake (UHD 620)',
-                'lap-gfx-coffee': 'Coffee/Comet Lake (UHD 630)',
-                'lap-gfx-ice': 'Ice Lake (Iris Plus)',
-                'lap-gfx-warning': 'Atenção: iGPUs de 11ª Ger (Tiger Lake) e superiores NÃO são suportadas!',
-                'lap-audio-title': 'Áudio e Quirks Especiais',
-                'lap-audio-layout': 'Layouts comuns de Laptop:',
-                'lap-quirk-usb': 'ReleaseUsbOwnership: True (Corrige travamento no boot)',
+                'val-minus-one': '-1 (Desativado)',
 
                 'sec-smbios-title': 'Escolhendo o SMBIOS Correto',
                 'sec-smbios-desc': 'SMBIOS define qual Mac seu Hackintosh vai emular',
@@ -3669,8 +2485,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 // TABLE HEADERS
                 'th-kext': 'Kext', 'th-function': 'Função', 'th-required': 'Obrigatório', 'th-link': 'Link',
-                'th-hardware': 'Hardware', 'th-smbios-rec': 'SMBIOS Recomendado', 'th-compat': 'Compatibilidade', 'th-notes':
-                    'Observações',
+                'th-hardware': 'Hardware', 'th-smbios-rec': 'SMBIOS Recomendado', 'th-compat': 'Compatibilidade', 'th-notes': 'Observações',
                 'th-bootarg': 'Boot-arg', 'th-usage': 'Quando usar',
 
                 // TABLES CONTENT
@@ -3687,8 +2502,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'kext-desc-nvme': 'Otimização NVMe',
                 'kext-desc-restrict': 'Correções diversas',
                 'req-yes': 'Sim', 'req-rx6000': 'Se RX 6000+', 'req-intel-lan': 'Se Intel LAN', 'req-rtl8125': 'Se RTL8125',
-                'req-intel-wifi': 'Se Intel WiFi', 'req-intel-bt': 'Se Intel BT', 'req-12-13-gen': 'Se 12ª/13ª gen', 'req-rec':
-                    'Recomendado',
+                'req-intel-wifi': 'Se Intel WiFi', 'req-intel-bt': 'Se Intel BT', 'req-12-13-gen': 'Se 12ª/13ª gen', 'req-rec': 'Recomendado',
                 'smbios-hw-amd-ded': 'Desktop + AMD GPU dedicada', 'smbios-obs-amd-ded': 'Melhor para RX 6000/7000',
                 'smbios-hw-amd-alt': 'Desktop + AMD GPU (alternativa)', 'smbios-obs-amd-alt': 'Pode ser descontinuado',
                 'smbios-hw-intel-igpu': 'Desktop + Intel iGPU', 'smbios-obs-intel-igpu': 'Para 10ª geração Intel',
@@ -3704,9 +2518,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 // FAQ
                 'faq-q-1': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> Qual SMBIOS devo usar?',
-                'faq-a-1': 'Para desktop com GPU AMD dedicada: <strong>MacPro7,1</strong> (recomendado para Sequoia/Tahoe) ou iMacPro1, 1. Para desktop com iGPU Intel: iMac20, 1/20,2.',
+                'faq-a-1': 'Para desktop com GPU AMD dedicada: <strong>MacPro7,1</strong> (recomendado para Sequoia/Tahoe) ou iMacPro1,1. Para desktop com iGPU Intel: iMac20,1/20,2.',
                 'faq-q-2': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> Preciso de agdpmod=pikera?',
-                'faq-a-2': '<strong>NÃO</strong> se você usar MacPro7,1 + NootRX.kext! O fix já está incluído no NootRX. Apenas iMac/ iMacPro SMBIOS sem NootRX precisam.',
+                'faq-a-2': '<strong>NÃO</strong> se você usar MacPro7,1 + NootRX.kext! O fix já está incluído no NootRX. Apenas iMac/iMacPro SMBIOS sem NootRX precisam.',
                 'faq-q-3': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> RX 6700 XT funciona no macOS?',
                 'faq-a-3': '<strong>SIM!</strong> Mas precisa do <strong>NootRX.kext</strong>. Não tem suporte nativo, mas com NootRX funciona perfeitamente no Sequoia 15.x.',
                 'faq-q-4': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> Alder Lake (12ª gen) funciona?',
@@ -3742,191 +2556,6 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'hnanoto-dev-label': 'Desenvolvedor:',
                 'hnanoto-dev-desc': 'Hnanoto - Criador de ferramentas essenciais para a comunidade Hackintosh',
 
-                // PÓS-INSTALAÇÃO
-                'post-install-title': 'Pós-Instalação',
-                'post-install-desc': 'Configurações essenciais após instalar o macOS',
-                'post-install-success': 'Parabéns! macOS instalado com sucesso!',
-                'post-install-next': 'Agora vamos configurar funcionalidades essenciais para um Hackintosh perfeito.',
-                'post-usb-title': '1. Mapeamento USB (CRÍTICO)',
-                'post-usb-desc': 'O mapeamento USB é ESSENCIAL para estabilidade, sleep e compatibilidade de dispositivos.',
-                'post-usb-why': 'Por que mapear USB?',
-                'post-usb-reason-1': 'macOS tem limite de 15 portas USB',
-                'post-usb-reason-2': 'Previne problemas de sleep/wake',
-                'post-usb-reason-3': 'Melhora estabilidade geral do sistema',
-                'post-usb-reason-4': 'Corrige problemas com Bluetooth/WiFi',
-                'post-usb-reason-5': 'Necessário para iServices funcionarem',
-                'post-usb-warning': 'Importante:',
-                'post-usb-warning-desc': 'Remova XhciPortLimit quirk após mapear USB!',
-                'post-sleep-title': '2. Corrigindo Sleep/Wake',
-                'post-sleep-desc': 'Configurações para sleep e wake funcionarem perfeitamente.',
-                'post-sleep-pmset': 'Configurações pmset',
-                'post-sleep-bios': 'Configurações BIOS para Sleep',
-                'post-sleep-bios-1': 'Desabilitar Wake on LAN',
-                'post-sleep-bios-2': 'Desabilitar USB Wake',
-                'post-sleep-bios-3': 'Habilitar XHCI Hand-off',
-                'post-sleep-bios-4': 'Desabilitar ErP (se disponível)',
-                // Advanced Sleep
-                'post-sleep-advanced': 'Troubleshooting Avançado (Culprits)',
-                'sleep-culprit-disp-title': 'Displays & Laptops',
-                'sleep-lid-title': 'Lid Wake (HP/Skylake+):',
-                'sleep-lid-desc': 'Fix para wake aleatório causado pela tampa. Use SSDT-HP-FixLidSleep.',
-                'sleep-culprit-rtc-title': 'RTC (Real Time Clock)',
-                'sleep-rtc-desc': 'Corrige "BIOS Restarted in Safemode" em Z390+.',
-                'sleep-rtc-fix1': 'DisableRtcChecksum (Kernel -> Quirks)',
-                'sleep-rtc-fix2': 'RTCMemoryFixup.kext + rtcfx_exclude=58-59',
-                'sleep-culprit-nvme-title': 'NVMe & USB',
-                'sleep-nvme-warn': 'Evite: Samsung PM981/PM991, Micron 2200S',
-                'sleep-nvme-fix': 'Use NVMeFix.kext',
-                'sleep-usb-fix': 'Mapeie as portas USB corretamente (Máx 15)',
-                'sleep-darkwake-title': 'Darkwake boot-args',
-                'sleep-darkwake-desc': 'Tente valores diferentes se o sleep falhar 1 seg após o wake:',
-                'post-iservices-title': '3. Configurando iServices (iMessage, FaceTime)',
-                'post-iservices-desc': 'Passos para fazer iMessage e FaceTime funcionarem.',
-                'post-iservices-warning': 'ATENÇÃO:',
-                'post-iservices-warning-desc': 'Use seriais ÚNICOS! Nunca use seriais de outras pessoas ou de EFIs prontas!',
-                'post-iservices-steps': 'Passo a Passo',
-                'post-iservices-step-1-title': 'Gerar SMBIOS único',
-                'post-iservices-step-2-title': 'Verificar serial',
-                'post-iservices-step-2-desc': 'Acesse checkcoverage.apple.com e verifique. Deve mostrar "Não é possível verificar".',
-                'post-iservices-step-3-title': 'Configurar ROM',
-                'post-iservices-step-3-desc': 'Use o endereço MAC da sua placa de rede Ethernet (sem os dois pontos).',
-                'post-iservices-step-4-title': 'Limpar NVRAM',
-                'post-iservices-step-4-desc': 'Reinicie e escolha "Reset NVRAM" no boot picker.',
-                'post-iservices-step-5-title': 'Fazer login no iCloud',
-                'post-iservices-step-5-desc': 'Aguarde 24-48h para ativação completa.',
-                'post-power-title': '4. Power Management (Gerenciamento de Energia)',
-                'post-power-desc': 'Otimizar consumo de energia e performance da CPU.',
-                'post-power-intel': 'Intel Power Management',
-                'post-power-intel-1': 'Use SSDT-PLUG.aml (obrigatório)',
-                'post-power-intel-2': 'CPUFriend.kext para ajuste fino',
-                'post-power-intel-3': 'CPUFriendDataProvider.kext (gerado)',
-                'post-power-amd': 'AMD Power Management',
-                'post-power-amd-1': 'Use DummyPowerManagement = True',
-                'post-power-amd-2': 'AMDRyzenCPUPowerManagement.kext (opcional)',
-                'post-power-amd-3': 'SMCAMDProcessor.kext para sensores',
-                'post-drm-title': '5. DRM (Netflix, Apple TV+, Amazon Prime)',
-                'post-drm-desc': 'Configurar DRM para streaming funcionar.',
-                'post-drm-th-service': 'Serviço',
-                'post-drm-th-requirement': 'Requisito',
-                'post-drm-th-solution': 'Solução',
-                'post-drm-netflix-req': 'DRM nativo',
-                'post-drm-netflix-sol': 'Funciona com iGPU ou AMD GPU',
-                'post-drm-appletv-req': 'FairPlay DRM',
-                'post-drm-appletv-sol': 'Requer iGPU ou AMD Polaris+',
-                'post-drm-prime-req': 'Widevine',
-                'post-drm-prime-sol': 'Funciona em qualquer GPU',
-                'post-drm-tip': 'Dica:',
-                'post-drm-tip-desc': 'Para testar DRM, use o site drm-test.appspot.com',
-                'post-dualboot-title': '6. Dual Boot (macOS + Windows/Linux)',
-                'post-dualboot-desc': 'Configurar dual boot corretamente.',
-                'post-dualboot-best': 'Melhores Práticas',
-                'post-dualboot-1': 'Instale cada OS em discos separados (recomendado)',
-                'post-dualboot-2': 'Use OpenCore como bootloader principal',
-                'post-dualboot-3': 'Configure LauncherOption = Full em config.plist',
-                'post-dualboot-4': 'Adicione OpenShell.efi para debug',
-                'post-dualboot-time': 'Sincronizar Horário',
-
-                // GLOSSÁRIO
-                'glossary-title': 'Glossário de Termos',
-                'glossary-desc': 'Definições de termos técnicos do Hackintosh',
-                'glossary-aml-def': 'ACPI Machine Language - Formato compilado de arquivos SSDT/DSDT',
-                'glossary-bootargs-def': 'Argumentos de inicialização passados ao kernel do macOS para modificar comportamento',
-                'glossary-dsdt-def': 'Differentiated System Description Table - Tabela principal do ACPI que descreve o hardware',
-                'glossary-drm-def': 'Digital Rights Management - Tecnologia de proteção de conteúdo digital (Netflix, Apple TV+)',
-                'glossary-efi-def': 'Extensible Firmware Interface - Partição especial que contém o bootloader e arquivos de configuração',
-                'glossary-kp-def': 'Erro crítico do kernel que causa reinicialização do sistema',
-                'glossary-oc-def': 'Bootloader moderno e seguro para Hackintosh, sucessor do Clover',
-                'glossary-ssdt-def': 'Secondary System Description Table - Tabelas secundárias do ACPI que adicionam ou modificam funcionalidades',
-                'glossary-uefi-def': 'Unified Extensible Firmware Interface - Substituto moderno do BIOS legado',
-                'glossary-verbose-def': 'Modo de inicialização que mostra log detalhado do boot (boot-arg: -v)',
-
-                // ACPI/SSDTs
-                'acpi-title': 'ACPI e SSDTs Explicados',
-                'acpi-desc': 'Entenda o que cada SSDT faz e quando usar',
-                'acpi-what': 'O que é ACPI?',
-                'acpi-what-desc': 'ACPI (Advanced Configuration and Power Interface) é uma especificação que define tabelas de hardware para o sistema operacional.SSDTs são tabelas secundárias que adicionam ou modificam funcionalidades.',
-                'acpi-ec-what': 'O que faz:',
-                'acpi-ec-1': 'Cria um Embedded Controller (EC) fake',
-                'acpi-ec-2': 'Injeta propriedades USB power',
-                'acpi-ec-3': 'Necessário para boot no Catalina+',
-                'acpi-ec-when': 'Quando usar:',
-                'acpi-ec-when-1': 'Desktop: SEMPRE (obrigatório)',
-                'acpi-ec-when-2': 'Laptop: Use SSDT-EC-LAPTOP',
-                'acpi-plug-what': 'O que faz:',
-                'acpi-plug-1': 'Habilita XCPM (XNU CPU Power Management)',
-                'acpi-plug-2': 'Permite gerenciamento nativo de energia da CPU',
-                'acpi-plug-3': 'Melhora performance e economia de energia',
-                'acpi-plug-when': 'Quando usar:',
-                'acpi-plug-when-1': 'Intel Haswell (4ª gen) ou superior',
-                'acpi-plug-when-2': 'NÃO usar em AMD (use DummyPowerManagement)',
-                'acpi-plug-when-3': 'Para Alder/Raptor Lake: use SSDT-PLUG-ALT',
-                'acpi-awac-what': 'O que faz:',
-                'acpi-awac-1': 'Força uso do RTC (Real Time Clock) legado',
-                'acpi-awac-2': 'Desabilita AWAC (novo clock do firmware)',
-                'acpi-awac-3': 'Previne kernel panic no boot',
-                'acpi-awac-when': 'Quando usar:',
-                'acpi-awac-when-1': 'Intel 300 series (Z390, B360, H370)',
-                'acpi-awac-when-2': 'Intel 400/500/600 series',
-                'acpi-awac-when-3': 'Se tiver kernel panic relacionado a RTC',
-                'acpi-pmc-what': 'O que faz:',
-                'acpi-pmc-1': 'Adiciona device PMCR ao ACPI',
-                'acpi-pmc-2': 'Corrige NVRAM nativo em 300 series',
-                'acpi-pmc-3': 'Melhora compatibilidade de sleep',
-                'acpi-pmc-when': 'Quando usar:',
-                'acpi-pmc-when-1': 'Intel 300 series (Z390, B360, H370)',
-                'acpi-pmc-when-2': 'Se NVRAM não funcionar nativamente',
-                'acpi-platform-title': 'SSDTs por Plataforma',
-                'acpi-platform-th-platform': 'Plataforma',
-                'acpi-platform-th-ssdts': 'SSDTs Necessários',
-                'acpi-platform-th-optional': 'Opcionais',
-                'acpi-compile-title': 'Como Compilar SSDTs',
-                'acpi-compile-desc': 'Use SSDTTime para gerar automaticamente',
-
-                // CONFIG.PLIST
-                'config-title': 'Config.plist Detalhado',
-                'config-desc': 'Ajustes finos para máxima estabilidade e performance',
-                'config-booter-title': 'Booter Quirks',
-                'config-booter-desc': 'Correções essenciais para o bootloader carregar o kernel.',
-                'th-description': 'Descrição',
-                'th-platform': 'Plataforma',
-                'quirk-defrag': 'Corrige serviços de tempo de execução UEFI',
-                'quirk-slide': 'Permite uso de safe mode (Shift)',
-                'quirk-write': 'Permite escrita em memórias protegidas',
-                'quirk-map': 'Reconstroi mapa de memória p/ compatibilidade',
-                'config-gpu-title': 'DeviceProperties (GPU Patching)',
-                'config-gpu-desc': 'Configuração essencial para iGPU Intel (Intel HD/UHD Graphics).',
-                'config-gpu-igpur': 'Aceleradora Gráfica (iGPU)',
-                'config-gpu-warning': 'Atenção:',
-                'config-gpu-warning-note': 'GPUs AMD dedicadas geralmente não precisam de DeviceProperties, apenas boot-args ou SSDTs!',
-                'config-kernel-title': 'Kernel Quirks',
-                'config-kernel-desc': 'Patches aplicados diretamente ao kernel do macOS.',
-                'quirk-cfg': 'Necessário se CFG-Lock estiver habilitado na BIOS',
-                'quirk-iomapper': 'Necessário se VT-d estiver habilitado na BIOS',
-                'quirk-panic': 'Evita reboot instantâneo em Kernel Panic (essencial para debug)',
-                'quirk-xhci': 'Desabilite após mapear USBs (macOS 11.3+)',
-
-                // TROUBLESHOOTING ADVANCED
-                'trouble-adv-title': 'Troubleshooting Avançado',
-                'trouble-adv-desc': 'Diagnóstico e solução de problemas complexos',
-                'trouble-panic-title': 'Entendendo Kernel Panics',
-                'trouble-panic-boot': 'Se o PC reinicia antes de carregar:',
-                'trouble-panic-1': 'Adicione debug=0x100 keepsyms=1 aos boot-args',
-                'trouble-panic-2': 'Adicione -v para modo verbose',
-                'trouble-panic-3': 'Filme a tela no momento do travamento',
-                'trouble-common-errors': 'Erros Comuns:',
-                'trouble-err-eb': 'Erro de Booter Quirks. Verifique RebuildAppleMemoryMap, SetupVirtualMap ou EnableWriteUnprotector.',
-                'trouble-err-nvme': 'Use NVMeFix.kext ou verifique compatibilidade do SSD.',
-                'trouble-err-apfs': 'Erro no driver APFS ou BIOS (EC não configurado corretamente).',
-                'trouble-gpu-title': 'Problemas Gráficos (GPU)',
-                'trouble-gpu-black': 'Adicione agdpmod=pikera (APENAS se não usar NootRX). Verifique se WhateverGreen está carregado.',
-                'trouble-gpu-accel': 'GPU não suportada ou kexts não carregados. AMD requer Lilu+WhateverGreen (ou NootRX). Intel requer DeviceProperties corretos.',
-                'trouble-gpu-color': 'Force modo RGB nas configurações do monitor ou use patch EDID.',
-                'trouble-audio-title-adv': 'Áudio (AppleALC)',
-                'trouble-audio-desc': 'Se o áudio não funcionar mesmo com AppleALC e alcid:',
-                'trouble-audio-1': 'Verifique se o HPET está corrigido (SSDTTime FixHPET)',
-                'trouble-audio-2': 'Confirme se o controlador de áudio aparece no Hackintool',
-                'trouble-audio-3': 'Tente boot-arg alcdelay=1000 (atrasa carregamento)',
-
                 // TOPS TOOLS
                 'tops-title': '<i class="fas fa-crown" style="color: #FFD700"></i> Ferramentas Tops 2.0',
                 'tops-desc-1': 'A ferramenta ALL-IN-ONE definitiva para Hackintosh!',
@@ -3940,26 +2569,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'tops-feat-6': 'Organização inteligente de ferramentas',
                 'tops-feat-7': 'Execução direta das ferramentas',
                 'tops-feat-8': 'Atualizações regulares',
-                'tops-included': '<i class="fas fa-tools"></i> Ferramentas Incluídas (23+):',
-                // MANUTENÇÃO & SEGURANÇA
-                'install-step-0-title': '0. Criar USB (Windows/macOS)',
-                'install-step-0-desc': 'Use nossa ferramenta exclusiva para baixar e criar o instalador:',
-                'btn-download-tool': 'Baixar macOS Recovery',
-
-                'maint-title': 'Manutenção e Segurança',
-                'maint-update-title': 'Como Atualizar (Seguro)',
-                'maint-update-desc': 'Siga esta ordem para evitar quebra do sistema:',
-                'maint-step-1': '1. Faça backup da pasta EFI funcional no pendrive.',
-                'maint-step-2': '2. Atualize Kexts primeiro.',
-                'maint-step-3': '3. Atualize OpenCore (BOOTx64.efi, OpenCore.efi, Drivers).',
-                'maint-step-4': '4. Valide config.plist com OCConfigCompare.',
-                'maint-step-5': '5. Só então atualize o macOS.',
-
-                'sec-security-title': 'Segurança (SIP & FileVault)',
-                'sec-sip-title': 'SIP (System Integrity Protection)',
-                'sec-sip-desc': 'Desabilite (csr-active-config: FF0F0000) apenas para instalar kexts em /System (Root Patching). Para uso normal, mantenha habilitado (00000000).',
-                'sec-fv-title': 'FileVault (Criptografia)',
-                'sec-fv-desc': 'Requer configuração complexa (Misc -> Security -> Vault). Não ative sem ler a documentação oficial, ou você perderá acesso aos dados.',
+                'tops-included': '<i class="fas fa-tools"></i> Ferramentas Incluídas (23+):'
             },
             'en': {
                 'loading': 'Loading updates...',
@@ -3969,7 +2579,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'december': 'December',
                 'auto-update': 'Auto-update',
                 'main-title': 'Complete Hackintosh Guide',
-                'main-description': 'The most complete and updated guide to create your EFI from scratch using OpenCore. Compatible with macOS Sequoia 15.x and ready for macOS Tahoe 26.x(2025).',
+                'main-description': 'The most complete and updated guide to create your EFI from scratch using OpenCore. Compatible with macOS Sequoia 15.x and ready for macOS Tahoe 26.x (2025).',
 
                 'nav-home': 'Home',
                 'nav-req': 'Requirements',
@@ -4046,7 +2656,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'sec-kexts-title': 'Essential Kexts',
                 'sec-kexts-desc': 'Kernel extensions required for full functionality',
                 'alert-kexts': 'Important: Always download the latest kexts from official GitHub repositories.',
-                'alert-nootrx': 'NEVER use NootRX.kext with WhateverGreen.kext! They are incompatible and will cause a black screen. For RX 6000 / 7000, use ONLY NootRX.',
+                'alert-nootrx': 'NEVER use NootRX.kext with WhateverGreen.kext! They are incompatible and will cause a black screen. For RX 6000/7000, use ONLY NootRX.',
 
                 'sec-hw-title': 'Configurations by Generation',
                 'sec-hw-desc': 'Quick config.plist guide for different architectures',
@@ -4096,24 +2706,6 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'val-true': 'True',
                 'val-false': 'False',
                 'val-minus-one': '-1 (Disabled)',
-
-                // LAPTOP CONFIGS
-                'hw-laptop-title': 'Intel Laptops (3rd-10th Gen)',
-                'hw-laptop-desc': 'Complete configurations for Notebooks (Ivy Bridge to Comet Lake)',
-                'lap-acpi-note': '<strong>SSDT-PNLF:</strong> Essential for backlight control',
-                'lap-acpi-xosi': '<strong>SSDT-XOSI:</strong> Required for I2C Trackpads',
-                'lap-gfx-title': 'Graphics (iGPU Configuration)',
-                'lap-gfx-desc': 'Copy the correct AAPL,ig-platform-id for your generation:',
-                'lap-gfx-ivy': 'Ivy Bridge (HD 4000)',
-                'lap-gfx-haswell': 'Haswell (HD 4400/4600)',
-                'lap-gfx-skylake': 'Skylake (HD 520/530)',
-                'lap-gfx-kaby': 'Kaby Lake (UHD 620)',
-                'lap-gfx-coffee': 'Coffee/Comet Lake (UHD 630)',
-                'lap-gfx-ice': 'Ice Lake (Iris Plus)',
-                'lap-gfx-warning': 'Warning: 11th Gen (Tiger Lake) and newer iGPUs are NOT supported!',
-                'lap-audio-title': 'Audio & Special Quirks',
-                'lap-audio-layout': 'Common Laptop Layouts:',
-                'lap-quirk-usb': 'ReleaseUsbOwnership: True (Fixes boot freeze)',
 
                 'sec-smbios-title': 'Choosing the Correct SMBIOS',
                 'sec-smbios-desc': 'SMBIOS defines which Mac your Hackintosh will emulate',
@@ -4178,8 +2770,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'kext-desc-nvme': 'NVMe Optimization',
                 'kext-desc-restrict': 'Various fixes',
                 'req-yes': 'Yes', 'req-rx6000': 'If RX 6000+', 'req-intel-lan': 'If Intel LAN', 'req-rtl8125': 'If RTL8125',
-                'req-intel-wifi': 'If Intel WiFi', 'req-intel-bt': 'If Intel BT', 'req-12-13-gen': 'If 12th/13th gen', 'req-rec':
-                    'Recommended',
+                'req-intel-wifi': 'If Intel WiFi', 'req-intel-bt': 'If Intel BT', 'req-12-13-gen': 'If 12th/13th gen', 'req-rec': 'Recommended',
                 'smbios-hw-amd-ded': 'Desktop + Dedicated AMD GPU', 'smbios-obs-amd-ded': 'Best for RX 6000/7000',
                 'smbios-hw-amd-alt': 'Desktop + AMD GPU (alternative)', 'smbios-obs-amd-alt': 'May be discontinued',
                 'smbios-hw-intel-igpu': 'Desktop + Intel iGPU', 'smbios-obs-intel-igpu': 'For 10th gen Intel',
@@ -4194,7 +2785,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'boot-desc-npci': 'Fix PCI configuration', 'boot-usage-npci': 'Boot problems',
 
                 'faq-q-1': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> Which SMBIOS should I use?',
-                'faq-a-1': 'For desktop with dedicated AMD GPU: <strong>MacPro7,1</strong> (recommended for Sequoia/Tahoe) or iMacPro1, 1. For desktop with Intel iGPU: iMac20, 1 / 20, 2.',
+                'faq-a-1': 'For desktop with dedicated AMD GPU: <strong>MacPro7,1</strong> (recommended for Sequoia/Tahoe) or iMacPro1,1. For desktop with Intel iGPU: iMac20,1/20,2.',
                 'faq-q-2': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> Do I need agdpmod=pikera?',
                 'faq-a-2': '<strong>NO</strong> if you use MacPro7,1 + NootRX.kext! The fix is included in NootRX. Only iMac/iMacPro SMBIOS without NootRX need it.',
                 'faq-q-3': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> Does RX 6700 XT work on macOS?',
@@ -4230,191 +2821,6 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'hnanoto-dev-label': 'Developer:',
                 'hnanoto-dev-desc': 'Hnanoto - Creator of essential tools for the Hackintosh community',
 
-                // POST-INSTALLATION
-                'post-install-title': 'Post-Installation',
-                'post-install-desc': 'Essential configurations after installing macOS',
-                'post-install-success': 'Congratulations! macOS installed successfully!',
-                'post-install-next': 'Now let\'s configure essential features for a perfect Hackintosh.',
-                'post-usb-title': '1. USB Mapping (CRITICAL)',
-                'post-usb-desc': 'USB mapping is ESSENTIAL for stability, sleep, and device compatibility.',
-                'post-usb-why': 'Why map USB?',
-                'post-usb-reason-1': 'macOS has a 15 port USB limit',
-                'post-usb-reason-2': 'Prevents sleep/wake issues',
-                'post-usb-reason-3': 'Improves overall system stability',
-                'post-usb-reason-4': 'Fixes Bluetooth/WiFi issues',
-                'post-usb-reason-5': 'Required for iServices to work',
-                'post-usb-warning': 'Important:',
-                'post-usb-warning-desc': 'Remove XhciPortLimit quirk after mapping USB!',
-                'post-sleep-title': '2. Fixing Sleep/Wake',
-                'post-sleep-desc': 'Settings for sleep and wake to work perfectly.',
-                'post-sleep-pmset': 'pmset Settings',
-                'post-sleep-bios': 'BIOS Settings for Sleep',
-                'post-sleep-bios-1': 'Disable Wake on LAN',
-                'post-sleep-bios-2': 'Disable USB Wake',
-                'post-sleep-bios-3': 'Enable XHCI Hand-off',
-                'post-sleep-bios-4': 'Disable ErP (if available)',
-                // Advanced Sleep
-                'post-sleep-advanced': 'Advanced Troubleshooting (Culprits)',
-                'sleep-culprit-disp-title': 'Displays & Laptops',
-                'sleep-lid-title': 'Lid Wake (HP/Skylake+):',
-                'sleep-lid-desc': 'Fix random wake caused by lid. Use SSDT-HP-FixLidSleep.',
-                'sleep-culprit-rtc-title': 'RTC (Real Time Clock)',
-                'sleep-rtc-desc': 'Fix "BIOS Restarted in Safemode" on Z390+.',
-                'sleep-rtc-fix1': 'DisableRtcChecksum (Kernel -> Quirks)',
-                'sleep-rtc-fix2': 'RTCMemoryFixup.kext + rtcfx_exclude=58-59',
-                'sleep-culprit-nvme-title': 'NVMe & USB',
-                'sleep-nvme-warn': 'Avoid: Samsung PM981/PM991, Micron 2200S',
-                'sleep-nvme-fix': 'Use NVMeFix.kext',
-                'sleep-usb-fix': 'Map USB ports correctly (Max 15)',
-                'sleep-darkwake-title': 'Darkwake boot-args',
-                'sleep-darkwake-desc': 'Try different values if sleep fails 1 sec after wake:',
-                'post-iservices-title': '3. Configuring iServices (iMessage, FaceTime)',
-                'post-iservices-desc': 'Steps to make iMessage and FaceTime work.',
-                'post-iservices-warning': 'WARNING:',
-                'post-iservices-warning-desc': 'Use UNIQUE serials! Never use serials from others or ready-made EFIs!',
-                'post-iservices-steps': 'Step by Step',
-                'post-iservices-step-1-title': 'Generate unique SMBIOS',
-                'post-iservices-step-2-title': 'Verify serial',
-                'post-iservices-step-2-desc': 'Access checkcoverage.apple.com and verify. Should show "Unable to verify".',
-                'post-iservices-step-3-title': 'Configure ROM',
-                'post-iservices-step-3-desc': 'Use your Ethernet network card MAC address (without colons).',
-                'post-iservices-step-4-title': 'Clear NVRAM',
-                'post-iservices-step-4-desc': 'Restart and choose "Reset NVRAM" in boot picker.',
-                'post-iservices-step-5-title': 'Login to iCloud',
-                'post-iservices-step-5-desc': 'Wait 24-48h for full activation.',
-                'post-power-title': '4. Power Management',
-                'post-power-desc': 'Optimize power consumption and CPU performance.',
-                'post-power-intel': 'Intel Power Management',
-                'post-power-intel-1': 'Use SSDT-PLUG.aml (required)',
-                'post-power-intel-2': 'CPUFriend.kext for fine tuning',
-                'post-power-intel-3': 'CPUFriendDataProvider.kext (generated)',
-                'post-power-amd': 'AMD Power Management',
-                'post-power-amd-1': 'Use DummyPowerManagement = True',
-                'post-power-amd-2': 'AMDRyzenCPUPowerManagement.kext (optional)',
-                'post-power-amd-3': 'SMCAMDProcessor.kext for sensors',
-                'post-drm-title': '5. DRM (Netflix, Apple TV+, Amazon Prime)',
-                'post-drm-desc': 'Configure DRM for streaming to work.',
-                'post-drm-th-service': 'Service',
-                'post-drm-th-requirement': 'Requirement',
-                'post-drm-th-solution': 'Solution',
-                'post-drm-netflix-req': 'Native DRM',
-                'post-drm-netflix-sol': 'Works with iGPU or AMD GPU',
-                'post-drm-appletv-req': 'FairPlay DRM',
-                'post-drm-appletv-sol': 'Requires iGPU or AMD Polaris+',
-                'post-drm-prime-req': 'Widevine',
-                'post-drm-prime-sol': 'Works on any GPU',
-                'post-drm-tip': 'Tip:',
-                'post-drm-tip-desc': 'To test DRM, use drm-test.appspot.com',
-                'post-dualboot-title': '6. Dual Boot (macOS + Windows/Linux)',
-                'post-dualboot-desc': 'Configure dual boot correctly.',
-                'post-dualboot-best': 'Best Practices',
-                'post-dualboot-1': 'Install each OS on separate disks (recommended)',
-                'post-dualboot-2': 'Use OpenCore as main bootloader',
-                'post-dualboot-3': 'Configure LauncherOption = Full in config.plist',
-                'post-dualboot-4': 'Add OpenShell.efi for debug',
-                'post-dualboot-time': 'Sync Time',
-
-                // GLOSSARY
-                'glossary-title': 'Glossary of Terms',
-                'glossary-desc': 'Definitions of Hackintosh technical terms',
-                'glossary-aml-def': 'ACPI Machine Language - Compiled format of SSDT/DSDT files',
-                'glossary-bootargs-def': 'Boot arguments passed to macOS kernel to modify behavior',
-                'glossary-dsdt-def': 'Differentiated System Description Table - Main ACPI table describing hardware',
-                'glossary-drm-def': 'Digital Rights Management - Digital content protection technology (Netflix, Apple TV+)',
-                'glossary-efi-def': 'Extensible Firmware Interface - Special partition containing bootloader and configuration files',
-                'glossary-kp-def': 'Critical kernel error that causes system restart',
-                'glossary-oc-def': 'Modern and secure bootloader for Hackintosh, successor to Clover',
-                'glossary-ssdt-def': 'Secondary System Description Table - Secondary ACPI tables that add or modify functionalities',
-                'glossary-uefi-def': 'Unified Extensible Firmware Interface - Modern replacement for legacy BIOS',
-                'glossary-verbose-def': 'Boot mode that shows detailed boot log (boot-arg: -v)',
-
-                // ACPI/SSDTs
-                'acpi-title': 'ACPI and SSDTs Explained',
-                'acpi-desc': 'Understand what each SSDT does and when to use',
-                'acpi-what': 'What is ACPI?',
-                'acpi-what-desc': 'ACPI (Advanced Configuration and Power Interface) is a specification that defines hardware tables for the operating system.SSDTs are secondary tables that add or modify functionalities.',
-                'acpi-ec-what': 'What it does:',
-                'acpi-ec-1': 'Creates a fake Embedded Controller (EC)',
-                'acpi-ec-2': 'Injects USB power properties',
-                'acpi-ec-3': 'Required for boot on Catalina+',
-                'acpi-ec-when': 'When to use:',
-                'acpi-ec-when-1': 'Desktop: ALWAYS (required)',
-                'acpi-ec-when-2': 'Laptop: Use SSDT-EC-LAPTOP',
-                'acpi-plug-what': 'What it does:',
-                'acpi-plug-1': 'Enables XCPM (XNU CPU Power Management)',
-                'acpi-plug-2': 'Allows native CPU power management',
-                'acpi-plug-3': 'Improves performance and power efficiency',
-                'acpi-plug-when': 'When to use:',
-                'acpi-plug-when-1': 'Intel Haswell (4th gen) or higher',
-                'acpi-plug-when-2': 'DO NOT use on AMD (use DummyPowerManagement)',
-                'acpi-plug-when-3': 'For Alder/Raptor Lake: use SSDT-PLUG-ALT',
-                'acpi-awac-what': 'What it does:',
-                'acpi-awac-1': 'Forces use of legacy RTC (Real Time Clock)',
-                'acpi-awac-2': 'Disables AWAC (new firmware clock)',
-                'acpi-awac-3': 'Prevents kernel panic on boot',
-                'acpi-awac-when': 'When to use:',
-                'acpi-awac-when-1': 'Intel 300 series (Z390, B360, H370)',
-                'acpi-awac-when-2': 'Intel 400/500/600 series',
-                'acpi-awac-when-3': 'If you have RTC-related kernel panic',
-                'acpi-pmc-what': 'What it does:',
-                'acpi-pmc-1': 'Adds PMCR device to ACPI',
-                'acpi-pmc-2': 'Fixes native NVRAM on 300 series',
-                'acpi-pmc-3': 'Improves sleep compatibility',
-                'acpi-pmc-when': 'When to use:',
-                'acpi-pmc-when-1': 'Intel 300 series (Z390, B360, H370)',
-                'acpi-pmc-when-2': 'If NVRAM doesn\'t work natively',
-                'acpi-platform-title': 'SSDTs by Platform',
-                'acpi-platform-th-platform': 'Platform',
-                'acpi-platform-th-ssdts': 'Required SSDTs',
-                'acpi-platform-th-optional': 'Optional',
-                'acpi-compile-title': 'How to Compile SSDTs',
-                'acpi-compile-desc': 'Use SSDTTime to generate automatically',
-
-                // CONFIG.PLIST
-                'config-title': 'Detailed Config.plist',
-                'config-desc': 'Fine-tuning for maximum stability and performance',
-                'config-booter-title': 'Booter Quirks',
-                'config-booter-desc': 'Essential fixes for bootloader to load the kernel.',
-                'th-description': 'Description',
-                'th-platform': 'Platform',
-                'quirk-defrag': 'Fixes UEFI runtime services',
-                'quirk-slide': 'Allows safe mode usage (Shift)',
-                'quirk-write': 'Allows writing to protected memory',
-                'quirk-map': 'Rebuilds memory map for compatibility',
-                'config-gpu-title': 'DeviceProperties (GPU Patching)',
-                'config-gpu-desc': 'Essential configuration for Intel iGPU (Intel HD/UHD Graphics).',
-                'config-gpu-igpur': 'Graphics Accelerator (iGPU)',
-                'config-gpu-warning': 'Attention:',
-                'config-gpu-warning-note': 'Dedicated AMD GPUs usually do not need DeviceProperties, only boot-args or SSDTs!',
-                'config-kernel-title': 'Kernel Quirks',
-                'config-kernel-desc': 'Patches applied directly to macOS kernel.',
-                'quirk-cfg': 'Required if CFG-Lock is enabled in BIOS',
-                'quirk-iomapper': 'Required if VT-d is enabled in BIOS',
-                'quirk-panic': 'Prevents instant reboot on Kernel Panic (essential for debug)',
-                'quirk-xhci': 'Disable after mapping USBs (macOS 11.3+)',
-
-                // TROUBLESHOOTING ADVANCED
-                'trouble-adv-title': 'Advanced Troubleshooting',
-                'trouble-adv-desc': 'Diagnosis and solution of complex problems',
-                'trouble-panic-title': 'Understanding Kernel Panics',
-                'trouble-panic-boot': 'If PC restarts before loading:',
-                'trouble-panic-1': 'Add debug=0x100 keepsyms=1 to boot-args',
-                'trouble-panic-2': 'Add -v for verbose mode',
-                'trouble-panic-3': 'Film the screen at the moment of crash',
-                'trouble-common-errors': 'Common Errors:',
-                'trouble-err-eb': 'Booter Quirks error. Check RebuildAppleMemoryMap, SetupVirtualMap or EnableWriteUnprotector.',
-                'trouble-err-nvme': 'Use NVMeFix.kext or check SSD compatibility.',
-                'trouble-err-apfs': 'APFS driver or BIOS error (EC not configured correctly).',
-                'trouble-gpu-title': 'Graphics Problems (GPU)',
-                'trouble-gpu-black': 'Add agdpmod=pikera (ONLY if not using NootRX). Check if WhateverGreen is loaded.',
-                'trouble-gpu-accel': 'Unsupported GPU or unloaded kexts. AMD requires Lilu+WhateverGreen (or NootRX). Intel requires correct DeviceProperties.',
-                'trouble-gpu-color': 'Force RGB mode in monitor settings or use EDID patch.',
-                'trouble-audio-title-adv': 'Audio (AppleALC)',
-                'trouble-audio-desc': 'If audio does not work even with AppleALC and alcid:',
-                'trouble-audio-1': 'Check if HPET is fixed (SSDTTime FixHPET)',
-                'trouble-audio-2': 'Confirm audio controller appears in Hackintool',
-                'trouble-audio-3': 'Try boot-arg alcdelay=1000 (delays loading)',
-
                 'tops-title': '<i class="fas fa-crown" style="color: #FFD700"></i> Tops Tools 2.0',
                 'tops-desc-1': 'The definitive ALL-IN-ONE tool for Hackintosh!',
                 'tops-desc-2': 'macOS app centralizing 23+ essential tools in a modern SwiftUI interface.',
@@ -4427,26 +2833,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'tops-feat-6': 'Smart tool organization',
                 'tops-feat-7': 'Direct tool execution',
                 'tops-feat-8': 'Regular updates',
-                'tops-included': '<i class="fas fa-tools"></i> Included Tools (23+):',
-                // MAINTENANCE & SECURITY
-                'install-step-0-title': '0. Create USB (Windows/macOS)',
-                'install-step-0-desc': 'Use our exclusive tool to download and create the installer:',
-                'btn-download-tool': 'Download macOS Recovery',
-
-                'maint-title': 'Maintenance & Security',
-                'maint-update-title': 'How to Update (Safe)',
-                'maint-update-desc': 'Follow this order to avoid breaking the system:',
-                'maint-step-1': '1. Backup working EFI folder to USB.',
-                'maint-step-2': '2. Update Kexts first.',
-                'maint-step-3': '3. Update OpenCore (BOOTx64.efi, OpenCore.efi, Drivers).',
-                'maint-step-4': '4. Validate config.plist with OCConfigCompare.',
-                'maint-step-5': '5. Only then update macOS.',
-
-                'sec-security-title': 'Security (SIP & FileVault)',
-                'sec-sip-title': 'SIP (System Integrity Protection)',
-                'sec-sip-desc': 'Disable (csr-active-config: FF0F0000) only to install kexts in /System (Root Patching). For normal use, keep enabled (00000000).',
-                'sec-fv-title': 'FileVault (Encryption)',
-                'sec-fv-desc': 'Requires complex configuration (Misc -> Security -> Vault). Do not enable without reading official docs, or you will lose data access.',
+                'tops-included': '<i class="fas fa-tools"></i> Included Tools (23+):'
             },
             'es': {
                 'loading': 'Cargando actualizaciones...',
@@ -4456,7 +2843,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'december': 'Diciembre',
                 'auto-update': 'Auto-actualización',
                 'main-title': 'Guía Completa de Hackintosh',
-                'main-description': 'La guía más completa y actualizada para crear tu EFI desde cero usando OpenCore. Compatible con macOS Sequoia 15.x y preparado para macOS Tahoe 26.x(2025).',
+                'main-description': 'La guía más completa y actualizada para crear tu EFI desde cero usando OpenCore. Compatible con macOS Sequoia 15.x y preparado para macOS Tahoe 26.x (2025).',
 
                 'nav-home': 'Inicio',
                 'nav-req': 'Requisitos',
@@ -4533,7 +2920,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'sec-kexts-title': 'Kexts Esenciales',
                 'sec-kexts-desc': 'Extensiones de kernel necesarias para la funcionalidad completa',
                 'alert-kexts': 'Importante: Siempre descargue los últimos kexts de los repositorios oficiales de GitHub.',
-                'alert-nootrx': '¡NUNCA use NootRX.kext con WhateverGreen.kext! Son incompatibles y causarán pantalla negra. Para RX 6000 / 7000, use SOLO NootRX.',
+                'alert-nootrx': '¡NUNCA use NootRX.kext con WhateverGreen.kext! Son incompatibles y causarán pantalla negra. Para RX 6000/7000, use SOLO NootRX.',
 
                 'sec-hw-title': 'Configuraciones por Generación',
                 'sec-hw-desc': 'Guía rápida de config.plist para diferentes arquitecturas',
@@ -4584,24 +2971,6 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'val-false': 'False (Falso)',
                 'val-minus-one': '-1 (Desactivado)',
 
-                // LAPTOP CONFIGS
-                'hw-laptop-title': 'Laptops Intel (3ª-10ª Gen)',
-                'hw-laptop-desc': 'Configuraciones completas para Portátiles (Ivy Bridge hasta Comet Lake)',
-                'lap-acpi-note': '<strong>SSDT-PNLF:</strong> Esencial para control de brillo',
-                'lap-acpi-xosi': '<strong>SSDT-XOSI:</strong> Necesario para Trackpads I2C',
-                'lap-gfx-title': 'Gráficos (iGPU Configuration)',
-                'lap-gfx-desc': 'Copie el AAPL,ig-platform-id correcto para su generación:',
-                'lap-gfx-ivy': 'Ivy Bridge (HD 4000)',
-                'lap-gfx-haswell': 'Haswell (HD 4400/4600)',
-                'lap-gfx-skylake': 'Skylake (HD 520/530)',
-                'lap-gfx-kaby': 'Kaby Lake (UHD 620)',
-                'lap-gfx-coffee': 'Coffee/Comet Lake (UHD 630)',
-                'lap-gfx-ice': 'Ice Lake (Iris Plus)',
-                'lap-gfx-warning': 'Atención: ¡Las iGPU de 11ª Gen (Tiger Lake) y superiores NO son compatibles!',
-                'lap-audio-title': 'Audio y Quirks Especiales',
-                'lap-audio-layout': 'Layouts comunes de Laptop:',
-                'lap-quirk-usb': 'ReleaseUsbOwnership: True (Corrige congelamiento en boot)',
-
                 'sec-smbios-title': 'Eligiendo el SMBIOS Correcto',
                 'sec-smbios-desc': 'SMBIOS define qué Mac emulará su Hackintosh',
                 'alert-smbios': 'Actualización 2024: Para macOS Sequoia 15.x y Tahoe 26.x, MacPro7,1 es la elección recomendada para escritorio con GPU AMD dedicada.',
@@ -4649,8 +3018,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'repo-tools': 'Herramientas Tops',
 
                 'th-kext': 'Kext', 'th-function': 'Función', 'th-required': 'Obligatorio', 'th-link': 'Enlace',
-                'th-hardware': 'Hardware', 'th-smbios-rec': 'SMBIOS Recomendado', 'th-compat': 'Compatibilidad', 'th-notes':
-                    'Observaciones',
+                'th-hardware': 'Hardware', 'th-smbios-rec': 'SMBIOS Recomendado', 'th-compat': 'Compatibilidad', 'th-notes': 'Observaciones',
                 'th-bootarg': 'Boot-arg', 'th-usage': 'Cuándo usar',
 
                 'kext-desc-lilu': 'Base esencial para otros kexts',
@@ -4666,8 +3034,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'kext-desc-nvme': 'Optimización NVMe',
                 'kext-desc-restrict': 'Correcciones varias',
                 'req-yes': 'Sí', 'req-rx6000': 'Si RX 6000+', 'req-intel-lan': 'Si Intel LAN', 'req-rtl8125': 'Si RTL8125',
-                'req-intel-wifi': 'Si Intel WiFi', 'req-intel-bt': 'Si Intel BT', 'req-12-13-gen': 'Si 12ª/13ª gen', 'req-rec':
-                    'Recomendado',
+                'req-intel-wifi': 'Si Intel WiFi', 'req-intel-bt': 'Si Intel BT', 'req-12-13-gen': 'Si 12ª/13ª gen', 'req-rec': 'Recomendado',
                 'smbios-hw-amd-ded': 'Escritorio + GPU AMD dedicada', 'smbios-obs-amd-ded': 'Mejor para RX 6000/7000',
                 'smbios-hw-amd-alt': 'Escritorio + GPU AMD (alternativa)', 'smbios-obs-amd-alt': 'Puede ser descontinuado',
                 'smbios-hw-intel-igpu': 'Escritorio + iGPU Intel', 'smbios-obs-intel-igpu': 'Para 10ª generación Intel',
@@ -4682,13 +3049,13 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'boot-desc-npci': 'Corrección configuración PCI', 'boot-usage-npci': 'Problemas de arranque',
 
                 'faq-q-1': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> ¿Qué SMBIOS debo usar?',
-                'faq-a-1': 'Para escritorio con GPU AMD dedicada: <strong>MacPro7,1</strong> (recomendado para Sequoia/Tahoe) o iMacPro1, 1. Para escritorio con iGPU Intel: iMac20, 1 / 20, 2.',
+                'faq-a-1': 'Para escritorio con GPU AMD dedicada: <strong>MacPro7,1</strong> (recomendado para Sequoia/Tahoe) o iMacPro1,1. Para escritorio con iGPU Intel: iMac20,1/20,2.',
                 'faq-q-2': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> ¿Necesito agdpmod=pikera?',
-                'faq-a-2': '<strong>NO</strong> si usa MacPro7,1 + NootRX.kext! La corrección ya está incluida en NootRX. Solo iMac / iMacPro SMBIOS sin NootRX lo necesitan.',
+                'faq-a-2': '<strong>NO</strong> si usa MacPro7,1 + NootRX.kext! La corrección ya está incluida en NootRX. Solo iMac/iMacPro SMBIOS sin NootRX lo necesitan.',
                 'faq-q-3': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> ¿RX 6700 XT funciona en macOS?',
                 'faq-a-3': '<strong>¡SÍ!</strong> Pero necesita <strong>NootRX.kext</strong>. No tiene soporte nativo, pero con NootRX funciona perfectamente en Sequoia 15.x.',
                 'faq-q-4': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> ¿Alder Lake (12ª gen) funciona?',
-                'faq-a-4': '<strong>¡SÍ!</strong> Pero necesita CPU spoofing (emular Comet Lake) y <strong>CpuTopologyRebuild.kext</strong> para que funcionen los E - cores.',
+                'faq-a-4': '<strong>¡SÍ!</strong> Pero necesita CPU spoofing (emular Comet Lake) y <strong>CpuTopologyRebuild.kext</strong> para que funcionen los E-cores.',
                 'faq-q-5': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> ¿WiFi Intel funciona?',
                 'faq-a-5': '<strong>¡SÍ!</strong> Use <strong>itlwm.kext</strong> + HeliPort.app. Pero AirDrop/Handoff no funcionan. Para funcionalidad completa, use Broadcom.',
                 'faq-q-6': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> ¿Cómo actualizar OpenCore?',
@@ -4720,191 +3087,6 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'hnanoto-dev-label': 'Desarrollador:',
                 'hnanoto-dev-desc': 'Hnanoto - Creador de herramientas esenciales para la comunidad Hackintosh',
 
-                // POST-INSTALACIÓN
-                'post-install-title': 'Post-Instalación',
-                'post-install-desc': 'Configuraciones esenciales después de instalar macOS',
-                'post-install-success': '¡Felicitaciones! ¡macOS instalado con éxito!',
-                'post-install-next': 'Ahora vamos a configurar funcionalidades esenciales para un Hackintosh perfecto.',
-                'post-usb-title': '1. Mapeo USB (CRÍTICO)',
-                'post-usb-desc': 'El mapeo USB es ESENCIAL para estabilidad, sleep y compatibilidad de dispositivos.',
-                'post-usb-why': '¿Por qué mapear USB?',
-                'post-usb-reason-1': 'macOS tiene límite de 15 puertos USB',
-                'post-usb-reason-2': 'Previene problemas de sleep/wake',
-                'post-usb-reason-3': 'Mejora estabilidad general del sistema',
-                'post-usb-reason-4': 'Corrige problemas con Bluetooth/WiFi',
-                'post-usb-reason-5': 'Necesario para que iServices funcionen',
-                'post-usb-warning': 'Importante:',
-                'post-usb-warning-desc': '¡Elimine XhciPortLimit quirk después de mapear USB!',
-                'post-sleep-title': '2. Corrigiendo Sleep/Wake',
-                'post-sleep-desc': 'Configuraciones para que sleep y wake funcionen perfectamente.',
-                'post-sleep-pmset': 'Configuraciones pmset',
-                'post-sleep-bios': 'Configuraciones BIOS para Sleep',
-                'post-sleep-bios-1': 'Desactivar Wake on LAN',
-                'post-sleep-bios-2': 'Desactivar USB Wake',
-                'post-sleep-bios-3': 'Activar XHCI Hand-off',
-                'post-sleep-bios-4': 'Desactivar ErP (si disponible)',
-                // Advanced Sleep
-                'post-sleep-advanced': 'Troubleshooting Avanzado (Culprits)',
-                'sleep-culprit-disp-title': 'Displays & Laptops',
-                'sleep-lid-title': 'Lid Wake (HP/Skylake+):',
-                'sleep-lid-desc': 'Fix para wake aleatorio causado por la tapa. Use SSDT-HP-FixLidSleep.',
-                'sleep-culprit-rtc-title': 'RTC (Real Time Clock)',
-                'sleep-rtc-desc': 'Corrige "BIOS Restarted in Safemode" en Z390+.',
-                'sleep-rtc-fix1': 'DisableRtcChecksum (Kernel -> Quirks)',
-                'sleep-rtc-fix2': 'RTCMemoryFixup.kext + rtcfx_exclude=58-59',
-                'sleep-culprit-nvme-title': 'NVMe & USB',
-                'sleep-nvme-warn': 'Evite: Samsung PM981/PM991, Micron 2200S',
-                'sleep-nvme-fix': 'Use NVMeFix.kext',
-                'sleep-usb-fix': 'Mapee los puertos USB correctamente (Máx 15)',
-                'sleep-darkwake-title': 'Darkwake boot-args',
-                'sleep-darkwake-desc': 'Pruebe diferentes valores si el sleep falla 1 seg después del wake:',
-                'post-iservices-title': '3. Configurando iServices (iMessage, FaceTime)',
-                'post-iservices-desc': 'Pasos para hacer que iMessage y FaceTime funcionen.',
-                'post-iservices-warning': 'ATENCIÓN:',
-                'post-iservices-warning-desc': '¡Use seriales ÚNICOS! ¡Nunca use seriales de otras personas o de EFIs listas!',
-                'post-iservices-steps': 'Paso a Paso',
-                'post-iservices-step-1-title': 'Generar SMBIOS único',
-                'post-iservices-step-2-title': 'Verificar serial',
-                'post-iservices-step-2-desc': 'Acceda a checkcoverage.apple.com y verifique. Debe mostrar "No es posible verificar".',
-                'post-iservices-step-3-title': 'Configurar ROM',
-                'post-iservices-step-3-desc': 'Use la dirección MAC de su tarjeta de red Ethernet (sin los dos puntos).',
-                'post-iservices-step-4-title': 'Limpiar NVRAM',
-                'post-iservices-step-4-desc': 'Reinicie y elija "Reset NVRAM" en el boot picker.',
-                'post-iservices-step-5-title': 'Iniciar sesión en iCloud',
-                'post-iservices-step-5-desc': 'Espere 24-48h para activación completa.',
-                'post-power-title': '4. Power Management (Gestión de Energía)',
-                'post-power-desc': 'Optimizar consumo de energía y rendimiento de CPU.',
-                'post-power-intel': 'Intel Power Management',
-                'post-power-intel-1': 'Use SSDT-PLUG.aml (obligatorio)',
-                'post-power-intel-2': 'CPUFriend.kext para ajuste fino',
-                'post-power-intel-3': 'CPUFriendDataProvider.kext (generado)',
-                'post-power-amd': 'AMD Power Management',
-                'post-power-amd-1': 'Use DummyPowerManagement = True',
-                'post-power-amd-2': 'AMDRyzenCPUPowerManagement.kext (opcional)',
-                'post-power-amd-3': 'SMCAMDProcessor.kext para sensores',
-                'post-drm-title': '5. DRM (Netflix, Apple TV+, Amazon Prime)',
-                'post-drm-desc': 'Configurar DRM para que streaming funcione.',
-                'post-drm-th-service': 'Servicio',
-                'post-drm-th-requirement': 'Requisito',
-                'post-drm-th-solution': 'Solución',
-                'post-drm-netflix-req': 'DRM nativo',
-                'post-drm-netflix-sol': 'Funciona con iGPU o AMD GPU',
-                'post-drm-appletv-req': 'FairPlay DRM',
-                'post-drm-appletv-sol': 'Requiere iGPU o AMD Polaris+',
-                'post-drm-prime-req': 'Widevine',
-                'post-drm-prime-sol': 'Funciona en cualquier GPU',
-                'post-drm-tip': 'Consejo:',
-                'post-drm-tip-desc': 'Para probar DRM, use drm-test.appspot.com',
-                'post-dualboot-title': '6. Dual Boot (macOS + Windows/Linux)',
-                'post-dualboot-desc': 'Configurar dual boot correctamente.',
-                'post-dualboot-best': 'Mejores Prácticas',
-                'post-dualboot-1': 'Instale cada OS en discos separados (recomendado)',
-                'post-dualboot-2': 'Use OpenCore como bootloader principal',
-                'post-dualboot-3': 'Configure LauncherOption = Full en config.plist',
-                'post-dualboot-4': 'Agregue OpenShell.efi para debug',
-                'post-dualboot-time': 'Sincronizar Hora',
-
-                // GLOSARIO
-                'glossary-title': 'Glosario de Términos',
-                'glossary-desc': 'Definiciones de términos técnicos de Hackintosh',
-                'glossary-aml-def': 'ACPI Machine Language - Formato compilado de archivos SSDT/DSDT',
-                'glossary-bootargs-def': 'Argumentos de arranque pasados al kernel de macOS para modificar comportamiento',
-                'glossary-dsdt-def': 'Differentiated System Description Table - Tabla principal del ACPI que describe el hardware',
-                'glossary-drm-def': 'Digital Rights Management - Tecnología de protección de contenido digital (Netflix, Apple TV +) ',
-                'glossary-efi-def': 'Extensible Firmware Interface - Partición especial que contiene el bootloader y archivos de configuración',
-                'glossary-kp-def': 'Error crítico del kernel que causa reinicio del sistema',
-                'glossary-oc-def': 'Bootloader moderno y seguro para Hackintosh, sucesor de Clover',
-                'glossary-ssdt-def': 'Secondary System Description Table - Tablas secundarias del ACPI que agregan o modifican funcionalidades',
-                'glossary-uefi-def': 'Unified Extensible Firmware Interface - Sustituto moderno del BIOS legado',
-                'glossary-verbose-def': 'Modo de arranque que muestra log detallado del boot (boot-arg: -v)',
-
-                // ACPI/SSDTs
-                'acpi-title': 'ACPI y SSDTs Explicados',
-                'acpi-desc': 'Entienda qué hace cada SSDT y cuándo usar',
-                'acpi-what': '¿Qué es ACPI?',
-                'acpi-what-desc': 'ACPI (Advanced Configuration and Power Interface) es una especificação que define tablas de hardware para el sistema operativo.SSDTs son tablas secundarias que agregan o modifican funcionalidades.',
-                'acpi-ec-what': 'Qué hace:',
-                'acpi-ec-1': 'Crea un Embedded Controller (EC) falso',
-                'acpi-ec-2': 'Inyecta propiedades USB power',
-                'acpi-ec-3': 'Necesario para arrancar en Catalina+',
-                'acpi-ec-when': 'Cuándo usar:',
-                'acpi-ec-when-1': 'Desktop: SIEMPRE (obligatorio)',
-                'acpi-ec-when-2': 'Laptop: Use SSDT-EC-LAPTOP',
-                'acpi-plug-what': 'Qué hace:',
-                'acpi-plug-1': 'Habilita XCPM (XNU CPU Power Management)',
-                'acpi-plug-2': 'Permite gestión nativa de energía de CPU',
-                'acpi-plug-3': 'Mejora rendimiento y eficiencia energética',
-                'acpi-plug-when': 'Cuándo usar:',
-                'acpi-plug-when-1': 'Intel Haswell (4ª gen) o superior',
-                'acpi-plug-when-2': 'NO usar en AMD (use DummyPowerManagement)',
-                'acpi-plug-when-3': 'Para Alder/Raptor Lake: use SSDT-PLUG-ALT',
-                'acpi-awac-what': 'Qué hace:',
-                'acpi-awac-1': 'Fuerza uso del RTC (Real Time Clock) legado',
-                'acpi-awac-2': 'Desactiva AWAC (nuevo reloj del firmware)',
-                'acpi-awac-3': 'Previene kernel panic en arranque',
-                'acpi-awac-when': 'Cuándo usar:',
-                'acpi-awac-when-1': 'Intel 300 series (Z390, B360, H370)',
-                'acpi-awac-when-2': 'Intel 400/500/600 series',
-                'acpi-awac-when-3': 'Si tiene kernel panic relacionado con RTC',
-                'acpi-pmc-what': 'Qué hace:',
-                'acpi-pmc-1': 'Agrega device PMCR al ACPI',
-                'acpi-pmc-2': 'Corrige NVRAM nativo en 300 series',
-                'acpi-pmc-3': 'Mejora compatibilidad de sleep',
-                'acpi-pmc-when': 'Cuándo usar:',
-                'acpi-pmc-when-1': 'Intel 300 series (Z390, B360, H370)',
-                'acpi-pmc-when-2': 'Si NVRAM no funciona nativamente',
-                'acpi-platform-title': 'SSDTs por Plataforma',
-                'acpi-platform-th-platform': 'Plataforma',
-                'acpi-platform-th-ssdts': 'SSDTs Necesarios',
-                'acpi-platform-th-optional': 'Opcionales',
-                'acpi-compile-title': 'Cómo Compilar SSDTs',
-                'acpi-compile-desc': 'Use SSDTTime para generar automáticamente',
-
-                // CONFIG.PLIST
-                'config-title': 'Config.plist Detallado',
-                'config-desc': 'Ajustes finos para máxima estabilidad y rendimiento',
-                'config-booter-title': 'Booter Quirks',
-                'config-booter-desc': 'Correcciones esenciales para que el bootloader cargue el kernel.',
-                'th-description': 'Descripción',
-                'th-platform': 'Plataforma',
-                'quirk-defrag': 'Corrige servicios de tiempo de ejecución UEFI',
-                'quirk-slide': 'Permite uso de safe mode (Shift)',
-                'quirk-write': 'Permite escritura en memorias protegidas',
-                'quirk-map': 'Reconstruye mapa de memoria para compatibilidad',
-                'config-gpu-title': 'DeviceProperties (Parcheo GPU)',
-                'config-gpu-desc': 'Configuración esencial para iGPU Intel (Intel HD/UHD Graphics).',
-                'config-gpu-igpur': 'Aceleradora Gráfica (iGPU)',
-                'config-gpu-warning': 'Atención:',
-                'config-gpu-warning-note': '¡Las GPUs AMD dedicadas generalmente no necesitan DeviceProperties, solo boot-args o SSDTs!',
-                'config-kernel-title': 'Kernel Quirks',
-                'config-kernel-desc': 'Parches aplicados directamente al kernel de macOS.',
-                'quirk-cfg': 'Necesario si CFG-Lock está habilitado en BIOS',
-                'quirk-iomapper': 'Necesario si VT-d está habilitado en BIOS',
-                'quirk-panic': 'Evita reinicio instantáneo en Kernel Panic (esencial para debug)',
-                'quirk-xhci': 'Desactive después de mapear USBs (macOS 11.3+)',
-
-                // TROUBLESHOOTING ADVANCED
-                'trouble-adv-title': 'Troubleshooting Avanzado',
-                'trouble-adv-desc': 'Diagnóstico y solución de problemas complejos',
-                'trouble-panic-title': 'Entendiendo Kernel Panics',
-                'trouble-panic-boot': 'Si la PC se reinicia antes de cargar:',
-                'trouble-panic-1': 'Agregue debug=0x100 keepsyms=1 a los boot-args',
-                'trouble-panic-2': 'Agregue -v para modo verbose',
-                'trouble-panic-3': 'Filme la pantalla en el momento del fallo',
-                'trouble-common-errors': 'Errores Comunes:',
-                'trouble-err-eb': 'Error de Booter Quirks. Verifique RebuildAppleMemoryMap, SetupVirtualMap o EnableWriteUnprotector.',
-                'trouble-err-nvme': 'Use NVMeFix.kext o verifique compatibilidad del SSD.',
-                'trouble-err-apfs': 'Error en driver APFS o BIOS (EC no configurado correctamente).',
-                'trouble-gpu-title': 'Problemas Gráficos (GPU)',
-                'trouble-gpu-black': 'Agregue agdpmod=pikera (SOLO si no usa NootRX). Verifique si WhateverGreen está cargado.',
-                'trouble-gpu-accel': 'GPU no soportada o kexts no cargados. AMD requiere Lilu+WhateverGreen (o NootRX). Intel requiere DeviceProperties correctos.',
-                'trouble-gpu-color': 'Fuerce modo RGB en configuraciones del monitor o use parche EDID.',
-                'trouble-audio-title-adv': 'Audio (AppleALC)',
-                'trouble-audio-desc': 'Si el audio no funciona incluso con AppleALC y alcid:',
-                'trouble-audio-1': 'Verifique si HPET está corregido (SSDTTime FixHPET)',
-                'trouble-audio-2': 'Confirme si controlador de audio aparece en Hackintool',
-                'trouble-audio-3': 'Intente boot-arg alcdelay=1000 (retrasa carga)',
-
                 // TOPS TOOLS
                 'tops-title': '<i class="fas fa-crown" style="color: #FFD700"></i> Herramientas Tops 2.0',
                 'tops-desc-1': '¡La herramienta TODO-EN-UNO definitiva para Hackintosh!',
@@ -4918,59 +3100,11 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'tops-feat-6': 'Organización inteligente de herramientas',
                 'tops-feat-7': 'Ejecución directa de herramientas',
                 'tops-feat-8': 'Actualizaciones regulares',
-                'tops-included': '<i class="fas fa-tools"></i> Herramientas Incluidas (23+):',
-                // MANTENIMIENTO Y SEGURIDAD
-                'install-step-0-title': '0. Crear USB (Windows/macOS)',
-                'install-step-0-desc': 'Use nuestra herramienta exclusiva para descargar y crear el instalador:',
-                'btn-download-tool': 'Descargar macOS Recovery',
-
-                'maint-title': 'Mantenimiento y Seguridad',
-                'maint-update-title': 'Cómo Actualizar (Seguro)',
-                'maint-update-desc': 'Siga este orden para evitar romper el sistema:',
-                'maint-step-1': '1. Haga backup de la carpeta EFI funcional en USB.',
-                'maint-step-2': '2. Actualice Kexts primero.',
-                'maint-step-3': '3. Actualice OpenCore (BOOTx64.efi, OpenCore.efi, Drivers).',
-                'maint-step-4': '4. Valide config.plist con OCConfigCompare.',
-                'maint-step-5': '5. Solo entonces actualice macOS.',
-
-                'sec-security-title': 'Seguridad (SIP y FileVault)',
-                'sec-sip-title': 'SIP (System Integrity Protection)',
-                'sec-sip-desc': 'Desactive (csr-active-config: FF0F0000) solo para instalar kexts en /System (Root Patching). Para uso normal, mantenga activado (00000000).',
-                'sec-fv-title': 'FileVault (Cifrado)',
-                'sec-fv-desc': 'Requiere configuración compleja (Misc -> Security -> Vault). No active sin leer la documentación oficial o perderá acceso a los datos.',
+                'tops-included': '<i class="fas fa-tools"></i> Herramientas Incluidas (23+):'
             },
         };
 
         let currentLang = 'pt-BR';
-
-        // ========================================
-        // HELPER FUNCTIONS
-        // ========================================
-
-        function toggleAccordion(element) {
-            const content = element.nextElementSibling;
-            const icon = element.querySelector('.accordion-icon');
-            element.classList.toggle('active');
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-                icon.style.transform = 'rotate(0deg)';
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-                icon.style.transform = 'rotate(180deg)';
-            }
-        }
-
-        function switchTab(event, tabId) {
-            const container = event.target.closest('.tabs');
-            const buttons = container.querySelectorAll('.tab-btn');
-            const contents = container.querySelectorAll('.tab-content');
-
-            buttons.forEach(btn => btn.classList.remove('active'));
-            contents.forEach(content => content.classList.remove('active'));
-
-            event.target.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-        }
 
         // Detect browser language
         function detectLanguage() {
@@ -4996,21 +3130,14 @@ PciRoot(0x0)/Pci(0x2,0x0)
             // Update active button
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.textContent.includes(lang === 'pt-BR' ? 'PT' : lang === 'en' ? 'EN' : 'ES')) {
-                    btn.classList.add('active');
-                }
             });
+            event.target.classList.add('active');
 
             // Update HTML lang attribute
             document.documentElement.lang = lang;
 
             // Re-render version cards to translate them
             fetchLatestVersions();
-        }
-
-        // Download Tool
-        function downloadTool() {
-            window.open('https://github.com/hnanoto/macOS-Recovery/releases', '_blank');
         }
 
         // Initialize language
@@ -5091,23 +3218,21 @@ PciRoot(0x0)/Pci(0x2,0x0)
             const downloadText = translations[currentLang]['download'];
 
             return `
-    <div
-        style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
-        <h3 style="margin-bottom: 1rem; color: var(--primary);">
-            <i class="fas fa-cube"></i> ${name}
-        </h3>
-        <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">
-            <strong>${versionText}:</strong> ${data.tag_name}
-        </p>
-        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-            <strong>${releasedText}:</strong> ${date}
-        </p>
-        <a href="${data.html_url}" target="_blank"
-            style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--gradient-primary); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; transition: all 0.3s ease;">
-            <i class="fab fa-github"></i> ${downloadText}
-        </a>
-    </div>
-    `;
+                <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <h3 style="margin-bottom: 1rem; color: var(--primary);">
+                        <i class="fas fa-cube"></i> ${name}
+                    </h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                        <strong>${versionText}:</strong> ${data.tag_name}
+                    </p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        <strong>${releasedText}:</strong> ${date}
+                    </p>
+                    <a href="${data.html_url}" target="_blank" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--gradient-primary); color: white; text-decoration: none; border-radius: 50px; font-weight: 600; transition: all 0.3s ease;">
+                        <i class="fab fa-github"></i> ${downloadText}
+                    </a>
+                </div>
+            `;
         }
 
         // ========================================

@@ -1,0 +1,4 @@
+__pycache__/
+*.py
+gif_frames/
+*.rec

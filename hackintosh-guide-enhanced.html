@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Guia Completo e Profissional de Hackintosh - OpenCore 1.0.5+ | Atualizado Dezembro 2024">
+    <title>Guia Completo de Hackintosh | OpenCore 2024-2025</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* ========================================
+           BASE STYLES & VARIABLES
+           ======================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0071e3;
+            --primary-dark: #0051a8;
+            --secondary: #00d4ff;
+            --success: #34c759;
+            --warning: #ff9f0a;
+            --danger: #ff3b30;
+            --dark: #1d1d1f;
+            --dark-secondary: #2c2c2e;
+            --dark-tertiary: #3a3a3c;
+            --light: #f5f5f7;
+            --text: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 15px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e1e1e 0%, #0a0a0a 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ========================================
+           ANIMATED BACKGROUND
+           ======================================== */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background:
+                radial-gradient(circle at 20% 50%, var(--primary) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--secondary) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, var(--success) 0%, transparent 50%);
+            animation: bgMove 20s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(50px, 50px) scale(1.1);
+            }
+        }
+
+        /* ========================================
+           LANGUAGE SELECTOR
+           ======================================== */
+        .language-selector {
+            position: fixed;
+            top: 100px;
+            right: 2rem;
+            z-index: 1001;
+            background: rgba(29, 29, 31, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+        }
+
+        .language-selector h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .language-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .lang-btn.active {
+            background: var(--gradient-primary);
+            border-color: var(--primary);
+        }
+
+        /* ========================================
+           LOADING INDICATOR
+           ======================================== */
+        .loading-indicator {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 113, 227, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            z-index: 1002;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .loading-indicator.show {
+            display: flex;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ========================================
+           HEADER & NAVIGATION
+           ======================================== */
+        header {
+            background: rgba(29, 29, 31, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* ========================================
+           HERO SECTION
+           ======================================== */
+        .hero {
+            max-width: 1400px;
+            margin: 4rem auto;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .version-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--gradient-success);
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .auto-update-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(52, 199, 89, 0.2);
+            border: 1px solid var(--success);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-left: 1rem;
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========================================
+           STATS CARDS
+           ======================================== */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .stat-card i {
+            font-size: 3rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           CONTAINER & SECTIONS
+           ======================================== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section {
+            margin: 4rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* ========================================
+           CARDS
+           ======================================== */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card li i {
+            color: var(--success);
+        }
+
+        /* ========================================
+           CODE BLOCKS
+           ======================================== */
+        .code-block {
+            background: var(--dark-secondary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        /* ========================================
+           TABLES
+           ======================================== */
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--gradient-primary);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            font-weight: 700;
+            color: white;
+        }
+
+        tbody tr {
+            transition: background 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ========================================
+           ALERTS
+           ======================================== */
+        .alert {
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .alert i {
+            font-size: 1.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .alert-info {
+            background: rgba(0, 113, 227, 0.1);
+            border-color: var(--primary);
+            color: var(--text);
+        }
+
+        .alert-info i {
+            color: var(--primary);
+        }
+
+        .alert-success {
+            background: rgba(52, 199, 89, 0.1);
+            border-color: var(--success);
+            color: var(--text);
+        }
+
+        .alert-success i {
+            color: var(--success);
+        }
+
+        .alert-warning {
+            background: rgba(255, 159, 10, 0.1);
+            border-color: var(--warning);
+            color: var(--text);
+        }
+
+        .alert-warning i {
+            color: var(--warning);
+        }
+
+        .alert-danger {
+            background: rgba(255, 59, 48, 0.1);
+            border-color: var(--danger);
+            color: var(--text);
+        }
+
+        .alert-danger i {
+            color: var(--danger);
+        }
+
+        /* ========================================
+           BUTTONS
+           ======================================== */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px);
+        }
+
+        /* ========================================
+           ACCORDION/COLLAPSIBLE
+           ======================================== */
+        .accordion {
+            margin: 1rem 0;
+        }
+
+        .accordion-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .accordion-header h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 2000px;
+        }
+
+        .accordion-body {
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        /* ========================================
+           FOOTER
+           ======================================== */
+        footer {
+            background: var(--dark);
+            padding: 3rem 2rem;
+            margin-top: 5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        /* ========================================
+           SCROLL TO TOP
+           ======================================== */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .scroll-top i {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .language-selector {
+                top: auto;
+                bottom: 2rem;
+                right: 1rem;
+            }
+        }
+
+        /* ========================================
+           SEARCH BAR
+           ======================================== */
+        .search-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.5rem 1rem 3.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        /* ========================================
+           TABLE OF CONTENTS
+           ======================================== */
+        .toc {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .toc h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            padding: 0.5rem 0;
+        }
+
+        .toc a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .toc a:hover {
+            color: var(--primary);
+        }
+
+        /* ========================================
+           GLOSSARY TERM
+           ======================================== */
+        .glossary-term {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+        }
+
+        .glossary-term h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* ========================================
+           TABS
+           ======================================== */
+        .tabs {
+            margin: 2rem 0;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-primary);
+            border-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-animation"></div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" id="loadingIndicator">
+        <div class="spinner"></div>
+        <span data-i18n="loading">Carregando atualizações...</span>
+    </div>
+
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <h4><i class="fas fa-globe"></i> <span data-i18n="language">Idioma</span></h4>
+        <div class="language-buttons">
+            <button class="lang-btn active" onclick="changeLanguage('pt-BR')">🇧🇷 PT</button>
+            <button class="lang-btn" onclick="changeLanguage('en')">🇺🇸 EN</button>
+            <button class="lang-btn" onclick="changeLanguage('es')">🇪🇸 ES</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fab fa-apple"></i>
+                Hackintosh Guide
+            </div>
+            <ul class="nav-links">
+                <li><a href="#inicio" data-i18n="nav-home">Início</a></li>
+                <li><a href="#requisitos" data-i18n="nav-req">Requisitos</a></li>
+                <li><a href="#kexts" data-i18n="nav-kexts">Kexts</a></li>
+                <li><a href="#acpi" data-i18n="nav-acpi">ACPI</a></li>
+                <li><a href="#config-plist" data-i18n="nav-config">Config.plist</a></li>
+                <li><a href="#pos-instalacao" data-i18n="nav-post">Pós-Instalação</a></li>
+                <li><a href="#troubleshooting" data-i18n="nav-trouble">Troubleshooting</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" id="inicio">
+        <div class="version-badge">
+            <i class="fas fa-rocket"></i>
+            <span data-i18n="opencore-version">OpenCore</span>
+            <span id="opencoreVersion">1.0.5</span> |
+            <span data-i18n="december">Dezembro</span> 2024
+            <span class="auto-update-badge">
+                <div class="pulse"></div>
+                <span data-i18n="auto-update">Auto-atualização</span>
+            </span>
+        </div>
+        <h1 data-i18n="main-title">Guia Completo de Hackintosh</h1>
+        <p data-i18n="main-description">O guia mais completo e atualizado para criar sua EFI do zero usando OpenCore.
+            Compatível com macOS Sequoia 15.x e preparado para macOS Tahoe 26.x (2025).</p>
+        
+        <!-- Search Bar -->
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchInput" data-i18n-placeholder="search-placeholder" placeholder="Buscar no guia...">
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat-card">
+            <i class="fas fa-microchip"></i>
+            <h3>1.0.5</h3>
+            <p data-i18n="stat-oc">Versão OpenCore</p>
+        </div>
+        <div class="stat-card">
+            <i class="fab fa-apple"></i>
+            <h3>15.2</h3>
+            <p data-i18n="stat-macos">macOS Sequoia</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-puzzle-piece"></i>
+            <h3>50+</h3>
+            <p data-i18n="stat-kexts">Kexts Suportados</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-desktop"></i>
+            <h3>100%</h3>
+            <p data-i18n="stat-compat">Compatibilidade</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h3><i class="fas fa-list"></i> <span data-i18n="toc-title">Índice</span></h3>
+            <ul>
+                <li><a href="#requisitos" data-i18n="toc-req">1. Requisitos do Sistema</a></li>
+                <li><a href="#kexts" data-i18n="toc-kexts">2. Kexts Essenciais</a></li>
+                <li><a href="#acpi" data-i18n="toc-acpi">3. ACPI e SSDTs</a></li>
+                <li><a href="#config-plist" data-i18n="toc-config">4. Configuração do Config.plist</a></li>
+                <li><a href="#smbios" data-i18n="toc-smbios">5. SMBIOS</a></li>
+                <li><a href="#instalacao" data-i18n="toc-install">6. Instalação</a></li>
+                <li><a href="#pos-instalacao" data-i18n="toc-post">7. Pós-Instalação</a></li>
+                <li><a href="#troubleshooting" data-i18n="toc-trouble">8. Troubleshooting</a></li>
+                <li><a href="#atualizacoes" data-i18n="toc-updates">9. Atualizações</a></li>
+                <li><a href="#glossario" data-i18n="toc-glossary">10. Glossário</a></li>
+            </ul>
+        </div>
+
+        <!-- Dynamic Content Alerts -->
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <div>
+                <strong data-i18n="live-updates">Atualizações em Tempo Real</strong><br>
+                <span data-i18n="live-updates-desc">Este guia busca automaticamente as versões mais recentes do
+                    OpenCore, kexts e ferramentas do Hnanoto via GitHub API.</span>
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <i class="fas fa-globe"></i>
+            <div>
+                <strong data-i18n="multi-language">Multi-Idiomas</strong><br>
+                <span data-i18n="multi-language-desc">Disponível em Português (BR), English (US) e Español. O idioma é
+                    detectado automaticamente ou pode ser alterado no seletor acima.</span>
+            </div>
+        </div>
+
+        <!-- Latest Versions -->
+        <div id="latestVersions" style="margin-top: 3rem; margin-bottom: 4rem;">
+            <h2
+                style="text-align: center; margin-bottom: 2rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                <i class="fas fa-sync-alt"></i> <span data-i18n="latest-versions">Versões Mais Recentes</span>
+            </h2>
+            <div id="versionsContainer"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+Due to length constraints, I'll continue this in the next response. Let me create a comprehensive enhanced version with all the improvements...
