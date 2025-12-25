@@ -1530,7 +1530,15 @@
                             <span data-i18n="lap-gfx-title">Graphics (HD/UHD)</span>
                         </summary>
                         <div style="padding: 10px;">
-                            <p style="font-size:0.8rem; margin-bottom:10px;" data-i18n="lap-gfx-desc">Copy ID:</p>
+                            <p style="font-size:0.8rem; margin-bottom:10px;">
+                                <span data-i18n="lap-gfx-desc">Copy ID:</span>
+                                <a href="https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md"
+                                    target="_blank"
+                                    style="color:var(--primary); text-decoration: underline; margin-left:10px;">
+                                    <span data-i18n="link-see-list">See List</span> <i
+                                        class="fas fa-external-link-alt"></i>
+                                </a>
+                            </p>
 
                             <!-- Ivy Bridge -->
                             <div class="code-block" style="margin-bottom:10px;">
@@ -1574,6 +1582,13 @@
                                 <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
                                 <code>AAPL,ig-platform-id: 0000528A</code>
                             </div>
+
+                            <div class="alert alert-info" style="margin-top:10px; padding: 8px; font-size: 0.8rem;">
+                                <strong data-i18n="gfx-desktop-note-title">Desktop Users:</strong>
+                                <span data-i18n="gfx-desktop-note-desc">If using dGPU (AMD/NVIDIA), use a 'Headless'
+                                    frame (empty framebuffer) for iGPU QuickSync.</span>
+                            </div>
+
                             <p style="font-size:0.8rem; color:var(--danger); margin-top:5px; font-weight:bold;"
                                 data-i18n="lap-gfx-warning">* 11th Gen+ NOT supported!</p>
                         </div>
@@ -3748,6 +3763,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'lap-gfx-ice': 'Ice Lake (Iris Plus)',
                 'lap-gfx-warning': 'Atenção: iGPUs de 11ª Ger (Tiger Lake) e superiores NÃO são suportadas!',
                 'lap-audio-title': 'Áudio e Quirks Especiais',
+                'link-see-list': 'Ver Lista',
+                'gfx-desktop-note-title': 'Usuários de Desktop:',
+                'gfx-desktop-note-desc': 'Se usar dGPU (AMD/NVIDIA), use um frame \'Headless\' (framebuffer vazio) para QuickSync da iGPU.',
                 'lap-audio-layout': 'Layouts comuns de Laptop:',
                 'lap-quirk-usb': 'ReleaseUsbOwnership: True (Corrige travamento no boot)',
 
@@ -4278,6 +4296,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'lap-gfx-ice': 'Ice Lake (Iris Plus)',
                 'lap-gfx-warning': 'Warning: 11th Gen (Tiger Lake) and newer iGPUs are NOT supported!',
                 'lap-audio-title': 'Audio & Special Quirks',
+                'link-see-list': 'See List',
+                'gfx-desktop-note-title': 'Desktop Users:',
+                'gfx-desktop-note-desc': 'If using dGPU (AMD/NVIDIA), use a \'Headless\' frame (empty framebuffer) for iGPU QuickSync.',
                 'lap-audio-layout': 'Common Laptop Layouts:',
                 'lap-quirk-usb': 'ReleaseUsbOwnership: True (Fixes boot freeze)',
 
@@ -4800,6 +4821,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'lap-gfx-ice': 'Ice Lake (Iris Plus)',
                 'lap-gfx-warning': 'Atención: ¡Las iGPU de 11ª Gen (Tiger Lake) y superiores NO son compatibles!',
                 'lap-audio-title': 'Audio y Quirks Especiales',
+                'link-see-list': 'Ver Lista',
+                'gfx-desktop-note-title': 'Usuarios de Escritorio:',
+                'gfx-desktop-note-desc': 'Si usa dGPU (AMD/NVIDIA), use un frame \'Headless\' (framebuffer vacío) para QuickSync de la iGPU.',
                 'lap-audio-layout': 'Layouts comunes de Laptop:',
                 'lap-quirk-usb': 'ReleaseUsbOwnership: True (Corrige congelamiento en boot)',
 
