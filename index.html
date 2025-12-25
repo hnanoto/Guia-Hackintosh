@@ -5343,30 +5343,33 @@ PciRoot(0x0)/Pci(0x2,0x0)
             const recList = document.getElementById('rec-list');
             recList.innerHTML = ''; // Clear previous
 
-            // 1. EXTRACT DATA
-            // Robust extraction with fallbacks to avoid undefined errors
-            const cpuName = (data.CPU && data.CPU.Name) ? String(data.CPU.Name) : "Unknown CPU";
-            const cpuCodename = (data.CPU && data.CPU.Codename) ? String(data.CPU.Codename) : "";
-            const moboName = (data.Motherboard && data.Motherboard.Name) ? String(data.Motherboard.Name) : "Unknown Motherboard";
+            // 1. EXTRACT DATA - ULTRA SAFE MODE
+            // Function to safely get string or default
+            const safeStr = (val, def = "") => (val !== undefined && val !== null) ? String(val) : def;
+
+            const cpuName = safeStr(data.CPU?.Name, "Unknown CPU");
+            const cpuCodename = safeStr(data.CPU?.Codename, "");
+            const moboName = safeStr(data.Motherboard?.Name, "Unknown Motherboard");
 
             // GPU: Handle array or object
             const gpuData = Array.isArray(data.GPU) ? data.GPU : (data.GPU ? [data.GPU] : []);
             // Safety check: ensure Name exists
-            const gpuName = (gpuData.length > 0 && gpuData[0].Name) ? String(gpuData[0].Name) : "Unknown GPU";
+            const gpuName = (gpuData.length > 0) ? safeStr(gpuData[0].Name, "Unknown GPU") : "Unknown GPU";
 
             // Ethernet
             let ethName = "Unknown";
-            if (data.Network && data.Network.Ethernet && Array.isArray(data.Network.Ethernet) && data.Network.Ethernet.length > 0) {
-                ethName = data.Network.Ethernet[0].Name ? String(data.Network.Ethernet[0].Name) : "Generic Ethernet";
+            const net = data.Network;
+            if (net && net.Ethernet && Array.isArray(net.Ethernet) && net.Ethernet.length > 0) {
+                ethName = safeStr(net.Ethernet[0].Name, "Generic Ethernet");
             }
 
             // Audio
             let audioName = "Unknown/USB";
             if (data.Audio) {
                 if (Array.isArray(data.Audio) && data.Audio.length > 0) {
-                    audioName = (data.Audio[0].Name) ? String(data.Audio[0].Name) : "Generic Audio";
+                    audioName = safeStr(data.Audio[0].Name, "Generic Audio");
                 } else if (data.Audio.Codec) {
-                    audioName = String(data.Audio.Codec);
+                    audioName = safeStr(data.Audio.Codec, "Generic Codec");
                 }
             }
 
@@ -5386,6 +5389,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             };
 
             // CPU Rules
+            // CPU Rules
             const cpuLower = (cpuName + " " + cpuCodename).toLowerCase();
             if (cpuLower.includes("coffee") || cpuLower.includes("comet") || cpuLower.includes("8700") || cpuLower.includes("9900") || cpuLower.includes("10")) {
                 addRec("SMBIOS Recommendation: <strong>iMac20,1</strong> or <strong>iMac19,1</strong>");
@@ -5400,7 +5404,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             }
 
             // GPU Rules
-            const gpuLower = String(gpuName).toLowerCase();
+            const gpuLower = safeStr(gpuName).toLowerCase();
             if (gpuLower.includes("nvidia") && !gpuLower.includes("kepler")) {
                 addRec("NVIDIA GPU detected: <strong>Likely Unsupported</strong> in macOS Sequoia.", "times-circle", "var(--danger)");
             } else if (gpuLower.includes("rx 6") || gpuLower.includes("rx 6600") || gpuLower.includes("6800") || gpuLower.includes("6900")) {
@@ -5418,7 +5422,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             }
 
             // Ethernet Rules
-            const ethLower = String(ethName).toLowerCase();
+            const ethLower = safeStr(ethName).toLowerCase();
             if (ethLower.includes("i225") || ethLower.includes("i226")) {
                 addRec("Ethernet: Use <strong>AppleIGC.kext</strong> (or spoofing on older macOS).");
             } else if (ethLower.includes("rtl8111") || ethLower.includes("8168")) {
@@ -5430,11 +5434,12 @@ PciRoot(0x0)/Pci(0x2,0x0)
             }
 
             // Audio Rules
-            if (audioName && !String(audioName).toLowerCase().includes("usb")) {
+            if (audioName && !safeStr(audioName).toLowerCase().includes("usb")) {
                 addRec(`Audio Codec <strong>${audioName}</strong> detected: Check AppleALC supported layouts.`, "volume-up", "var(--primary)");
             }
 
             // Motherboard
+            const moboLower = safeStr(moboName).toLowerCase();
             if (moboName.includes("Z690") || moboName.includes("Z790") || moboName.includes("B660") || moboName.includes("B760")) {
                 addRec("Alder/Raptor Lake Chipset: <strong>SSDT-PLUG-ALT</strong> and <strong>SSDT-AWAC</strong> required.", "microchip");
             }
