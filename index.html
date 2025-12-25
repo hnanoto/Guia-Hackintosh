@@ -2851,6 +2851,97 @@ python3 CPUFriendFriend.command
                 </div>
             </div>
 
+            <!-- Fix Audio (New Section - More detailed than troubleshooting) -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-volume-up"></i></div>
+                <h3 data-i18n="post-audio-title-main">Fixing Audio (AppleALC)</h3>
+                <p data-i18n="post-audio-desc-main">Enabling native audio using AppleALC.</p>
+
+                <h4 data-i18n="post-audio-find-layout">1. Find your Audio Codec</h4>
+                <p data-i18n="post-audio-find-desc">Use Hackintool (Audio tab) or check Windows Device Manager to find
+                    your Realtek codec name (e.g., ALC256, ALC892).</p>
+
+                <h4 data-i18n="post-audio-choose-layout">2. Choose a Layout ID</h4>
+                <p><span data-i18n="post-audio-layout-desc">Consult the supported codecs list and try layout-ids one by
+                        one.</span> <a href="https://github.com/acidanthera/AppleALC/wiki/Supported-codecs"
+                        target="_blank" style="color:var(--primary); text-decoration: underline;">See List <i
+                            class="fas fa-external-link-alt"></i></a></p>
+
+                <h4 data-i18n="post-audio-apply">3. Apply (boot-args)</h4>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
+                    <code>alcid=1  # (Replace 1 with your layout-id)</code>
+                </div>
+
+                <div class="alert alert-info" style="margin-top:1rem;">
+                    <i class="fas fa-magic"></i>
+                    <div>
+                        <strong data-i18n="post-audio-hp-fix">HP Laptops:</strong>
+                        <span data-i18n="post-audio-hp-desc">Often require SSDT-HP-FixHPET for audio to work.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cosmetics (GUI & Boot Chime) -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-paint-brush"></i></div>
+                <h3 data-i18n="post-cosmetic-title">Cosmetics (OpenCanopy & Tips)</h3>
+                <p data-i18n="post-cosmetic-desc">Make your Hackintosh look premium during boot.</p>
+
+                <!-- GUI -->
+                <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <i class="fas fa-desktop" style="color: #A855F7; margin-right: 8px;"></i>
+                        <span data-i18n="post-gui-title">Enable Graphical GUI (OpenCanopy)</span>
+                    </summary>
+                    <div style="padding: 10px;">
+                        <ol style="font-size: 0.9rem; padding-left: 1.5rem; margin: 0;">
+                            <li data-i18n="post-gui-step1">Download <strong>OcBinaryData</strong> (Resources folder).
+                            </li>
+                            <li data-i18n="post-gui-step2">Add <strong>OpenCanopy.efi</strong> to Drivers.</li>
+                            <li data-i18n="post-gui-step3">Config.plist -> Misc -> Boot -> <strong>PickerMode:
+                                    External</strong>.</li>
+                            <li data-i18n="post-gui-step4">Config.plist -> Misc -> Boot -> <strong>PickerAttributes:
+                                    17</strong>.</li>
+                        </ol>
+                    </div>
+                </details>
+
+                <!-- Boot Chime -->
+                <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <i class="fas fa-music" style="color: #F59E0B; margin-right: 8px;"></i>
+                        <span data-i18n="post-chime-title">Enable Boot Chime (Mac Sound)</span>
+                    </summary>
+                    <div style="padding: 10px;">
+                        <ol style="font-size: 0.9rem; padding-left: 1.5rem; margin: 0;">
+                            <li data-i18n="post-chime-step1">Enable <strong>AudioDxe.efi</strong> driver.</li>
+                            <li data-i18n="post-chime-step2">UEFI -> Audio -> <strong>AudioSupport: True</strong>.</li>
+                            <li data-i18n="post-chime-step3">UEFI -> Audio -> <strong>AudioCodec: 0</strong>.</li>
+                            <li data-i18n="post-chime-step4">UEFI -> Audio -> <strong>AudioOutMask: -1</strong>.</li>
+                            <li data-i18n="post-chime-step5">NVRAM -> w... -> 7C... -> <strong>SystemAudioVolume:
+                                    46</strong>.</li>
+                        </ol>
+                    </div>
+                </details>
+
+                <!-- Verbose -->
+                <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <i class="fas fa-eye-slash" style="color: var(--danger); margin-right: 8px;"></i>
+                        <span data-i18n="post-verbose-title">Hide Verbose Text (-v)</span>
+                    </summary>
+                    <div style="padding: 10px;">
+                        <p style="font-size: 0.9rem;" data-i18n="post-verbose-desc">Only remove after your system is
+                            100% stable!</p>
+                        <ul style="font-size: 0.9rem; padding-left: 1.5rem; margin: 0;">
+                            <li><span data-i18n="post-verbose-step1">NVRAM -> UUID -> boot-args: Remove
+                                    <code>-v</code></span>.</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+
             <!-- Dual Boot -->
             <div class="card">
                 <div class="card-icon"><i class="fas fa-exchange-alt"></i></div>
@@ -3814,6 +3905,31 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'post-sleep-bios-1': 'Desabilitar Wake on LAN',
                 'post-sleep-bios-2': 'Desabilitar USB Wake',
                 'post-sleep-bios-3': 'Habilitar XHCI Hand-off',
+                'post-audio-title-main': 'Corrigindo Áudio (AppleALC)',
+                'post-audio-desc-main': 'Habilitando áudio nativo usando AppleALC.',
+                'post-audio-find-layout': '1. Descubra seu Codec de Áudio',
+                'post-audio-find-desc': 'Use o Hackintool (aba Audio) ou verifique no Gerenciador de Dispositivos do Windows o nome do codec Realtek (ex: ALC256, ALC892).',
+                'post-audio-choose-layout': '2. Escolha um Layout ID',
+                'post-audio-layout-desc': 'Consulte a lista de codecs suportados e tente os layout-ids um por um.',
+                'post-audio-apply': '3. Aplique (boot-args)',
+                'post-audio-hp-fix': 'Laptops HP:',
+                'post-audio-hp-desc': 'Geralmente requerem SSDT-HP-FixHPET para o áudio funcionar.',
+                'post-cosmetic-title': 'Cosméticos (OpenCanopy & Dicas)',
+                'post-cosmetic-desc': 'Deixe seu Hackintosh com visual premium no boot.',
+                'post-gui-title': 'Habilitar GUI Gráfica (OpenCanopy)',
+                'post-gui-step1': 'Baixe <strong>OcBinaryData</strong> (pasta Resources).',
+                'post-gui-step2': 'Adicione <strong>OpenCanopy.efi</strong> em Drivers.',
+                'post-gui-step3': 'Config.plist -> Misc -> Boot -> <strong>PickerMode: External</strong>.',
+                'post-gui-step4': 'Config.plist -> Misc -> Boot -> <strong>PickerAttributes: 17</strong>.',
+                'post-chime-title': 'Habilitar Boot Chime (Som de Mac)',
+                'post-chime-step1': 'Habilite o driver <strong>AudioDxe.efi</strong>.',
+                'post-chime-step2': 'UEFI -> Audio -> <strong>AudioSupport: True</strong>.',
+                'post-chime-step3': 'UEFI -> Audio -> <strong>AudioCodec: 0</strong>.',
+                'post-chime-step4': 'UEFI -> Audio -> <strong>AudioOutMask: -1</strong>.',
+                'post-chime-step5': 'NVRAM -> w... -> 7C... -> <strong>SystemAudioVolume: 46</strong>.',
+                'post-verbose-title': 'Esconder Texto Verbose (-v)',
+                'post-verbose-desc': 'Apenas remova após seu sistema estar 100% estável!',
+                'post-verbose-step1': 'NVRAM -> UUID -> boot-args: Remova <code>-v</code>.',
                 'post-sleep-bios-4': 'Desabilitar ErP (se disponível)',
                 // Advanced Sleep
                 'post-sleep-advanced': 'Troubleshooting Avançado (Culprits)',
@@ -4312,6 +4428,31 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'post-sleep-bios-1': 'Disable Wake on LAN',
                 'post-sleep-bios-2': 'Disable USB Wake',
                 'post-sleep-bios-3': 'Enable XHCI Hand-off',
+                'post-audio-title-main': 'Fixing Audio (AppleALC)',
+                'post-audio-desc-main': 'Enabling native audio using AppleALC.',
+                'post-audio-find-layout': '1. Find your Audio Codec',
+                'post-audio-find-desc': 'Use Hackintool (Audio tab) or check Windows Device Manager to find your Realtek codec name (e.g., ALC256, ALC892).',
+                'post-audio-choose-layout': '2. Choose a Layout ID',
+                'post-audio-layout-desc': 'Consult the supported codecs list and try layout-ids one by one.',
+                'post-audio-apply': '3. Apply (boot-args)',
+                'post-audio-hp-fix': 'HP Laptops:',
+                'post-audio-hp-desc': 'Often require SSDT-HP-FixHPET for audio to work.',
+                'post-cosmetic-title': 'Cosmetics (OpenCanopy & Tips)',
+                'post-cosmetic-desc': 'Make your Hackintosh look premium during boot.',
+                'post-gui-title': 'Enable Graphical GUI (OpenCanopy)',
+                'post-gui-step1': 'Download <strong>OcBinaryData</strong> (Resources folder).',
+                'post-gui-step2': 'Add <strong>OpenCanopy.efi</strong> to Drivers.',
+                'post-gui-step3': 'Config.plist -> Misc -> Boot -> <strong>PickerMode: External</strong>.',
+                'post-gui-step4': 'Config.plist -> Misc -> Boot -> <strong>PickerAttributes: 17</strong>.',
+                'post-chime-title': 'Enable Boot Chime (Mac Sound)',
+                'post-chime-step1': 'Enable <strong>AudioDxe.efi</strong> driver.',
+                'post-chime-step2': 'UEFI -> Audio -> <strong>AudioSupport: True</strong>.',
+                'post-chime-step3': 'UEFI -> Audio -> <strong>AudioCodec: 0</strong>.',
+                'post-chime-step4': 'UEFI -> Audio -> <strong>AudioOutMask: -1</strong>.',
+                'post-chime-step5': 'NVRAM -> w... -> 7C... -> <strong>SystemAudioVolume: 46</strong>.',
+                'post-verbose-title': 'Hide Verbose Text (-v)',
+                'post-verbose-desc': 'Only remove after your system is 100% stable!',
+                'post-verbose-step1': 'NVRAM -> UUID -> boot-args: Remove <code>-v</code>.',
                 'post-sleep-bios-4': 'Disable ErP (if available)',
                 // Advanced Sleep
                 'post-sleep-advanced': 'Advanced Troubleshooting (Culprits)',
@@ -4812,6 +4953,31 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'post-sleep-bios-1': 'Desactivar Wake on LAN',
                 'post-sleep-bios-2': 'Desactivar USB Wake',
                 'post-sleep-bios-3': 'Activar XHCI Hand-off',
+                'post-audio-title-main': 'Corrigiendo Audio (AppleALC)',
+                'post-audio-desc-main': 'Habilitando audio nativo usando AppleALC.',
+                'post-audio-find-layout': '1. Encuentre su Codec de Audio',
+                'post-audio-find-desc': 'Use Hackintool (pestaña Audio) o verifique en el Administrador de Dispositivos de Windows el nombre del codec Realtek (ej: ALC256, ALC892).',
+                'post-audio-choose-layout': '2. Elija un Layout ID',
+                'post-audio-layout-desc': 'Consulte la lista de codecs soportados y pruebe los layout-ids uno por uno.',
+                'post-audio-apply': '3. Aplique (boot-args)',
+                'post-audio-hp-fix': 'Laptops HP:',
+                'post-audio-hp-desc': 'Generalmente requieren SSDT-HP-FixHPET para que el audio funcione.',
+                'post-cosmetic-title': 'Cosméticos (OpenCanopy & Tips)',
+                'post-cosmetic-desc': 'Haga que su Hackintosh luzca premium durante el arranque.',
+                'post-gui-title': 'Habilitar GUI Gráfica (OpenCanopy)',
+                'post-gui-step1': 'Descargue <strong>OcBinaryData</strong> (carpeta Resources).',
+                'post-gui-step2': 'Agregue <strong>OpenCanopy.efi</strong> en Drivers.',
+                'post-gui-step3': 'Config.plist -> Misc -> Boot -> <strong>PickerMode: External</strong>.',
+                'post-gui-step4': 'Config.plist -> Misc -> Boot -> <strong>PickerAttributes: 17</strong>.',
+                'post-chime-title': 'Habilitar Boot Chime (Sonido Mac)',
+                'post-chime-step1': 'Habilite el driver <strong>AudioDxe.efi</strong>.',
+                'post-chime-step2': 'UEFI -> Audio -> <strong>AudioSupport: True</strong>.',
+                'post-chime-step3': 'UEFI -> Audio -> <strong>AudioCodec: 0</strong>.',
+                'post-chime-step4': 'UEFI -> Audio -> <strong>AudioOutMask: -1</strong>.',
+                'post-chime-step5': 'NVRAM -> w... -> 7C... -> <strong>SystemAudioVolume: 46</strong>.',
+                'post-verbose-title': 'Ocultar Texto Verbose (-v)',
+                'post-verbose-desc': '¡Solo elimine después de que su sistema esté 100% estable!',
+                'post-verbose-step1': 'NVRAM -> UUID -> boot-args: Elimine <code>-v</code>.',
                 'post-sleep-bios-4': 'Desactivar ErP (si disponible)',
                 // Advanced Sleep
                 'post-sleep-advanced': 'Troubleshooting Avanzado (Culprits)',
