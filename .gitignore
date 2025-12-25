@@ -1,4 +1,3 @@
-__pycache__/
-*.py
-gif_frames/
-*.rec
+*
+!index.html
+!.gitignore
