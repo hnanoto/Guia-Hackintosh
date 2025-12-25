@@ -5344,27 +5344,31 @@ PciRoot(0x0)/Pci(0x2,0x0)
             recList.innerHTML = ''; // Clear previous
 
             // 1. EXTRACT DATA
-            // Note: Adjusting to the structure the user might have provided or generic structure
-            // Provided snippet: Motherboard: { Name: ... }, CPU: { Name: ..., Codename: ... }
-            const cpuName = data.CPU?.Name || "Unknown CPU";
-            const cpuCodename = data.CPU?.Codename || "";
-            const moboName = data.Motherboard?.Name || "Unknown Motherboard";
+            // Robust extraction with fallbacks to avoid undefined errors
+            const cpuName = (data.CPU && data.CPU.Name) ? String(data.CPU.Name) : "Unknown CPU";
+            const cpuCodename = (data.CPU && data.CPU.Codename) ? String(data.CPU.Codename) : "";
+            const moboName = (data.Motherboard && data.Motherboard.Name) ? String(data.Motherboard.Name) : "Unknown Motherboard";
+
+            // GPU: Handle array or object
             const gpuData = Array.isArray(data.GPU) ? data.GPU : (data.GPU ? [data.GPU] : []);
-            const gpuName = gpuData.length > 0 ? gpuData[0].Name : "Unknown GPU";
+            // Safety check: ensure Name exists
+            const gpuName = (gpuData.length > 0 && gpuData[0].Name) ? String(gpuData[0].Name) : "Unknown GPU";
 
-            // Audio/Ethernet might be under different keys depending on tool version, try to be flexible
-            // Typically: Network: { Ethernet: [...], Wifi: [...] }
+            // Ethernet
             let ethName = "Unknown";
-            if (data.Network && data.Network.Ethernet && data.Network.Ethernet.length > 0) {
-                ethName = data.Network.Ethernet[0].Name || "Generic Ethernet";
+            if (data.Network && data.Network.Ethernet && Array.isArray(data.Network.Ethernet) && data.Network.Ethernet.length > 0) {
+                ethName = data.Network.Ethernet[0].Name ? String(data.Network.Ethernet[0].Name) : "Generic Ethernet";
             }
-            let audioName = "Unknown/USB";
-            if (data.Audio && Array.isArray(data.Audio) && data.Audio.length > 0) {
-                audioName = data.Audio[0].Name || "Generic Audio"; // Or Codec
-            }
-            // Sometimes Audio is an object with Controller
-            if (data.Audio && data.Audio.Codec) audioName = data.Audio.Codec;
 
+            // Audio
+            let audioName = "Unknown/USB";
+            if (data.Audio) {
+                if (Array.isArray(data.Audio) && data.Audio.length > 0) {
+                    audioName = (data.Audio[0].Name) ? String(data.Audio[0].Name) : "Generic Audio";
+                } else if (data.Audio.Codec) {
+                    audioName = String(data.Audio.Codec);
+                }
+            }
 
             // 2. DISPLAY DATA
             document.getElementById('res-cpu-val').innerText = cpuName + (cpuCodename ? ` (${cpuCodename})` : '');
@@ -5396,7 +5400,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             }
 
             // GPU Rules
-            const gpuLower = gpuName.toLowerCase();
+            const gpuLower = String(gpuName).toLowerCase();
             if (gpuLower.includes("nvidia") && !gpuLower.includes("kepler")) {
                 addRec("NVIDIA GPU detected: <strong>Likely Unsupported</strong> in macOS Sequoia.", "times-circle", "var(--danger)");
             } else if (gpuLower.includes("rx 6") || gpuLower.includes("rx 6600") || gpuLower.includes("6800") || gpuLower.includes("6900")) {
@@ -5414,7 +5418,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             }
 
             // Ethernet Rules
-            const ethLower = ethName.toLowerCase();
+            const ethLower = String(ethName).toLowerCase();
             if (ethLower.includes("i225") || ethLower.includes("i226")) {
                 addRec("Ethernet: Use <strong>AppleIGC.kext</strong> (or spoofing on older macOS).");
             } else if (ethLower.includes("rtl8111") || ethLower.includes("8168")) {
@@ -5426,7 +5430,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             }
 
             // Audio Rules
-            if (audioName && !audioName.toLowerCase().includes("usb")) {
+            if (audioName && !String(audioName).toLowerCase().includes("usb")) {
                 addRec(`Audio Codec <strong>${audioName}</strong> detected: Check AppleALC supported layouts.`, "volume-up", "var(--primary)");
             }
 
