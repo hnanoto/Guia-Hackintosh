@@ -1465,6 +1465,24 @@
                                 style="background: var(--primary); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">MacPro7,1</span>
                         </h5>
 
+                        <!-- macOS Version Selector (Moved Here) -->
+                        <div style="margin-bottom: 10px;">
+                            <label for="macos-version"
+                                style="font-weight:bold; color:var(--text); display:block; margin-bottom:5px; font-size:0.85rem;"
+                                data-i18n="target-macos">Target macOS Version:</label>
+                            <select id="macos-version"
+                                style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); font-family:inherit; font-size:0.9rem;"
+                                onchange="generateRecipe()">
+                                <option value="Tahoe">macOS Tahoe (26.x) - Beta</option>
+                                <option value="Sequoia">macOS Sequoia (15.x)</option>
+                                <option value="Sonoma">macOS Sonoma (14.x)</option>
+                                <option value="Ventura">macOS Ventura (13.x)</option>
+                                <option value="Monterey">macOS Monterey (12.x)</option>
+                                <option value="BigSur">macOS Big Sur (11.x)</option>
+                                <option value="Catalina">macOS Catalina (10.15) or older</option>
+                            </select>
+                        </div>
+
                         <div style="font-size: 0.85rem; margin-bottom: 10px;">
                             <strong data-i18n="recipe-kexts">Recommended Kexts:</strong>
                             <div id="recipe-kext-list" style="margin-top: 5px; color: var(--text-secondary);">
@@ -5691,25 +5709,18 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
             currentConfig = { smbios, bootArgs, kexts, quirks };
 
-            // Render Recipe
-            const recipeHTML = `
-                <div style="background:var(--bg-secondary); padding:15px; border-radius:10px; border-left:4px solid var(--primary);">
-                    <p><strong>SMBIOS:</strong> <span style="color:var(--primary)">${smbios}</span></p>
-                    <p><strong>Boot-args:</strong> <code style="background:rgba(0,0,0,0.3); padding:2px 5px; border-radius:3px; color:var(--text);">${bootArgs}</code></p>
-                    <p><strong>Rec. Kexts:</strong></p>
-                    <ul style="font-size:0.9rem; margin-top:5px; columns:2;">
-                        ${kexts.map(k => `<li>${k}</li>`).join('')}
-                    </ul>
-                    <div style="margin-top:10px; font-size:0.85rem; color:var(--text-muted);">
-                        <i class="fas fa-info-circle"></i> Configured for <strong>macOS ${selectedOS}</strong>
-                    </div>
-                </div>
-                <button onclick="downloadConfig()" class="btn btn-primary" style="width:100%; margin-top:15px;">
-                    <i class="fas fa-file-download"></i> Baixar Config.plist
-                </button>
-            `;
-            document.getElementById("recipe-content").innerHTML = recipeHTML;
-            document.getElementById("analysis-recs").style.display = "block";
+            // Update UI (The Main EFI Recipe Card)
+            document.getElementById("target-smbios").innerText = smbios;
+            document.getElementById("recipe-boot-args").innerText = bootArgs;
+
+            // Format Kexts nicely like badges
+            const kextsHTML = kexts.map(k =>
+                `<span style="background:rgba(255,255,255,0.1); padding:2px 6px; margin:2px; border-radius:4px; display:inline-block; border:1px solid var(--primary); font-size:0.8rem;">${k}.kext</span>`
+            ).join(" ");
+            document.getElementById("recipe-kext-list").innerHTML = kextsHTML;
+
+            // Show the container
+            document.getElementById("efi-recipe").style.display = "block";
         }
 
         function downloadConfig() {
