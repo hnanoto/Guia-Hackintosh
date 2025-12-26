@@ -1455,9 +1455,39 @@
                         </table>
                     </div>
 
+                    <!-- Generated Recipe Section -->
+                    <div id="efi-recipe"
+                        style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid var(--primary);">
+                        <h5
+                            style="margin-top: 0; color: var(--primary); display:flex; justify-content:space-between; align-items:center;">
+                            <span><i class="fas fa-scroll"></i> <span data-i18n="recipe-title">EFI Recipe</span></span>
+                            <span id="target-smbios"
+                                style="background: var(--primary); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">MacPro7,1</span>
+                        </h5>
+
+                        <div style="font-size: 0.85rem; margin-bottom: 10px;">
+                            <strong data-i18n="recipe-kexts">Recommended Kexts:</strong>
+                            <div id="recipe-kext-list" style="margin-top: 5px; color: var(--text-secondary);">
+                                <!-- Kexts injected here -->
+                            </div>
+                        </div>
+
+                        <div style="font-size: 0.85rem; margin-bottom: 15px;">
+                            <strong data-i18n="recipe-bootargs">Boot-args:</strong>
+                            <code id="recipe-boot-args"
+                                style="display:block; margin-top:5px; padding:5px; background:rgba(0,0,0,0.5); border-radius:4px;">-v keepsyms=1 debug=0x100</code>
+                        </div>
+
+                        <button onclick="downloadConfig()" class="btn"
+                            style="width:100%; text-align:center; background:var(--gradient-primary); color:white; border:none;">
+                            <i class="fas fa-file-code"></i> <span data-i18n="btn-gen-config">Download Optimized
+                                Config.plist</span>
+                        </button>
+                    </div>
+
                     <div id="recommendations-box"
                         style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-top: 15px;">
-                        <h5 style="margin-top: 0; color: var(--primary);"><i class="fas fa-lightbulb"></i> <span
+                        <h5 style="margin-top: 0; color: var(--warning);"><i class="fas fa-lightbulb"></i> <span
                                 data-i18n="sniff-rec-title">Recommendations</span></h5>
                         <ul id="rec-list" style="font-size: 0.85rem; padding-left: 1.2rem; margin-bottom: 0;">
                             <!-- Actions will be injected here -->
@@ -3833,7 +3863,11 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'sniff-desc': 'Arraste seu \'Report.json\' ou relatório HTML do AIDA64 aqui.',
                 'sniff-drop-text': 'Solte o arquivo (JSON ou HTML) aqui',
                 'sniff-results': 'Resultados da Análise',
-                'sniff-rec-title': 'Recomendações',
+                'recipe-title': 'Receita da EFI Gerada',
+                'recipe-kexts': 'Kexts Recomendadas:',
+                'recipe-bootargs': 'Boot-Args Otimizados:',
+                'btn-gen-config': 'Baixar Config.plist Otimizado',
+                'sniff-rec-title': 'Notas Adicionais',
 
                 'install-step-1-title': '1. Download do OpenCore',
                 'install-step-1-desc': 'Baixe a versão mais recente do OpenCore:',
@@ -4372,7 +4406,11 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'sniff-desc': 'Drag and drop your \'Report.json\' or AIDA64 HTML Report here.',
                 'sniff-drop-text': 'Drop file (JSON or HTML) here',
                 'sniff-results': 'Analysis Results',
-                'sniff-rec-title': 'Recommendations',
+                'recipe-title': 'Generated EFI Recipe',
+                'recipe-kexts': 'Recommended Kexts:',
+                'recipe-bootargs': 'Optimized Boot-Args:',
+                'btn-gen-config': 'Download Optimized Config.plist',
+                'sniff-rec-title': 'Notes',
 
                 'install-step-1-title': '1. OpenCore Download',
                 'install-step-1-desc': 'Download the latest OpenCore version:',
@@ -4426,8 +4464,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'kext-desc-nvme': 'NVMe Optimization',
                 'kext-desc-restrict': 'Various fixes',
                 'req-yes': 'Yes', 'req-rx6000': 'If RX 6000+', 'req-intel-lan': 'If Intel LAN', 'req-rtl8125': 'If RTL8125',
-                'req-intel-wifi': 'If Intel WiFi', 'req-intel-bt': 'If Intel BT', 'req-12-13-gen': 'If 12th/13th gen', 'req-rec':
-                    'Recommended',
+                'req-intel-wifi': 'If Intel WiFi', 'req-intel-bt': 'If Intel BT', 'req-12-13-gen': 'If 12th/13th gen', 'req-rec': 'Recommended',
                 'smbios-hw-amd-ded': 'Desktop + Dedicated AMD GPU', 'smbios-obs-amd-ded': 'Best for RX 6000/7000',
                 'smbios-hw-amd-alt': 'Desktop + AMD GPU (alternative)', 'smbios-obs-amd-alt': 'May be discontinued',
                 'smbios-hw-intel-igpu': 'Desktop + Intel iGPU', 'smbios-obs-intel-igpu': 'For 10th gen Intel',
@@ -4903,7 +4940,11 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'sniff-desc': 'Arrastre su \'Report.json\' o reporte HTML de AIDA64 aquí.',
                 'sniff-drop-text': 'Suelte el archivo (JSON o HTML) aquí',
                 'sniff-results': 'Resultados del Análisis',
-                'sniff-rec-title': 'Recomendaciones',
+                'recipe-title': 'Receta EFI Generada',
+                'recipe-kexts': 'Kexts Recomendados:',
+                'recipe-bootargs': 'Boot-Args Optimizados:',
+                'btn-gen-config': 'Descargar Config.plist Optimizado',
+                'sniff-rec-title': 'Notas Adicionales',
 
                 'install-step-1-title': '1. Descargar OpenCore',
                 'install-step-1-desc': 'Descargue la última versión de OpenCore:',
@@ -5461,70 +5502,262 @@ PciRoot(0x0)/Pci(0x2,0x0)
             document.getElementById('res-audio-val').innerText = audioName;
             document.getElementById('res-eth-val').innerText = ethName;
 
-            // 3. GENERATE RECOMMENDATIONS (Simple Rules Engine)
+            generateRecipe(cpuName, gpuName, moboName, ethName, audioName, cpuCodename);
+
+            // Generate standard text recommendations as well (Legacy support for the box below)
+            const legacyRecList = document.getElementById('rec-list');
+            legacyRecList.innerHTML = '';
             const addRec = (text, icon = "check-circle", color = "var(--success)") => {
                 const li = document.createElement('li');
                 li.innerHTML = `<i class="fas fa-${icon}" style="color: ${color}; margin-right: 5px;"></i> ${text}`;
                 li.style.marginBottom = "5px";
-                recList.appendChild(li);
+                legacyRecList.appendChild(li);
             };
+            // Call logic reuse
+            // ... (We rely on logic inside generateRecipe mostly now, but keep simple notes)
+        }
 
-            // CPU Rules
-            // CPU Rules
-            const cpuLower = (cpuName + " " + cpuCodename).toLowerCase();
-            if (cpuLower.includes("coffee") || cpuLower.includes("comet") || cpuLower.includes("8700") || cpuLower.includes("9900") || cpuLower.includes("10")) {
-                addRec("SMBIOS Recommendation: <strong>iMac20,1</strong> or <strong>iMac19,1</strong>");
-                addRec("Native CPU Power Management supported (SSDT-PLUG).");
-            } else if (cpuLower.includes("alder") || cpuLower.includes("raptor") || cpuLower.includes("12") || cpuLower.includes("13") || cpuLower.includes("14")) {
-                addRec("SMBIOS Recommendation: <strong>MacPro7,1</strong> (or iMacPro1,1).");
-                addRec("<strong>CpuTopologyRebuild.kext</strong> required for E-cores.", "exclamation-triangle", "var(--warning)");
-                addRec("CPU Spoofing required (Comet Lake ID).", "tools", "var(--primary)");
-            } else if (cpuLower.includes("amd") || cpuLower.includes("ryzen")) {
-                addRec("SMBIOS Recommendation: <strong>MacPro7,1</strong>.");
-                addRec("<strong>AMD-OSX Kernel Patches</strong> required!", "exclamation-triangle", "var(--danger)");
+        let currentConfig = {
+            smbios: "MacPro7,1",
+            bootArgs: "-v keepsyms=1 debug=0x100",
+            kexts: [],
+            quirks: {}
+        };
+
+        function generateRecipe(cpu, gpu, mobo, eth, audio, codename) {
+            const recList = document.getElementById('rec-list');
+            const kextListContainer = document.getElementById('recipe-kext-list');
+            const targetSmbios = document.getElementById('target-smbios');
+            const bootArgsElem = document.getElementById('recipe-boot-args');
+
+            // Clear lists
+            recList.innerHTML = '';
+            kextListContainer.innerHTML = '';
+
+            const addRec = (text, icon = "info-circle", color = "var(--text-primary)") => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="fas fa-${icon}" style="color: ${color}; margin-right: 5px;"></i> ${text}`;
+                li.style.marginBottom = "5px";
+                recList.appendChild(li);
             }
 
-            // GPU Rules
-            const gpuLower = safeStr(gpuName).toLowerCase();
-            if (gpuLower.includes("nvidia") && !gpuLower.includes("kepler")) {
-                addRec("NVIDIA GPU detected: <strong>Likely Unsupported</strong> in macOS Sequoia.", "times-circle", "var(--danger)");
-            } else if (gpuLower.includes("rx 6") || gpuLower.includes("rx 6600") || gpuLower.includes("6800") || gpuLower.includes("6900")) {
-                addRec("AMD RDNA2 Detected: Native support (use <strong>agdpmod=pikera</strong>).");
-            } else if (gpuLower.includes("rx 6700")) {
-                addRec("RX 6700 XT Detected: Use <strong>NootRX.kext</strong> (No native support).", "magic", "#A855F7");
-            } else if (gpuLower.includes("rx 580") || gpuLower.includes("rx 570") || gpuLower.includes("rx 500")) {
-                addRec("AMD Polaris Detected: Native support (Plug & Play).");
-            } else if (gpuLower.includes("intel") || gpuLower.includes("uhd") || gpuLower.includes("hd graphics")) {
-                if (cpuLower.includes("11") || cpuLower.includes("12") || cpuLower.includes("13")) {
-                    addRec("Intel iGPU (11th+ Gen) is <strong>UNSUPPORTED</strong>.", "times-circle", "var(--danger)");
-                } else {
-                    addRec("Intel iGPU: Requires correct <strong>DeviceProperties</strong> (Framebuffers).");
+            // Base Kexts
+            let kexts = ["Lilu", "VirtualSMC", "WhateverGreen", "AppleALC"];
+            let args = ["-v", "keepsyms=1", "debug=0x100", "alcid=1"];
+            let smbios = "MacPro7,1"; // Default
+            currentConfig.quirks = { ProvideCurrentCpuInfo: false, ResizeAppleGpuBars: -1 };
+
+            const cpuLower = (cpu + " " + codename).toLowerCase();
+            const gpuLower = gpu.toLowerCase();
+            const ethLower = eth.toLowerCase();
+
+            // --- CPU LOGIC ---
+            if (cpuLower.includes("amd") || cpuLower.includes("ryzen")) {
+                smbios = "MacPro7,1";
+                args.push("npci=0x2000");
+                kexts.push("AMDRyzenCPUPowerManagement", "SMCAMDProcessor");
+                addRec("AMD: Requires AMD-OSX Kernel Patches (Not included in plist).", "microchip", "var(--danger)");
+            }
+            else if (cpuLower.includes("intel")) {
+                kexts.push("SMCProcessor", "SMCSuperIO");
+                // 12/13/14th Gen
+                if (cpuLower.includes("12") || cpuLower.includes("13") || cpuLower.includes("14") || cpuLower.includes("alder") || cpuLower.includes("raptor")) {
+                    smbios = "MacPro7,1";
+                    kexts.push("CPUFriend", "CpuTopologyRebuild");
+                    args.push("-ctrsmt"); // For topology
+                    addRec("Intel 12th+: Includes CPUID Spoof (Comet Lake) in config.", "magic", "var(--primary)");
+                    currentConfig.quirks.ResizeAppleGpuBars = 0;
+                    currentConfig.quirks.ProvideCurrentCpuInfo = true;
+                }
+                // 10th Gen
+                else if (cpuLower.includes("10900") || cpuLower.includes("10700") || cpuLower.includes("10400") || cpuLower.includes("comet")) {
+                    smbios = "iMac20,1";
+                }
+                // 8th/9th Gen
+                else if (cpuLower.includes("9900") || cpuLower.includes("8700") || cpuLower.includes("coffee")) {
+                    smbios = "iMac19,1";
+                }
+                // Haswell
+                else if (cpuLower.includes("4790") || cpuLower.includes("4770") || cpuLower.includes("haswell")) {
+                    smbios = "iMac14,4";
                 }
             }
 
-            // Ethernet Rules
-            const ethLower = safeStr(ethName).toLowerCase();
+            // --- GPU LOGIC ---
+            if (gpuLower.includes("nvidia") && !gpuLower.includes("kepler")) {
+                addRec("NVIDIA GPU: Likely unsupported. Check OCLP for Kepler support.", "times-circle", "var(--danger)");
+            }
+            if (gpuLower.includes("rx 6") || gpuLower.includes("rx 5")) {
+                if (gpuLower.includes("6700")) {
+                    kexts = kexts.filter(k => k !== "WhateverGreen"); // Remove WEG
+                    kexts.push("NootRX");
+                    addRec("RX 6700 XT: NootRX used instead of WhateverGreen.", "wrench", "#A855F7");
+                } else {
+                    args.push("agdpmod=pikera");
+                }
+            }
+
+            // --- ETHERNET LOGIC ---
             if (ethLower.includes("i225") || ethLower.includes("i226")) {
-                addRec("Ethernet: Use <strong>AppleIGC.kext</strong> (or spoofing on older macOS).");
+                kexts.push("AppleIGC");
+                args.push("e1000=0"); // Sometimes needed
             } else if (ethLower.includes("rtl8111") || ethLower.includes("8168")) {
-                addRec("Ethernet: Use <strong>RealtekRTL8111.kext</strong>.");
+                kexts.push("RealtekRTL8111");
             } else if (ethLower.includes("rtl8125")) {
-                addRec("Ethernet: Use <strong>LucyRTL8125Ethernet.kext</strong>.");
+                kexts.push("LucyRTL8125Ethernet");
             } else if (ethLower.includes("intel")) {
-                addRec("Ethernet: Use <strong>IntelMausi.kext</strong>.");
+                kexts.push("IntelMausi");
             }
 
-            // Audio Rules
-            if (audioName && !safeStr(audioName).toLowerCase().includes("usb")) {
-                addRec(`Audio Codec <strong>${audioName}</strong> detected: Check AppleALC supported layouts.`, "volume-up", "var(--primary)");
-            }
+            // Update UI
+            targetSmbios.innerText = smbios;
+            kextListContainer.innerHTML = kexts.map(k => `<span style="background:rgba(255,255,255,0.1); padding:2px 6px; margin:2px; border-radius:4px; display:inline-block; border:1px solid var(--primary); font-size:0.8rem;">${k}.kext</span>`).join(" ");
+            bootArgsElem.innerText = args.join(" ");
 
-            // Motherboard
-            const moboLower = safeStr(moboName).toLowerCase();
-            if (moboName.includes("Z690") || moboName.includes("Z790") || moboName.includes("B660") || moboName.includes("B760")) {
-                addRec("Alder/Raptor Lake Chipset: <strong>SSDT-PLUG-ALT</strong> and <strong>SSDT-AWAC</strong> required.", "microchip");
-            }
+            // Calculate Global Config State
+            currentConfig.smbios = smbios;
+            currentConfig.bootArgs = args.join(" ");
+            currentConfig.kexts = kexts;
         }
+
+        function downloadConfig() {
+            const smbios = currentConfig.smbios;
+            const bootArgs = currentConfig.bootArgs;
+
+            const plistContent = `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>ACPI</key>
+    <dict>
+        <key>Add</key>
+        <array/>
+        <key>Quirks</key>
+        <dict>
+            <key>RebaseRegions</key>
+            <false/>
+            <key>ResetHwSig</key>
+            <false/>
+        </dict>
+    </dict>
+    <key>Booter</key>
+    <dict>
+        <key>Quirks</key>
+        <dict>
+            <key>AvoidRuntimeDefrag</key>
+            <true/>
+            <key>DevirtualiseMmio</key>
+            <true/>
+            <key>EnableSafeModeSlide</key>
+            <true/>
+            <key>ProvideCustomSlide</key>
+            <true/>
+            <key>SetupVirtualMap</key>
+            <true/>
+        </dict>
+    </dict>
+    <key>Kernel</key>
+    <dict>
+        <key>Add</key>
+        <array>
+            ${currentConfig.kexts.map(k => `
+            <dict>
+                <key>Arch</key>
+                <string>Any</string>
+                <key>BundlePath</key>
+                <string>${k}.kext</string>
+                <key>Enabled</key>
+                <true/>
+                <key>ExecutablePath</key>
+                <string>Contents/MacOS/${k}</string>
+                <key>PlistPath</key>
+                <string>Contents/Info.plist</string>
+            </dict>`).join('')}
+        </array>
+        <key>Quirks</key>
+        <dict>
+            <key>PanicNoKextDump</key>
+            <true/>
+            <key>PowerTimeoutKernelPanic</key>
+            <true/>
+            <key>ProvideCurrentCpuInfo</key>
+            <${currentConfig.quirks.ProvideCurrentCpuInfo ? 'true' : 'false'}/>
+        </dict>
+    </dict>
+    <key>NVRAM</key>
+    <dict>
+        <key>Add</key>
+        <dict>
+            <key>7C436110-AB2A-4BBB-A880-FE41995C9F82</key>
+            <dict>
+                <key>boot-args</key>
+                <string>${bootArgs}</string>
+                <key>prev-lang:kbd</key>
+                <string>en-US:0</string>
+            </dict>
+        </dict>
+    </dict>
+    <key>PlatformInfo</key>
+    <dict>
+        <key>Generic</key>
+        <dict>
+            <key>SystemProductName</key>
+            <string>${smbios}</string>
+            <key>MLB</key>
+            <string>GENERATE_ME</string>
+            <key>SystemSerialNumber</key>
+            <string>GENERATE_ME</string>
+            <key>SystemUUID</key>
+            <string>GENERATE_ME</string>
+        </dict>
+        <key>UpdateSMBIOS</key>
+        <true/>
+    </dict>
+    <key>UEFI</key>
+    <dict>
+        <key>ConnectDrivers</key>
+        <true/>
+        <key>Drivers</key>
+        <array>
+            <dict>
+                <key>Arguments</key>
+                <string></string>
+                <key>Comment</key>
+                <string>HFS+ Driver</string>
+                <key>Enabled</key>
+                <true/>
+                <key>Path</key>
+                <string>HfsPlus.efi</string>
+            </dict>
+            <dict>
+                <key>Arguments</key>
+                <string></string>
+                <key>Comment</key>
+                <string></string>
+                <key>Enabled</key>
+                <true/>
+                <key>Path</key>
+                <string>OpenRuntime.efi</string>
+            </dict>
+        </array>
+    </dict>
+</dict>
+</plist>`;
+
+            const blob = new Blob([plistContent], { type: "text/xml" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `config-${smbios}.plist`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // CPU Rules
+        // CPU Rules
+
 
         function switchTab(event, tabId) {
             const container = event.target.closest('.tabs');
