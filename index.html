@@ -5649,9 +5649,22 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 }
             };
 
-            // 2. CLEANUP: Remove #WARNING keys (recursively or specifically)
-            // Ideally we scan the whole tree, but for safety lets just allow standard keys.
-            // Simplified: The template below is already "Clean" but let's Ensure PlatformInfo is set.
+            // 2. CLEANUP: Remove #WARNING keys and other comments
+            const removeComments = (node) => {
+                const keys = Array.from(node.children);
+                for (let i = 0; i < keys.length; i++) {
+                    if (keys[i].tagName === "key" && keys[i].textContent.startsWith("#WARNING")) {
+                        // Remove key and value
+                        node.removeChild(keys[i + 1]);
+                        node.removeChild(keys[i]);
+                        i--; // adjust index
+                    } else if (keys[i].tagName === "dict" || keys[i].tagName === "array") {
+                        removeComments(keys[i]);
+                    }
+                }
+            };
+            // Iterate over the whole plist dict
+            removeComments(plist);
 
             // 3. INJECT DATA
 
@@ -5746,8 +5759,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             URL.revokeObjectURL(url);
         }
 
-        // --- FULL OPENCORE TEMPLATE (Based on Sample.plist 0.9.x/1.0.0) ---
-        // Warning keys removed.
+        // --- FULL OPENCORE TEMPLATE (Official Sample.plist 1.0.6+) ---
         const OC_TEMPLATE = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -5755,7 +5767,32 @@ PciRoot(0x0)/Pci(0x2,0x0)
 	<key>ACPI</key>
 	<dict>
 		<key>Add</key>
-		<array/>
+		<array>
+			<dict>
+				<key>Comment</key>
+				<string>Read the comment in dsl sample</string>
+				<key>Enabled</key>
+				<false/>
+				<key>Path</key>
+				<string>SSDT-PLUG.aml</string>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Read the comment in dsl sample</string>
+				<key>Enabled</key>
+				<false/>
+				<key>Path</key>
+				<string>SSDT-EC-USBX.aml</string>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Read the comment in dsl sample</string>
+				<key>Enabled</key>
+				<false/>
+				<key>Path</key>
+				<string>SSDT-AWAC.aml</string>
+			</dict>
+		</array>
 		<key>Delete</key>
 		<array/>
 		<key>Patch</key>
@@ -5771,7 +5808,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 			<key>ResetHwSig</key>
 			<false/>
 			<key>ResetLogoStatus</key>
-			<false/>
+			<true/>
 			<key>SyncTableIds</key>
 			<false/>
 		</dict>
@@ -5788,6 +5825,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
 			<false/>
 			<key>AvoidRuntimeDefrag</key>
 			<true/>
+			<key>ClearTaskSwitchBit</key>
+			<false/>
 			<key>DevirtualiseMmio</key>
 			<false/>
 			<key>DisableSingleUser</key>
@@ -5801,7 +5840,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 			<key>EnableWriteUnprotector</key>
 			<true/>
 			<key>FixupAppleEfiImages</key>
-			<false/>
+			<true/>
 			<key>ForceBooterSignature</key>
 			<false/>
 			<key>ForceExitBootServices</key>
@@ -5831,7 +5870,13 @@ PciRoot(0x0)/Pci(0x2,0x0)
 	<key>DeviceProperties</key>
 	<dict>
 		<key>Add</key>
-		<dict/>
+		<dict>
+			<key>PciRoot(0x0)/Pci(0x1b,0x0)</key>
+			<dict>
+				<key>layout-id</key>
+				<data>AQAAAA==</data>
+			</dict>
+		</dict>
 		<key>Delete</key>
 		<dict/>
 	</dict>
@@ -6047,6 +6092,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
 				<false/>
 				<key>Flavour</key>
 				<string>OpenShell:UEFIShell:Shell</string>
+				<key>FullNvramAccess</key>
+				<false/>
 				<key>Name</key>
 				<string>UEFI Shell</string>
 				<key>Path</key>
@@ -6125,7 +6172,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 				<string>fmm-mobileme-token-FMM</string>
 				<string>fmm-mobileme-token-FMM-BridgeHasAccount</string>
 				<string>nvda_drv</string>
-				<string>prev-lang:kbd</key>
+				<string>prev-lang:kbd</string>
 			</array>
 			<key>8BE4DF61-93CA-11D2-AA0D-00E098032B8C</key>
 			<array>
@@ -6256,18 +6303,6 @@ PciRoot(0x0)/Pci(0x2,0x0)
 				<key>Arguments</key>
 				<string></string>
 				<key>Comment</key>
-				<string></string>
-				<key>Enabled</key>
-				<true/>
-				<key>LoadEarly</key>
-				<false/>
-				<key>Path</key>
-				<string>OpenRuntime.efi</string>
-			</dict>
-			<dict>
-				<key>Arguments</key>
-				<string></string>
-				<key>Comment</key>
 				<string>HFS+ Driver</string>
 				<key>Enabled</key>
 				<true/>
@@ -6276,7 +6311,19 @@ PciRoot(0x0)/Pci(0x2,0x0)
 				<key>Path</key>
 				<string>HfsPlus.efi</string>
 			</dict>
-             <dict>
+			<dict>
+				<key>Arguments</key>
+				<string></string>
+				<key>Comment</key>
+				<string></string>
+				<key>Enabled</key>
+				<true/>
+				<key>LoadEarly</key>
+				<false/>
+				<key>Path</key>
+				<string>OpenRuntime.efi</string>
+			</dict>
+            <dict>
 				<key>Arguments</key>
 				<string></string>
 				<key>Comment</key>
@@ -6424,6 +6471,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
 			<false/>
 		</dict>
 		<key>ReservedMemory</key>
+		<array/>
+		<key>Unload</key>
 		<array/>
 	</dict>
 </dict>
