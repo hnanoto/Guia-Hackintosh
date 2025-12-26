@@ -3018,6 +3018,7 @@ python3 CPUFriendFriend.command
                         <select id="macos-version"
                             style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--border); background:var(--card-bg); color:var(--text); font-family:inherit;"
                             onchange="generateRecipe()">
+                            <option value="Tahoe">macOS Tahoe (26.x) - Beta</option>
                             <option value="Sequoia">macOS Sequoia (15.x)</option>
                             <option value="Sonoma">macOS Sonoma (14.x)</option>
                             <option value="Ventura">macOS Ventura (13.x)</option>
@@ -5647,7 +5648,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 // If it looks like Intel:
                 if (netTextLower.includes("intel") || netTextLower.includes("wi-fi 6") || netTextLower.includes("ax")) {
                     // VERSION SPECIFIC KEXTS for AirportItlwm
-                    if (selectedOS === "Sequoia") {
+                    if (selectedOS === "Tahoe") {
+                        kexts.push("AirportItlwm-Sequoia"); // Use Sequoia kext as placeholder for Tahoe
+                    } else if (selectedOS === "Sequoia") {
                         kexts.push("AirportItlwm-Sequoia");
                     } else if (selectedOS === "Sonoma") {
                         kexts.push("AirportItlwm-Sonoma");
@@ -5663,7 +5666,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                     // BLUETOOTH
                     kexts.push("IntelBluetoothFirmware");
-                    if (selectedOS === "Monterey" || selectedOS === "Ventura" || selectedOS === "Sonoma" || selectedOS === "Sequoia") {
+                    if (selectedOS === "Monterey" || selectedOS === "Ventura" || selectedOS === "Sonoma" || selectedOS === "Sequoia" || selectedOS === "Tahoe") {
                         kexts.push("IntelBTPatcher");
                         kexts.push("BlueToolFixup");
                     } else { // BigSur/Catalina
