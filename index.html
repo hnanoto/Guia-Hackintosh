@@ -3007,6 +3007,28 @@ python3 CPUFriendFriend.command
                     <i class="fas fa-music" style="color: #F59E0B; margin-right: 8px;"></i>
                     <span data-i18n="post-chime-title">Enable Boot Chime (Mac Sound)</span>
                 </summary>
+                <div class="result-details" id="analysis-recs" style="display:none; margin-top:15px;">
+                    <h5 data-i18n="analysis-recs-title">Recommended Configuration</h5>
+
+                    <!-- macOS Version Selector -->
+                    <div style="margin-bottom: 15px;">
+                        <label for="macos-version"
+                            style="font-weight:bold; color:var(--text); display:block; margin-bottom:5px;"
+                            data-i18n="target-macos">Target macOS Version:</label>
+                        <select id="macos-version"
+                            style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--border); background:var(--card-bg); color:var(--text); font-family:inherit;"
+                            onchange="generateRecipe()">
+                            <option value="Sequoia">macOS Sequoia (15.x)</option>
+                            <option value="Sonoma">macOS Sonoma (14.x)</option>
+                            <option value="Ventura">macOS Ventura (13.x)</option>
+                            <option value="Monterey">macOS Monterey (12.x)</option>
+                            <option value="BigSur">macOS Big Sur (11.x)</option>
+                            <option value="Catalina">macOS Catalina (10.15) or older</option>
+                        </select>
+                    </div>
+
+                    <div id="recipe-content"></div>
+                </div>
                 <div style="padding: 10px;">
                     <ol style="font-size: 0.9rem; padding-left: 1.5rem; margin: 0;">
                         <li data-i18n="post-chime-step1">Enable <strong>AudioDxe.efi</strong> driver.</li>
@@ -3712,6 +3734,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 // Section Headers
                 'sec-req-title': 'Requisitos do Sistema',
                 'sec-req-desc': 'Certifique-se de que seu hardware é compatível antes de começar',
+                'target-macos': 'Versão Alvo do macOS:',
                 'sec-bios-title': 'Configurações da BIOS',
                 'sec-bios-desc': 'Configurações essenciais para funcionamento correto',
                 'sec-boot-title': 'Boot Arguments Importantes',
@@ -4178,7 +4201,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'quirk-panic': 'Evita reboot instantâneo em Kernel Panic (essencial para debug)',
                 'quirk-xhci': 'Desabilite após mapear USBs (macOS 11.3+)',
 
-                // TROUBLESHOOTING ADVANCED
+                // TROUBLESHOOTING AVANÇADO
                 'trouble-adv-title': 'Troubleshooting Avançado',
                 'trouble-adv-desc': 'Diagnóstico e solução de problemas complexos',
                 'trouble-panic-title': 'Entendendo Kernel Panics',
@@ -4260,6 +4283,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'sec-req-title': 'System Requirements',
                 'sec-req-desc': 'Ensure your hardware is compatible before starting',
+                'target-macos': 'Target macOS Version:',
                 'sec-bios-title': 'BIOS Settings',
                 'sec-bios-desc': 'Essential settings for correct functionality',
                 'sec-boot-title': 'Important Boot Arguments',
@@ -4794,6 +4818,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'sec-req-title': 'Requisitos del Sistema',
                 'sec-req-desc': 'Asegúrese de que su hardware sea compatible antes de comenzar',
+                'target-macos': 'Versión macOS Destino:',
                 'sec-bios-title': 'Configuración de BIOS',
                 'sec-bios-desc': 'Configuraciones esenciales para el funcionamiento correcto',
                 'sec-boot-title': 'Argumentos de arranque importantes',
@@ -5034,7 +5059,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'trouble-bs-3': 'Asegúrese de que WhateverGreen y NootRX no estén juntos',
                 'trouble-bs-4': 'Confirme que Above 4G Decoding esté habilitado en BIOS',
                 'trouble-kp-title': '¿Kernel Panic al arrancar?',
-                'trouble-kp-1': 'Agregue debug=0x100 keepsyms=1 a boot-args',
+                'trouble-kp-1': 'Agregue debug=0x100 keepsyms=1 a los boot-args',
                 'trouble-kp-2': 'Verifique que todos los kexts estén actualizados',
                 'trouble-kp-3': 'Confirme que Lilu.kext se cargue primero',
                 'trouble-kp-4': 'Verifique quirks del Kernel en config.plist',
@@ -5232,7 +5257,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'config-title': 'Config.plist Detallado',
                 'config-desc': 'Ajustes finos para máxima estabilidad y rendimiento',
                 'config-booter-title': 'Booter Quirks',
-                'config-booter-desc': 'Correcciones esenciales para que el bootloader cargue el kernel.',
+                'config-booter-desc': 'Correções esenciales para que el bootloader cargue el kernel.',
                 'th-description': 'Descripción',
                 'th-platform': 'Plataforma',
                 'quirk-defrag': 'Corrige servicios de tiempo de ejecución UEFI',
@@ -5334,6 +5359,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
         const dropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const analysisResult = document.getElementById('analysis-result');
+        let latestAnalysis = null; // Global variable to store analysis results
 
         // Drag & Drop Events
         dropZone.addEventListener('dragover', (e) => {
@@ -5502,7 +5528,18 @@ PciRoot(0x0)/Pci(0x2,0x0)
             document.getElementById('res-audio-val').innerText = audioName;
             document.getElementById('res-eth-val').innerText = ethName;
 
-            generateRecipe(cpuName, gpuName, moboName, ethName, audioName, cpuCodename);
+            // Store analysis for generateRecipe
+            latestAnalysis = {
+                cpu: cpuName,
+                gpu: gpuName,
+                mobo: moboName,
+                eth: ethName,
+                audio: audioName,
+                codename: cpuCodename,
+                netText: ethName // Store the raw network text for WiFi heuristic
+            };
+
+            generateRecipe(); // Call generateRecipe without arguments, it will use latestAnalysis
 
             // Generate standard text recommendations as well (Legacy support for the box below)
             const legacyRecList = document.getElementById('rec-list');
@@ -5524,100 +5561,152 @@ PciRoot(0x0)/Pci(0x2,0x0)
             quirks: {}
         };
 
-        function generateRecipe(cpu, gpu, mobo, eth, audio, codename) {
-            const recList = document.getElementById('rec-list');
-            const kextListContainer = document.getElementById('recipe-kext-list');
-            const targetSmbios = document.getElementById('target-smbios');
-            const bootArgsElem = document.getElementById('recipe-boot-args');
+        function generateRecipe() {
+            if (!latestAnalysis) return; // logic needs analysis first
 
-            // Clear lists
-            recList.innerHTML = '';
-            kextListContainer.innerHTML = '';
+            const cpu = latestAnalysis.cpu;
+            const gpu = latestAnalysis.gpu;
+            const eth = latestAnalysis.eth;
+            const audio = latestAnalysis.audio;
+            const codename = latestAnalysis.codename;
+            const netText = latestAnalysis.netText; // Use the stored network text for WiFi detection
 
-            const addRec = (text, icon = "info-circle", color = "var(--text-primary)") => {
-                const li = document.createElement('li');
-                li.innerHTML = `<i class="fas fa-${icon}" style="color: ${color}; margin-right: 5px;"></i> ${text}`;
-                li.style.marginBottom = "5px";
-                recList.appendChild(li);
-            }
+            const selectedOS = document.getElementById("macos-version").value;
 
-            // Base Kexts
+            let smbios = "MacPro7,1"; // Default safe fallback
+            let bootArgs = "-v keepsyms=1 debug=0x100";
             let kexts = ["Lilu", "VirtualSMC", "WhateverGreen", "AppleALC"];
-            let args = ["-v", "keepsyms=1", "debug=0x100", "alcid=1"];
-            let smbios = "MacPro7,1"; // Default
-            currentConfig.quirks = { ProvideCurrentCpuInfo: false, ResizeAppleGpuBars: -1 };
-
-            const cpuLower = (cpu + " " + codename).toLowerCase();
-            const gpuLower = gpu.toLowerCase();
-            const ethLower = eth.toLowerCase();
+            let quirks = {
+                ProvideCurrentCpuInfo: false,
+                ResizeAppleGpuBars: -1,
+                SecureBootModel: "Default", // Default for modern macOS
+                XhciPortLimit: false // Default for macOS 11.3+
+            };
 
             // --- CPU LOGIC ---
+            const cpuLower = (cpu + " " + codename).toLowerCase();
             if (cpuLower.includes("amd") || cpuLower.includes("ryzen")) {
                 smbios = "MacPro7,1";
-                args.push("npci=0x2000");
+                bootArgs += " alcid=1 npci=0x2000";
                 kexts.push("AMDRyzenCPUPowerManagement", "SMCAMDProcessor");
-                addRec("AMD: Requires AMD-OSX Kernel Patches (Not included in plist).", "microchip", "var(--danger)");
-            }
-            else if (cpuLower.includes("intel")) {
+            } else if (cpuLower.includes("intel")) {
                 kexts.push("SMCProcessor", "SMCSuperIO");
-                // 12/13/14th Gen
+                // 12th/13th/14th Gen (Alder/Raptor)
                 if (cpuLower.includes("12") || cpuLower.includes("13") || cpuLower.includes("14") || cpuLower.includes("alder") || cpuLower.includes("raptor")) {
                     smbios = "MacPro7,1";
+                    bootArgs += " -ctrsmt"; // Control E-cores
+                    quirks.ProvideCurrentCpuInfo = true;
                     kexts.push("CPUFriend", "CpuTopologyRebuild");
-                    args.push("-ctrsmt"); // For topology
-                    addRec("Intel 12th+: Includes CPUID Spoof (Comet Lake) in config.", "magic", "var(--primary)");
-                    currentConfig.quirks.ResizeAppleGpuBars = 0;
-                    currentConfig.quirks.ProvideCurrentCpuInfo = true;
                 }
-                // 10th Gen
-                else if (cpuLower.includes("10900") || cpuLower.includes("10700") || cpuLower.includes("10400") || cpuLower.includes("comet")) {
+                // 10th Gen (Comet Lake)
+                else if (cpuLower.includes("10")) {
                     smbios = "iMac20,1";
                 }
-                // 8th/9th Gen
-                else if (cpuLower.includes("9900") || cpuLower.includes("8700") || cpuLower.includes("coffee")) {
+                // 8th/9th Gen (Coffee Lake)
+                else if (cpuLower.includes("8") || cpuLower.includes("9")) {
                     smbios = "iMac19,1";
                 }
-                // Haswell
-                else if (cpuLower.includes("4790") || cpuLower.includes("4770") || cpuLower.includes("haswell")) {
-                    smbios = "iMac14,4";
+                // Haswell (4th)
+                else if (cpuLower.includes("4")) {
+                    smbios = "iMac15,1";
                 }
             }
 
             // --- GPU LOGIC ---
+            const gpuLower = gpu.toLowerCase();
             if (gpuLower.includes("nvidia") && !gpuLower.includes("kepler")) {
-                addRec("NVIDIA GPU: Likely unsupported. Check OCLP for Kepler support.", "times-circle", "var(--danger)");
-            }
-            if (gpuLower.includes("rx 6") || gpuLower.includes("rx 5")) {
-                if (gpuLower.includes("6700")) {
-                    kexts = kexts.filter(k => k !== "WhateverGreen"); // Remove WEG
+                bootArgs += " -wegnoegpu"; // Disable Nvidia
+            } else if (gpuLower.includes("rx 6") || gpuLower.includes("rx 5") || gpuLower.includes("rx 4")) {
+                if (gpuLower.includes("6700") || gpuLower.includes("6750")) {
+                    bootArgs += " agdpmod=pikera";
+                    kexts = kexts.filter(k => k !== "WhateverGreen"); // Remove WG
                     kexts.push("NootRX");
-                    addRec("RX 6700 XT: NootRX used instead of WhateverGreen.", "wrench", "#A855F7");
-                } else {
-                    args.push("agdpmod=pikera");
+                } else if (gpuLower.includes("6600") || gpuLower.includes("6800") || gpuLower.includes("6900")) {
+                    bootArgs += " agdpmod=pikera";
                 }
             }
 
             // --- ETHERNET LOGIC ---
+            const ethLower = eth.toLowerCase();
             if (ethLower.includes("i225") || ethLower.includes("i226")) {
+                bootArgs += " e1000=0";
                 kexts.push("AppleIGC");
-                args.push("e1000=0"); // Sometimes needed
             } else if (ethLower.includes("rtl8111") || ethLower.includes("8168")) {
                 kexts.push("RealtekRTL8111");
-            } else if (ethLower.includes("rtl8125")) {
+            } else if (ethLower.includes("8125")) {
                 kexts.push("LucyRTL8125Ethernet");
             } else if (ethLower.includes("intel")) {
-                kexts.push("IntelMausi");
+                kexts.push("IntelMausi"); // Generic Intel
             }
 
-            // Update UI
-            targetSmbios.innerText = smbios;
-            kextListContainer.innerHTML = kexts.map(k => `<span style="background:rgba(255,255,255,0.1); padding:2px 6px; margin:2px; border-radius:4px; display:inline-block; border:1px solid var(--primary); font-size:0.8rem;">${k}.kext</span>`).join(" ");
-            bootArgsElem.innerText = args.join(" ");
+            // --- WIFI/BT LOGIC (OS DEPENDENT) ---
+            // Heuristic: Check if 'Wi-Fi' or 'Wireless' presents in the network text
+            const netTextLower = netText.toLowerCase();
+            if (netTextLower.includes("wi-fi") || netTextLower.includes("wireless") || netTextLower.includes("intel wi-fi")) {
+                // Assuming Intel for now as it's most common requiring kexts (Broadcom needs OCLP usually)
+                // If it looks like Intel:
+                if (netTextLower.includes("intel") || netTextLower.includes("wi-fi 6") || netTextLower.includes("ax")) {
+                    // VERSION SPECIFIC KEXTS for AirportItlwm
+                    if (selectedOS === "Sequoia") {
+                        kexts.push("AirportItlwm-Sequoia");
+                    } else if (selectedOS === "Sonoma") {
+                        kexts.push("AirportItlwm-Sonoma");
+                    } else if (selectedOS === "Ventura") {
+                        kexts.push("AirportItlwm-Ventura");
+                    } else if (selectedOS === "Monterey") {
+                        kexts.push("AirportItlwm-Monterey");
+                    } else if (selectedOS === "BigSur") {
+                        kexts.push("AirportItlwm-BigSur");
+                    } else { // Catalina or older
+                        kexts.push("AirportItlwm-Catalina");
+                    }
 
-            // Calculate Global Config State
-            currentConfig.smbios = smbios;
-            currentConfig.bootArgs = args.join(" ");
-            currentConfig.kexts = kexts;
+                    // BLUETOOTH
+                    kexts.push("IntelBluetoothFirmware");
+                    if (selectedOS === "Monterey" || selectedOS === "Ventura" || selectedOS === "Sonoma" || selectedOS === "Sequoia") {
+                        kexts.push("IntelBTPatcher");
+                        kexts.push("BlueToolFixup");
+                    } else { // BigSur/Catalina
+                        kexts.push("IntelBluetoothInjector");
+                    }
+                }
+            }
+
+            // --- OS SPECIFIC QUIRKS ---
+            // SecureBootModel
+            if (selectedOS === "Catalina") {
+                quirks.SecureBootModel = "Disabled";
+            } else {
+                quirks.SecureBootModel = "Default";
+            }
+
+            // XhciPortLimit (Golden rule: False for 11.3+ / Big Sur 11.3+)
+            // For older macOS, it might be true, but mapping is always better.
+            // Let's keep it false to encourage proper USB mapping.
+            quirks.XhciPortLimit = false;
+
+
+            currentConfig = { smbios, bootArgs, kexts, quirks };
+
+            // Render Recipe
+            const recipeHTML = `
+                <div style="background:var(--bg-secondary); padding:15px; border-radius:10px; border-left:4px solid var(--primary);">
+                    <p><strong>SMBIOS:</strong> <span style="color:var(--primary)">${smbios}</span></p>
+                    <p><strong>Boot-args:</strong> <code style="background:rgba(0,0,0,0.3); padding:2px 5px; border-radius:3px; color:var(--text);">${bootArgs}</code></p>
+                    <p><strong>Rec. Kexts:</strong></p>
+                    <ul style="font-size:0.9rem; margin-top:5px; columns:2;">
+                        ${kexts.map(k => `<li>${k}</li>`).join('')}
+                    </ul>
+                    <div style="margin-top:10px; font-size:0.85rem; color:var(--text-muted);">
+                        <i class="fas fa-info-circle"></i> Configured for <strong>macOS ${selectedOS}</strong>
+                    </div>
+                </div>
+                <button onclick="downloadConfig()" class="btn btn-primary" style="width:100%; margin-top:15px;">
+                    <i class="fas fa-file-download"></i> Baixar Config.plist
+                </button>
+            `;
+            document.getElementById("recipe-content").innerHTML = recipeHTML;
+            document.getElementById("analysis-recs").style.display = "block";
         }
 
         function downloadConfig() {
