@@ -5557,8 +5557,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
         }
 
         // ========================================
-        // HARDWARE SNIFFER ANALYZER LOGIC
+        // HARDWARE SNIFFER ANALYZER LOGIC (DEPRECATED - REPLACED BY NEW SECTION)
         // ========================================
+        /* COMMENTED OUT TO AVOID CONFLICTS
         const hwDropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const analysisResult = document.getElementById('analysis-result');
@@ -5756,8 +5757,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
             // Call logic reuse
             // ... (We rely on logic inside generateRecipe mostly now, but keep simple notes)
         }
+        */ // END OF DEPRECATED CODE
 
-        let currentConfig = {
+        let oldCurrentConfig = {
             smbios: "MacPro7,1",
             bootArgs: "-v keepsyms=1 debug=0x100",
             kexts: [],
