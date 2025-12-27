@@ -5559,33 +5559,33 @@ PciRoot(0x0)/Pci(0x2,0x0)
         // ========================================
         // HARDWARE SNIFFER ANALYZER LOGIC
         // ========================================
-        const dropZone = document.getElementById('drop-zone');
+        const hwDropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
         const analysisResult = document.getElementById('analysis-result');
         let latestAnalysis = null; // Global variable to store analysis results
 
         // Drag & Drop Events
-        dropZone.addEventListener('dragover', (e) => {
+        hwDropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = 'var(--primary)';
-            dropZone.style.background = 'rgba(0, 199, 253, 0.1)';
+            hwDropZone.style.borderColor = 'var(--primary)';
+            hwDropZone.style.background = 'rgba(0, 199, 253, 0.1)';
         });
 
-        dropZone.addEventListener('dragleave', (e) => {
+        hwDropZone.addEventListener('dragleave', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = 'rgba(255,255,255,0.2)';
-            dropZone.style.background = 'transparent';
+            hwDropZone.style.borderColor = 'rgba(255,255,255,0.2)';
+            hwDropZone.style.background = 'transparent';
         });
 
-        dropZone.addEventListener('drop', (e) => {
+        hwDropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = 'rgba(255,255,255,0.2)';
-            dropZone.style.background = 'transparent';
+            hwDropZone.style.borderColor = 'rgba(255,255,255,0.2)';
+            hwDropZone.style.background = 'transparent';
             const files = e.dataTransfer.files;
             if (files.length > 0) handleFile(files[0]);
         });
 
-        dropZone.addEventListener('click', () => fileInput.click());
+        hwDropZone.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', (e) => {
             if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
         });
@@ -5959,13 +5959,13 @@ PciRoot(0x0)/Pci(0x2,0x0)
             const nvram = getDict(plist, "NVRAM");
             const nvramAdd = getDict(nvram, "Add");
             const uuidDict = getDict(nvramAdd, "7C436110-AB2A-4BBB-A880-FE41995C9F82");
-            if (uuidDict) setString(uuidDict, "boot-args", currentConfig.bootArgs);
+            if (uuidDict) setString(uuidDict, "boot-args", hwAnalysisConfig.bootArgs);
 
             // --- PLATFORMINFO (SMBIOS) ---
             const pi = getDict(plist, "PlatformInfo");
             const piGeneric = getDict(pi, "Generic");
             if (piGeneric) {
-                setString(piGeneric, "SystemProductName", currentConfig.smbios);
+                setString(piGeneric, "SystemProductName", hwAnalysisConfig.smbios);
                 setString(piGeneric, "MLB", "GENERATE_ME");
                 setString(piGeneric, "SystemSerialNumber", "GENERATE_ME");
                 setString(piGeneric, "SystemUUID", "GENERATE_ME");
@@ -5979,7 +5979,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             while (kernelAdd.firstChild) { kernelAdd.removeChild(kernelAdd.firstChild); }
 
             // Inject Generated Kexts
-            currentConfig.kexts.forEach(kext => {
+            hwAnalysisConfig.kexts.forEach(kext => {
                 const dict = xmlDoc.createElement("dict");
 
                 const addKey = (k, v, type = "string") => {
@@ -6011,13 +6011,13 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
             // --- KERNEL QUIRKS ---
             const kernelQuirks = getDict(kernel, "Quirks");
-            if (currentConfig.quirks.ProvideCurrentCpuInfo !== undefined) {
+            if (hwAnalysisConfig.quirks.ProvideCurrentCpuInfo !== undefined) {
                 // Find the key and set the next sibling to true/false
                 const keys = Array.from(kernelQuirks.children);
                 for (let i = 0; i < keys.length; i++) {
                     if (keys[i].textContent === "ProvideCurrentCpuInfo") {
                         const val = keys[i + 1];
-                        const newVal = xmlDoc.createElement(currentConfig.quirks.ProvideCurrentCpuInfo ? "true" : "false");
+                        const newVal = xmlDoc.createElement(hwAnalysisConfig.quirks.ProvideCurrentCpuInfo ? "true" : "false");
                         kernelQuirks.replaceChild(newVal, val);
                     }
                 }
@@ -6039,7 +6039,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `config-${currentConfig.smbios}.plist`;
+            a.download = `config-${hwAnalysisConfig.smbios}.plist`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -7083,8 +7083,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
             const advQuirks = AdvancedConfig.getQuirks(latestAnalysis, document.getElementById("macos-version").value);
             const advProps = AdvancedConfig.getDeviceProperties(latestAnalysis);
 
-            currentConfig.quirks = { ...currentConfig.quirks, ...advQuirks.Booter, ...advQuirks.Kernel };
-            currentConfig.deviceProperties = advProps;
+            hwAnalysisConfig.quirks = { ...hwAnalysisConfig.quirks, ...advQuirks.Booter, ...advQuirks.Kernel };
+            hwAnalysisConfig.deviceProperties = advProps;
 
             const recList = document.getElementById("recipe-kext-list");
             if (recList && !document.getElementById("adv-badge")) {
@@ -7125,8 +7125,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
             const dpAdd = getOrCreateDict(dp, "Add");
             while (dpAdd.firstChild) dpAdd.removeChild(dpAdd.firstChild); // Clear
 
-            if (currentConfig.deviceProperties) {
-                for (const [pciPath, props] of Object.entries(currentConfig.deviceProperties)) {
+            if (hwAnalysisConfig.deviceProperties) {
+                for (const [pciPath, props] of Object.entries(hwAnalysisConfig.deviceProperties)) {
                     const k = xmlDoc.createElement("key"); k.textContent = pciPath; dpAdd.appendChild(k);
                     const d = xmlDoc.createElement("dict"); dpAdd.appendChild(d);
                     for (const [propName, propVal] of Object.entries(props)) {
@@ -7170,7 +7170,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         let selectedMacOSVersion = null;
         let hardwareData = null;
-        let currentConfig = {
+        let hwAnalysisConfig = {
             smbios: null,
             bootArgs: "",
             kexts: [],
@@ -7210,26 +7210,26 @@ PciRoot(0x0)/Pci(0x2,0x0)
         }
 
         // Passo 2: Upload de Hardware
-        const dropZone = document.getElementById('drop-zone');
+        const hwDropZone = document.getElementById('drop-zone');
         const fileInput = document.getElementById('file-input');
 
-        dropZone.addEventListener('click', () => fileInput.click());
+        hwDropZone.addEventListener('click', () => fileInput.click());
 
-        dropZone.addEventListener('dragover', (e) => {
+        hwDropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = 'var(--primary)';
-            dropZone.style.background = 'rgba(0, 199, 253, 0.1)';
+            hwDropZone.style.borderColor = 'var(--primary)';
+            hwDropZone.style.background = 'rgba(0, 199, 253, 0.1)';
         });
 
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.style.borderColor = 'rgba(255,255,255,0.2)';
-            dropZone.style.background = 'rgba(0,0,0,0.2)';
+        hwDropZone.addEventListener('dragleave', () => {
+            hwDropZone.style.borderColor = 'rgba(255,255,255,0.2)';
+            hwDropZone.style.background = 'rgba(0,0,0,0.2)';
         });
 
-        dropZone.addEventListener('drop', (e) => {
+        hwDropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.style.borderColor = 'rgba(255,255,255,0.2)';
-            dropZone.style.background = 'rgba(0,0,0,0.2)';
+            hwDropZone.style.borderColor = 'rgba(255,255,255,0.2)';
+            hwDropZone.style.background = 'rgba(0,0,0,0.2)';
 
             const file = e.dataTransfer.files[0];
             if (file) processFile(file);
@@ -7318,19 +7318,19 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         function generateConfig() {
             // Detectar SMBIOS baseado no hardware
-            currentConfig.smbios = detectSMBIOS(hardwareData, selectedMacOSVersion);
+            hwAnalysisConfig.smbios = detectSMBIOS(hardwareData, selectedMacOSVersion);
 
             // Gerar Boot Args
-            currentConfig.bootArgs = generateBootArgs(hardwareData, selectedMacOSVersion);
+            hwAnalysisConfig.bootArgs = generateBootArgs(hardwareData, selectedMacOSVersion);
 
             // Selecionar Kexts
-            currentConfig.kexts = selectKexts(hardwareData, selectedMacOSVersion);
+            hwAnalysisConfig.kexts = selectKexts(hardwareData, selectedMacOSVersion);
 
             // Gerar Quirks
-            currentConfig.quirks = generateQuirks(hardwareData, selectedMacOSVersion);
+            hwAnalysisConfig.quirks = generateQuirks(hardwareData, selectedMacOSVersion);
 
             // Gerar Device Properties
-            currentConfig.deviceProperties = generateDeviceProperties(hardwareData);
+            hwAnalysisConfig.deviceProperties = generateDeviceProperties(hardwareData);
 
             // Exibir receita
             displayRecipe();
@@ -7373,7 +7373,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             // AMD GPU
             if (gpu.includes('rx 6') || gpu.includes('rx 7')) {
                 // RX 6000/7000 series - NootRX
-                if (currentConfig.smbios === 'MacPro7,1') {
+                if (hwAnalysisConfig.smbios === 'MacPro7,1') {
                     // Não precisa de agdpmod com MacPro7,1 + NootRX
                 } else {
                     args.push('agdpmod=pikera');
@@ -7507,11 +7507,11 @@ PciRoot(0x0)/Pci(0x2,0x0)
         }
 
         function displayRecipe() {
-            document.getElementById('target-smbios').textContent = currentConfig.smbios;
-            document.getElementById('recipe-boot-args').textContent = currentConfig.bootArgs;
+            document.getElementById('target-smbios').textContent = hwAnalysisConfig.smbios;
+            document.getElementById('recipe-boot-args').textContent = hwAnalysisConfig.bootArgs;
 
             const kextList = document.getElementById('recipe-kext-list');
-            kextList.innerHTML = currentConfig.kexts.map(k =>
+            kextList.innerHTML = hwAnalysisConfig.kexts.map(k =>
                 `<span style="display: inline-block; background: rgba(0, 199, 253, 0.2); padding: 0.3rem 0.8rem; border-radius: 5px; margin: 0.2rem; font-size: 0.9rem;">
                     <i class="fas fa-puzzle-piece" style="color: var(--primary);"></i> ${k}.kext
                 </span>`
@@ -7540,7 +7540,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         // Função de Download (já existe, mas vou garantir que use os dados corretos)
         function downloadConfig() {
-            if (!currentConfig.smbios) {
+            if (!hwAnalysisConfig.smbios) {
                 alert('Nenhuma configuração gerada ainda!');
                 return;
             }
