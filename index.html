@@ -7285,21 +7285,30 @@ PciRoot(0x0)/Pci(0x2,0x0)
         }
 
         function parseAIDA64(content) {
-            // Parser simplificado para AIDA64
+            // Parser multilíngue para AIDA64 (PT, EN, ES)
             hardwareData = {
-                cpu: extractAIDA64Field(content, 'Processor') || "Desconhecido",
-                mobo: extractAIDA64Field(content, 'Motherboard') || "Desconhecido",
-                gpu: extractAIDA64Field(content, 'Video Adapter') || "Desconhecido",
-                audio: extractAIDA64Field(content, 'Audio Adapter') || "Desconhecido",
-                ethernet: extractAIDA64Field(content, 'Network Adapter') || "Desconhecido"
+                cpu: extractAIDA64Field(content, ['Processor', 'Tipo de processador', 'Procesador']) || "Desconhecido",
+                mobo: extractAIDA64Field(content, ['Motherboard', 'Nome da Placa Mãe', 'Placa Base']) || "Desconhecido",
+                gpu: extractAIDA64Field(content, ['Video Adapter', 'Adaptador gráfico', 'Adaptador de vídeo']) || "Desconhecido",
+                audio: extractAIDA64Field(content, ['Audio Adapter', 'Adaptador de som', 'Adaptador de audio']) || "Desconhecido",
+                ethernet: extractAIDA64Field(content, ['Network Adapter', 'Adaptador de Rede', 'Adaptador de red']) || "Desconhecido"
             };
             analyzeHardware();
         }
 
-        function extractAIDA64Field(html, fieldName) {
-            const regex = new RegExp(fieldName + '.*?<td[^>]*>([^<]+)</td>', 'i');
-            const match = html.match(regex);
-            return match ? match[1].trim() : null;
+        function extractAIDA64Field(html, fieldNames) {
+            // Suporta array de nomes de campo (múltiplos idiomas)
+            const fields = Array.isArray(fieldNames) ? fieldNames : [fieldNames];
+
+            for (const fieldName of fields) {
+                // Tenta encontrar o campo com regex mais flexível
+                const regex = new RegExp(fieldName + '.*?<td[^>]*>([^<]+)</td>', 'i');
+                const match = html.match(regex);
+                if (match && match[1].trim()) {
+                    return match[1].trim();
+                }
+            }
+            return null;
         }
 
         // Passo 3: Análise e Geração
