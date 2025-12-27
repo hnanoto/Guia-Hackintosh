@@ -6955,14 +6955,23 @@ PciRoot(0x0)/Pci(0x2,0x0)
             // Standard serialization download
             const serializer = new XMLSerializer();
             const xmlString = serializer.serializeToString(xmlDoc);
-            const blob = new Blob([xmlString], { type: "text/xml" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "config.plist";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            const blob = new Blob([xmlString], { type: "application/xml" });
+
+            // Robust download for all browsers
+            if (window.navigator.msSaveOrOpenBlob) {
+                window.navigator.msSaveOrOpenBlob(blob, "config.plist");
+            } else {
+                const a = document.createElement("a");
+                const url = URL.createObjectURL(blob);
+                a.href = url;
+                a.download = "config.plist";
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+            }
         };
     </script>
 </body>
