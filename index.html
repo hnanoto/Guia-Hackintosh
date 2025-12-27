@@ -6952,32 +6952,28 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 }
             }
 
-            // Standard serialization download
+            // FIXED: Use Data URI instead of Blob to ensure filename works in file:// context
             const serializer = new XMLSerializer();
             const xmlString = serializer.serializeToString(xmlDoc);
-            // Use octet-stream to force "Save As" behavior and prevent browser interference
-            const blob = new Blob([xmlString], { type: "application/octet-stream" });
 
-            // Robust download for all browsers
-            if (window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveOrOpenBlob(blob, "config.plist");
-            } else {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.style.display = "none";
-                a.href = url;
-                a.setAttribute("download", "config.plist");
-                document.body.appendChild(a);
+            // Convert to Base64 Data URI (works in all contexts, including file://)
+            const base64Data = btoa(unescape(encodeURIComponent(xmlString)));
+            const dataUri = 'data:application/octet-stream;base64,' + base64Data;
 
-                // Explicit click
-                a.click();
+            // Create download link
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = dataUri;
+            a.download = "config.plist";
+            document.body.appendChild(a);
 
-                // Extended cleanup timeout
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);
-                }, 1000);
-            }
+            // Trigger download
+            a.click();
+
+            // Cleanup
+            setTimeout(() => {
+                document.body.removeChild(a);
+            }, 1000);
         };
     </script>
 </body>
