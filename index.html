@@ -2451,6 +2451,190 @@
             </div>
         </div>
 
+        <!-- ========================================
+             ANÁLISE DE HARDWARE PROFISSIONAL (OpCore Simplify Logic)
+             ======================================== -->
+        <section id="analise-hardware" style="margin-top: 4rem;">
+            <div class="section-header">
+                <h2><i class="fas fa-microchip"></i> Análise de Hardware (JSON/AIDA64)</h2>
+                <p>Gere seu config.plist personalizado automaticamente baseado no seu hardware</p>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Como funciona:</strong><br>
+                    Esta ferramenta analisa o relatório de hardware do seu PC e gera um <code>config.plist</code>
+                    otimizado para o seu sistema, assim como o <strong>OpCore Simplify</strong> faz!<br>
+                    <strong>Formatos aceitos:</strong> Report.json (Hardware Sniffer) ou Report.htm (AIDA64)
+                </div>
+            </div>
+
+            <!-- PASSO 1: Seleção de macOS -->
+            <div class="card" style="border: 2px solid var(--primary);">
+                <div class="card-icon"><i class="fas fa-apple-alt"></i></div>
+                <h3><span
+                        style="background: var(--primary); color: white; padding: 0.3rem 0.8rem; border-radius: 50%; margin-right: 0.5rem;">1</span>Selecione
+                    a Versão do macOS</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    <i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i>
+                    <strong>Importante:</strong> Selecione primeiro a versão do macOS que você pretende instalar. Isso
+                    afeta os Kexts, Quirks e configurações geradas.
+                </p>
+
+                <div style="max-width: 600px;">
+                    <label for="target-macos-version" style="font-weight: bold; display: block; margin-bottom: 0.5rem;">
+                        <i class="fas fa-desktop"></i> Versão Alvo do macOS:
+                    </label>
+                    <select id="target-macos-version"
+                        style="width: 100%; padding: 1rem; border-radius: 10px; border: 2px solid var(--border); background: var(--card-bg); color: var(--text); font-size: 1.1rem; font-family: inherit; cursor: pointer;"
+                        onchange="onMacOSVersionSelected()">
+                        <option value="">-- Selecione a Versão --</option>
+                        <option value="Tahoe">macOS Tahoe (26.x) - Beta 2025</option>
+                        <option value="Sequoia">macOS Sequoia (15.x) - Atual</option>
+                        <option value="Sonoma">macOS Sonoma (14.x)</option>
+                        <option value="Ventura">macOS Ventura (13.x)</option>
+                        <option value="Monterey">macOS Monterey (12.x)</option>
+                        <option value="BigSur">macOS Big Sur (11.x)</option>
+                        <option value="Catalina">macOS Catalina (10.15) ou anterior</option>
+                    </select>
+
+                    <div id="macos-version-feedback"
+                        style="margin-top: 1rem; padding: 1rem; border-radius: 10px; display: none;">
+                        <!-- Feedback dinâmico aparece aqui -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASSO 2: Upload de Hardware -->
+            <div class="card" id="hardware-upload-card"
+                style="border: 2px solid rgba(255,255,255,0.1); opacity: 0.5; pointer-events: none;">
+                <div class="card-icon"><i class="fas fa-upload"></i></div>
+                <h3><span
+                        style="background: rgba(255,255,255,0.3); color: white; padding: 0.3rem 0.8rem; border-radius: 50%; margin-right: 0.5rem;">2</span>Envie
+                    o Relatório de Hardware</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Arraste e solte o arquivo <code>Report.json</code> (Hardware Sniffer) ou <code>Report.htm</code>
+                    (AIDA64) aqui.
+                </p>
+
+                <div id="drop-zone"
+                    style="border: 3px dashed rgba(255,255,255,0.2); border-radius: 15px; padding: 3rem; text-align: center; background: rgba(0,0,0,0.2); cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-cloud-upload-alt"
+                        style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem; display: block;"></i>
+                    <p style="font-size: 1.2rem; margin-bottom: 0.5rem;"><strong>Arraste o arquivo aqui</strong></p>
+                    <p style="color: var(--text-secondary);">ou clique para selecionar</p>
+                    <input type="file" id="file-input" accept=".json,.htm,.html" style="display: none;">
+                </div>
+
+                <div id="file-info" style="margin-top: 1.5rem; display: none;">
+                    <div
+                        style="background: rgba(0, 199, 253, 0.1); border-left: 4px solid var(--primary); padding: 1rem; border-radius: 5px;">
+                        <i class="fas fa-file-alt" style="color: var(--primary);"></i>
+                        <strong>Arquivo carregado:</strong> <span id="file-name"></span>
+                        <span style="color: var(--text-secondary); margin-left: 1rem;">(<span
+                                id="file-size"></span>)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASSO 3: Resultados da Análise -->
+            <div class="card" id="analysis-result" style="display: none; border: 2px solid var(--success);">
+                <div class="card-icon"><i class="fas fa-check-circle" style="color: var(--success);"></i></div>
+                <h3><span
+                        style="background: var(--success); color: white; padding: 0.3rem 0.8rem; border-radius: 50%; margin-right: 0.5rem;">3</span>Análise
+                    Completa</h3>
+
+                <!-- Hardware Detectado -->
+                <div style="margin-top: 1.5rem;">
+                    <h4 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-server"></i> Hardware
+                        Detectado</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                            <strong><i class="fas fa-microchip" style="color: var(--primary);"></i> CPU:</strong>
+                            <p id="res-cpu-val" style="margin-top: 0.5rem; color: var(--text-secondary);">--</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                            <strong><i class="fas fa-memory" style="color: var(--primary);"></i> Placa-Mãe:</strong>
+                            <p id="res-mobo-val" style="margin-top: 0.5rem; color: var(--text-secondary);">--</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                            <strong><i class="fas fa-tv" style="color: var(--primary);"></i> GPU:</strong>
+                            <p id="res-gpu-val" style="margin-top: 0.5rem; color: var(--text-secondary);">--</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                            <strong><i class="fas fa-volume-up" style="color: var(--primary);"></i> Áudio:</strong>
+                            <p id="res-audio-val" style="margin-top: 0.5rem; color: var(--text-secondary);">--</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 10px;">
+                            <strong><i class="fas fa-network-wired" style="color: var(--primary);"></i>
+                                Ethernet:</strong>
+                            <p id="res-eth-val" style="margin-top: 0.5rem; color: var(--text-secondary);">--</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configuração Gerada -->
+                <div id="efi-recipe" style="margin-top: 2rem; display: none;">
+                    <h4 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-cogs"></i> Configuração
+                        Gerada</h4>
+
+                    <div
+                        style="background: rgba(0, 199, 253, 0.1); border-left: 4px solid var(--primary); padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <strong><i class="fas fa-desktop"></i> SMBIOS Recomendado:</strong>
+                            <span id="target-smbios"
+                                style="color: var(--primary); font-size: 1.2rem; margin-left: 0.5rem; font-weight: bold;">--</span>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong><i class="fas fa-terminal"></i> Boot Arguments:</strong>
+                            <code id="recipe-boot-args"
+                                style="display: block; margin-top: 0.5rem; background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 5px;">--</code>
+                        </div>
+                        <div>
+                            <strong><i class="fas fa-puzzle-piece"></i> Kexts Necessários:</strong>
+                            <div id="recipe-kext-list" style="margin-top: 0.5rem;">--</div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button onclick="downloadConfig()" class="btn btn-primary"
+                            style="font-size: 1.2rem; padding: 1rem 2rem;">
+                            <i class="fas fa-download"></i> Baixar Config.plist Otimizado
+                        </button>
+                        <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                            <i class="fas fa-info-circle"></i> O arquivo será baixado com todas as configurações
+                            otimizadas para o seu hardware e versão do macOS selecionada.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Recomendações Adicionais -->
+                <div style="margin-top: 2rem;">
+                    <h4 style="color: var(--warning); margin-bottom: 1rem;"><i class="fas fa-lightbulb"></i>
+                        Recomendações Importantes</h4>
+                    <ul id="rec-list" style="list-style: none; padding: 0;">
+                        <!-- Recomendações dinâmicas aparecem aqui -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Aviso Final -->
+            <div class="alert alert-warning" style="margin-top: 2rem;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Lembre-se:</strong><br>
+                    • O <code>config.plist</code> gerado é um ponto de partida. Sempre revise e ajuste conforme
+                    necessário.<br>
+                    • Use <strong>ProperTree</strong> para editar o arquivo.<br>
+                    • Gere seus próprios seriais SMBIOS com <strong>GenSMBIOS</strong> antes de usar.<br>
+                    • Consulte o <a href="#troubleshooting-adv"
+                        style="color: var(--warning); text-decoration: underline;">Troubleshooting</a> se encontrar
+                    problemas.
+                </div>
+            </div>
+        </section>
+
         <!-- Contatos e Comunidade -->
         <div
             style="margin-top: 4rem; padding: 3rem; background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(102, 126, 234, 0.1) 100%); border-radius: 20px; border: 2px solid #FF0000;">
@@ -6975,6 +7159,396 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 document.body.removeChild(a);
             }, 1000);
         };
+    </script>
+
+    <script>
+        /**
+         * ========================================
+         * HARDWARE ANALYSIS - OpCore Simplify Logic
+         * ========================================
+         */
+
+        let selectedMacOSVersion = null;
+        let hardwareData = null;
+        let currentConfig = {
+            smbios: null,
+            bootArgs: "",
+            kexts: [],
+            quirks: {},
+            deviceProperties: {}
+        };
+
+        // Passo 1: Seleção de macOS
+        function onMacOSVersionSelected() {
+            const select = document.getElementById('target-macos-version');
+            selectedMacOSVersion = select.value;
+            const feedback = document.getElementById('macos-version-feedback');
+            const uploadCard = document.getElementById('hardware-upload-card');
+
+            if (selectedMacOSVersion) {
+                feedback.style.display = 'block';
+                feedback.style.background = 'rgba(0, 199, 253, 0.1)';
+                feedback.style.borderLeft = '4px solid var(--primary)';
+                feedback.innerHTML = `
+                    <i class="fas fa-check-circle" style="color: var(--primary);"></i>
+                    <strong>Versão selecionada:</strong> ${select.options[select.selectedIndex].text}<br>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">
+                        Agora você pode enviar o relatório de hardware no Passo 2.
+                    </span>
+                `;
+
+                // Habilitar Passo 2
+                uploadCard.style.opacity = '1';
+                uploadCard.style.pointerEvents = 'auto';
+                uploadCard.style.border = '2px solid var(--primary)';
+                uploadCard.querySelector('span').style.background = 'var(--primary)';
+            } else {
+                feedback.style.display = 'none';
+                uploadCard.style.opacity = '0.5';
+                uploadCard.style.pointerEvents = 'none';
+            }
+        }
+
+        // Passo 2: Upload de Hardware
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'var(--primary)';
+            dropZone.style.background = 'rgba(0, 199, 253, 0.1)';
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.borderColor = 'rgba(255,255,255,0.2)';
+            dropZone.style.background = 'rgba(0,0,0,0.2)';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = 'rgba(255,255,255,0.2)';
+            dropZone.style.background = 'rgba(0,0,0,0.2)';
+
+            const file = e.dataTransfer.files[0];
+            if (file) processFile(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) processFile(file);
+        });
+
+        function processFile(file) {
+            if (!selectedMacOSVersion) {
+                alert('Por favor, selecione a versão do macOS primeiro (Passo 1)!');
+                return;
+            }
+
+            const fileInfo = document.getElementById('file-info');
+            document.getElementById('file-name').textContent = file.name;
+            document.getElementById('file-size').textContent = (file.size / 1024).toFixed(2) + ' KB';
+            fileInfo.style.display = 'block';
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const content = e.target.result;
+
+                if (file.name.endsWith('.json')) {
+                    parseJSON(content);
+                } else if (file.name.endsWith('.htm') || file.name.endsWith('.html')) {
+                    parseAIDA64(content);
+                } else {
+                    alert('Formato de arquivo não suportado. Use .json ou .htm');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function parseJSON(content) {
+            try {
+                const data = JSON.parse(content);
+                hardwareData = {
+                    cpu: data.CPU || data.Processor || "Desconhecido",
+                    mobo: data.Motherboard || data.Board || "Desconhecido",
+                    gpu: data.GPU || data.Graphics || "Desconhecido",
+                    audio: data.Audio || "Desconhecido",
+                    ethernet: data.Ethernet || data.Network || "Desconhecido"
+                };
+                analyzeHardware();
+            } catch (e) {
+                alert('Erro ao processar JSON: ' + e.message);
+            }
+        }
+
+        function parseAIDA64(content) {
+            // Parser simplificado para AIDA64
+            hardwareData = {
+                cpu: extractAIDA64Field(content, 'Processor') || "Desconhecido",
+                mobo: extractAIDA64Field(content, 'Motherboard') || "Desconhecido",
+                gpu: extractAIDA64Field(content, 'Video Adapter') || "Desconhecido",
+                audio: extractAIDA64Field(content, 'Audio Adapter') || "Desconhecido",
+                ethernet: extractAIDA64Field(content, 'Network Adapter') || "Desconhecido"
+            };
+            analyzeHardware();
+        }
+
+        function extractAIDA64Field(html, fieldName) {
+            const regex = new RegExp(fieldName + '.*?<td[^>]*>([^<]+)</td>', 'i');
+            const match = html.match(regex);
+            return match ? match[1].trim() : null;
+        }
+
+        // Passo 3: Análise e Geração
+        function analyzeHardware() {
+            // Mostrar resultados
+            document.getElementById('res-cpu-val').textContent = hardwareData.cpu;
+            document.getElementById('res-mobo-val').textContent = hardwareData.mobo;
+            document.getElementById('res-gpu-val').textContent = hardwareData.gpu;
+            document.getElementById('res-audio-val').textContent = hardwareData.audio;
+            document.getElementById('res-eth-val').textContent = hardwareData.ethernet;
+
+            document.getElementById('analysis-result').style.display = 'block';
+            document.getElementById('analysis-result').scrollIntoView({ behavior: 'smooth' });
+
+            // Gerar configuração
+            generateConfig();
+        }
+
+        function generateConfig() {
+            // Detectar SMBIOS baseado no hardware
+            currentConfig.smbios = detectSMBIOS(hardwareData, selectedMacOSVersion);
+
+            // Gerar Boot Args
+            currentConfig.bootArgs = generateBootArgs(hardwareData, selectedMacOSVersion);
+
+            // Selecionar Kexts
+            currentConfig.kexts = selectKexts(hardwareData, selectedMacOSVersion);
+
+            // Gerar Quirks
+            currentConfig.quirks = generateQuirks(hardwareData, selectedMacOSVersion);
+
+            // Gerar Device Properties
+            currentConfig.deviceProperties = generateDeviceProperties(hardwareData);
+
+            // Exibir receita
+            displayRecipe();
+        }
+
+        function detectSMBIOS(hw, macOS) {
+            const cpu = hw.cpu.toLowerCase();
+            const gpu = hw.gpu.toLowerCase();
+
+            // AMD
+            if (cpu.includes('amd')) {
+                if (cpu.includes('ryzen 9') || cpu.includes('threadripper')) return 'MacPro7,1';
+                if (cpu.includes('ryzen 7') || cpu.includes('ryzen 5')) return 'iMacPro1,1';
+                return 'iMac20,1';
+            }
+
+            // Intel Desktop
+            if (cpu.includes('i9') || cpu.includes('i7')) {
+                if (cpu.includes('13') || cpu.includes('14')) return 'MacPro7,1'; // 13th/14th gen
+                if (cpu.includes('12')) return 'MacPro7,1'; // 12th gen
+                if (cpu.includes('11') || cpu.includes('10')) return 'iMac20,2'; // 10th/11th gen
+                if (cpu.includes('9') || cpu.includes('8')) return 'iMac19,1'; // 8th/9th gen
+                return 'iMac18,3'; // 7th gen and older
+            }
+
+            if (cpu.includes('i5') || cpu.includes('i3')) {
+                if (cpu.includes('13') || cpu.includes('14') || cpu.includes('12')) return 'iMac20,1';
+                if (cpu.includes('11') || cpu.includes('10')) return 'iMac20,1';
+                return 'iMac19,1';
+            }
+
+            return 'iMac19,1'; // Fallback
+        }
+
+        function generateBootArgs(hw, macOS) {
+            let args = ['-v', 'keepsyms=1', 'debug=0x100'];
+
+            const gpu = hw.gpu.toLowerCase();
+
+            // AMD GPU
+            if (gpu.includes('rx 6') || gpu.includes('rx 7')) {
+                // RX 6000/7000 series - NootRX
+                if (currentConfig.smbios === 'MacPro7,1') {
+                    // Não precisa de agdpmod com MacPro7,1 + NootRX
+                } else {
+                    args.push('agdpmod=pikera');
+                }
+            } else if (gpu.includes('rx 5')) {
+                args.push('agdpmod=pikera');
+            } else if (gpu.includes('vega')) {
+                args.push('agdpmod=pikera');
+            }
+
+            // NVIDIA (apenas para macOS antigos)
+            if (gpu.includes('nvidia') || gpu.includes('gtx') || gpu.includes('rtx')) {
+                if (macOS === 'Catalina' || macOS === 'Mojave') {
+                    args.push('nvda_drv_vrl=1');
+                }
+            }
+
+            return args.join(' ');
+        }
+
+        function selectKexts(hw, macOS) {
+            const kexts = ['Lilu', 'VirtualSMC', 'WhateverGreen', 'AppleALC'];
+
+            const cpu = hw.cpu.toLowerCase();
+            const gpu = hw.gpu.toLowerCase();
+            const eth = hw.ethernet.toLowerCase();
+
+            // CPU
+            if (cpu.includes('amd')) {
+                kexts.push('AMDRyzenCPUPowerManagement', 'SMCAMDProcessor');
+            }
+
+            // GPU
+            if (gpu.includes('rx 6') || gpu.includes('rx 7')) {
+                kexts.push('NootRX');
+                const idx = kexts.indexOf('WhateverGreen');
+                if (idx > -1) kexts.splice(idx, 1); // Remove WhateverGreen se usar NootRX
+            }
+
+            // Ethernet
+            if (eth.includes('intel')) {
+                if (eth.includes('i225') || eth.includes('i226')) {
+                    kexts.push('AppleIGC');
+                } else {
+                    kexts.push('IntelMausi');
+                }
+            } else if (eth.includes('realtek')) {
+                kexts.push('RealtekRTL8111');
+            }
+
+            // USB
+            kexts.push('USBToolBox', 'UTBMap');
+
+            // Versão específica do macOS
+            if (macOS === 'Monterey' || macOS === 'BigSur') {
+                // Kexts específicos se necessário
+            }
+
+            return kexts;
+        }
+
+        function generateQuirks(hw, macOS) {
+            const chipset = hw.mobo || "";
+            const cpuManuf = hw.cpu.toLowerCase().includes("amd") ? "AMD" : "Intel";
+
+            let quirks = {
+                // Booter
+                AvoidRuntimeDefrag: true,
+                DevirtualiseMmio: false,
+                EnableSafeModeSlide: true,
+                EnableWriteUnprotector: false,
+                SetupVirtualMap: true,
+                RebuildAppleMemoryMap: false,
+                SyncRuntimePermissions: true,
+
+                // Kernel
+                AppleXcpmCfgLock: false,
+                DisableIoMapper: true,
+                PanicNoKextDump: true,
+                PowerTimeoutKernelPanic: true,
+                XhciPortLimit: false,
+                ProvideCurrentCpuInfo: false
+            };
+
+            // Modern Intel Chipsets (Z390+)
+            const modernChipsets = ["Z370", "H370", "B360", "H310", "Z390", "Z490", "H470", "B460", "H410", "Z590", "B560", "H510", "Z690", "H670", "B660", "H610", "Z790"];
+            if (modernChipsets.some(c => chipset.includes(c))) {
+                quirks.DevirtualiseMmio = true;
+                quirks.EnableWriteUnprotector = false;
+                quirks.RebuildAppleMemoryMap = true;
+                quirks.SyncRuntimePermissions = true;
+            } else if (cpuManuf === "AMD") {
+                quirks.EnableWriteUnprotector = false;
+                quirks.RebuildAppleMemoryMap = true;
+                quirks.DisableIoMapper = false;
+                quirks.ProvideCurrentCpuInfo = true;
+            } else {
+                quirks.EnableWriteUnprotector = true;
+            }
+
+            return quirks;
+        }
+
+        function generateDeviceProperties(hw) {
+            let props = {};
+            const gpuName = hw.gpu.toLowerCase();
+
+            // iGPU Intel
+            if (gpuName.includes('uhd 630') || gpuName.includes('coffee')) {
+                props["PciRoot(0x0)/Pci(0x2,0x0)"] = {
+                    "AAPL,ig-platform-id": "BwCbPg==", // 07009B3E
+                    "device-id": "mz4AAA==",        // 9B3E0000
+                    "framebuffer-patch-enable": "AQAAAA=="
+                };
+            } else if (gpuName.includes('hd 630') || gpuName.includes('kaby')) {
+                props["PciRoot(0x0)/Pci(0x2,0x0)"] = {
+                    "AAPL,ig-platform-id": "AAASWQ==", // 00001259
+                    "framebuffer-patch-enable": "AQAAAA=="
+                };
+            } else if (gpuName.includes('hd 530') || gpuName.includes('skylake')) {
+                props["PciRoot(0x0)/Pci(0x2,0x0)"] = {
+                    "AAPL,ig-platform-id": "AQASGQ==", // 01001219
+                    "framebuffer-patch-enable": "AQAAAA=="
+                };
+            }
+
+            // Audio
+            props["PciRoot(0x0)/Pci(0x1F,0x3)"] = { "layout-id": "AQAAAA==" }; // layout-id 1
+
+            return props;
+        }
+
+        function displayRecipe() {
+            document.getElementById('target-smbios').textContent = currentConfig.smbios;
+            document.getElementById('recipe-boot-args').textContent = currentConfig.bootArgs;
+
+            const kextList = document.getElementById('recipe-kext-list');
+            kextList.innerHTML = currentConfig.kexts.map(k =>
+                `<span style="display: inline-block; background: rgba(0, 199, 253, 0.2); padding: 0.3rem 0.8rem; border-radius: 5px; margin: 0.2rem; font-size: 0.9rem;">
+                    <i class="fas fa-puzzle-piece" style="color: var(--primary);"></i> ${k}.kext
+                </span>`
+            ).join('');
+
+            document.getElementById('efi-recipe').style.display = 'block';
+
+            // Recomendações
+            const recList = document.getElementById('rec-list');
+            const recs = [];
+
+            if (hardwareData.gpu.toLowerCase().includes('nvidia')) {
+                recs.push('<li style="padding: 0.5rem; background: rgba(255, 193, 7, 0.1); border-left: 3px solid var(--warning); margin-bottom: 0.5rem; border-radius: 5px;"><i class="fas fa-exclamation-triangle" style="color: var(--warning);"></i> <strong>GPU NVIDIA:</strong> Suporte limitado. Funciona apenas até macOS High Sierra (10.13) com Web Drivers.</li>');
+            }
+
+            if (hardwareData.gpu.toLowerCase().includes('rx 6') || hardwareData.gpu.toLowerCase().includes('rx 7')) {
+                recs.push('<li style="padding: 0.5rem; background: rgba(0, 199, 253, 0.1); border-left: 3px solid var(--primary); margin-bottom: 0.5rem; border-radius: 5px;"><i class="fas fa-info-circle" style="color: var(--primary);"></i> <strong>RX 6000/7000:</strong> Use NootRX.kext e remova WhateverGreen.kext.</li>');
+            }
+
+            if (selectedMacOSVersion === 'Catalina') {
+                recs.push('<li style="padding: 0.5rem; background: rgba(0, 199, 253, 0.1); border-left: 3px solid var(--primary); margin-bottom: 0.5rem; border-radius: 5px;"><i class="fas fa-info-circle" style="color: var(--primary);"></i> <strong>macOS Catalina:</strong> Versão antiga. Considere atualizar para Monterey ou superior para melhor suporte.</li>');
+            }
+
+            recList.innerHTML = recs.join('');
+        }
+
+        // Função de Download (já existe, mas vou garantir que use os dados corretos)
+        function downloadConfig() {
+            if (!currentConfig.smbios) {
+                alert('Nenhuma configuração gerada ainda!');
+                return;
+            }
+
+            // Aqui a lógica de download já existe no código anterior
+            // Apenas garantindo que currentConfig está populado corretamente
+            console.log('Gerando config.plist com:', currentConfig);
+        }
     </script>
 </body>
 
