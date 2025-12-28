@@ -249,21 +249,22 @@ class ConfigGenerator {
 
     extractAIDA64Value(html, labels) {
         for (const label of labels) {
-            // Procurar por padrões de tabela HTML
+            // FIXED: Capturar TUDO entre <TD> e </TD>, incluindo tags HTML internas
             const patterns = [
-                new RegExp(`${label}[^<]*<TD[^>]*>([^<]+)`, 'i'),
-                new RegExp(`${label}.*?<TD[^>]*>\\s*([^<]+)`, 'i'),
-                new RegExp(`>${label}<.*?<TD[^>]*>([^<]+)`, 'i')
+                new RegExp(`${label}[^<]*<TD[^>]*>([\\s\\S]*?)<\\/TD>`, 'i'),
+                new RegExp(`${label}.*?<TD[^>]*>\\s*([\\s\\S]*?)<\\/TD>`, 'i'),
+                new RegExp(`>${label}<.*?<TD[^>]*>([\\s\\S]*?)<\\/TD>`, 'i')
             ];
 
             for (const pattern of patterns) {
                 const match = html.match(pattern);
                 if (match && match[1]) {
                     let value = match[1].trim();
+                    // Remover tags HTML internas (como <a href>, <b>, etc.)
+                    value = value.replace(/<[^>]+>/g, '');
                     // Limpar HTML entities
                     value = value.replace(/&nbsp;/g, ' ');
                     value = value.replace(/&amp;/g, '&');
-                    value = value.replace(/<[^>]+>/g, '');
                     value = value.trim();
 
                     if (value && value.length > 0 && value.length < 200) {
