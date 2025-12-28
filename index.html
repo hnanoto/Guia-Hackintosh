@@ -1767,6 +1767,149 @@
             </div>
         </section>
 
+        <!-- Hardware Analysis & Config Generator -->
+        <section id="hardware-analyzer"
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 3rem 0;">
+            <div class="container">
+                <div class="section-header" style="color: white;">
+                    <h2><i class="fas fa-robot"></i> Hardware Analysis & Config Generator</h2>
+                    <p>Upload your hardware report and generate a perfect config.plist automatically</p>
+                </div>
+
+                <div class="card" style="max-width: 900px; margin: 0 auto;">
+                    <!-- Step 1: Upload File -->
+                    <div id="step1-upload" class="analyzer-step">
+                        <h3><i class="fas fa-upload"></i> Step 1: Upload Hardware Report</h3>
+                        <p style="margin-bottom: 1.5rem;">Drag and drop your <strong>Report.json</strong>
+                            (HardwareSniffer) or <strong>Report.htm</strong> (AIDA64) file here:</p>
+
+                        <div id="dropZone"
+                            style="border: 3px dashed var(--primary); border-radius: 12px; padding: 3rem; text-align: center; background: rgba(102, 126, 234, 0.05); cursor: pointer; transition: all 0.3s;">
+                            <i class="fas fa-cloud-upload-alt"
+                                style="font-size: 4rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                            <p style="font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem;">Drop your file here
+                                or click to browse</p>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Supported: .json
+                                (HardwareSniffer) or .htm/.html (AIDA64)</p>
+                            <input type="file" id="fileInput" accept=".json,.htm,.html" style="display: none;">
+                        </div>
+
+                        <div id="fileInfo" style="margin-top: 1rem; display: none;">
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle"></i>
+                                <div>
+                                    <strong>File loaded:</strong> <span id="fileName"></span>
+                                    <br><small id="fileSize"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Select macOS Version -->
+                    <div id="step2-macos" class="analyzer-step" style="display: none;">
+                        <h3><i class="fas fa-apple-alt"></i> Step 2: Select Target macOS Version</h3>
+                        <p style="margin-bottom: 1.5rem;">Which macOS version do you want to install?</p>
+
+                        <div id="macosVersions"
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                            <!-- Versions will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Hardware Analysis Results -->
+                    <div id="step3-analysis" class="analyzer-step" style="display: none;">
+                        <h3><i class="fas fa-chart-line"></i> Step 3: Analysis Results</h3>
+
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Hardware detected successfully!</strong>
+                                <p style="margin-top: 0.5rem; margin-bottom: 0;">Review the information below and
+                                    generate your config.plist</p>
+                            </div>
+                        </div>
+
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                            <div style="background: rgba(0,0,0,0.1); padding: 1rem; border-radius: 8px;">
+                                <h4 style="margin-top: 0;"><i class="fas fa-microchip"></i> CPU</h4>
+                                <p id="cpuInfo" style="margin: 0; font-size: 0.9rem;"></p>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.1); padding: 1rem; border-radius: 8px;">
+                                <h4 style="margin-top: 0;"><i class="fas fa-memory"></i> Motherboard</h4>
+                                <p id="moboInfo" style="margin: 0; font-size: 0.9rem;"></p>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.1); padding: 1rem; border-radius: 8px;">
+                                <h4 style="margin-top: 0;"><i class="fas fa-tv"></i> GPU</h4>
+                                <p id="gpuInfo" style="margin: 0; font-size: 0.9rem;"></p>
+                            </div>
+                            <div style="background: rgba(0,0,0,0.1); padding: 1rem; border-radius: 8px;">
+                                <h4 style="margin-top: 0;"><i class="fas fa-desktop"></i> SMBIOS</h4>
+                                <p id="smbiosInfo" style="margin: 0; font-size: 0.9rem;"></p>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 2rem; text-align: center;">
+                            <button id="generateBtn"
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 1rem 3rem; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); transition: all 0.3s;">
+                                <i class="fas fa-cog"></i> Generate config.plist
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Download -->
+                    <div id="step4-download" class="analyzer-step" style="display: none;">
+                        <h3><i class="fas fa-download"></i> Step 4: Download Your Config</h3>
+
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Config.plist generated successfully!</strong>
+                                <p style="margin-top: 0.5rem; margin-bottom: 0;">Your personalized OpenCore
+                                    configuration is ready</p>
+                            </div>
+                        </div>
+
+                        <div
+                            style="background: rgba(0,0,0,0.1); padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem;">
+                            <h4 style="margin-top: 0;"><i class="fas fa-info-circle"></i> What's included:</h4>
+                            <ul style="margin: 0; padding-left: 1.5rem;">
+                                <li>✅ Optimized Booter and Kernel quirks for your hardware</li>
+                                <li>✅ Correct SMBIOS configuration (<span id="selectedSMBIOS"></span>)</li>
+                                <li>✅ iGPU/dGPU DeviceProperties (if applicable)</li>
+                                <li>✅ Boot-args tailored to your system</li>
+                                <li>✅ UEFI drivers and settings</li>
+                            </ul>
+                        </div>
+
+                        <div style="margin-top: 2rem; text-align: center;">
+                            <button id="downloadBtn"
+                                style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 1rem 3rem; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: all 0.3s; margin-right: 1rem;">
+                                <i class="fas fa-download"></i> Download config.plist
+                            </button>
+                            <button id="restartBtn"
+                                style="background: rgba(255,255,255,0.1); color: white; border: 2px solid white; padding: 1rem 2rem; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: all 0.3s;">
+                                <i class="fas fa-redo"></i> Analyze Another System
+                            </button>
+                        </div>
+
+                        <div class="alert alert-warning" style="margin-top: 2rem;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>Important:</strong>
+                                <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                                    <li>Always review the generated config.plist before using it</li>
+                                    <li>Generate unique SMBIOS serials using GenSMBIOS</li>
+                                    <li>Add required kexts to EFI/OC/Kexts/</li>
+                                    <li>Test boot with -v (verbose mode) first</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Step-by-Step Installation (Configs) -->
         <section id="hardware-configs">
             <div class="section-header">
@@ -8922,6 +9065,210 @@ PciRoot(0x0)/Pci(0x2,0x0)
         }
 
         document.addEventListener('DOMContentLoaded', setupHardwareListeners);
+    </script>
+
+    <!-- Config Generator Integration -->
+    <script src="config-generator.js"></script>
+    <script>
+        // Hardware Analyzer Integration
+        (function () {
+            const generator = new ConfigGenerator();
+            let currentHardwareData = null;
+            let selectedMacOS = null;
+
+            // Initialize on page load
+            document.addEventListener('DOMContentLoaded', function () {
+                setupAnalyzer();
+            });
+
+            function setupAnalyzer() {
+                const dropZone = document.getElementById('dropZone');
+                const fileInput = document.getElementById('fileInput');
+
+                if (!dropZone || !fileInput) return;
+
+                // Click to browse
+                dropZone.addEventListener('click', () => fileInput.click());
+
+                // Drag and drop
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.style.borderColor = '#667eea';
+                    dropZone.style.background = 'rgba(102, 126, 234, 0.15)';
+                });
+
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.style.borderColor = 'var(--primary)';
+                    dropZone.style.background = 'rgba(102, 126, 234, 0.05)';
+                });
+
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.style.borderColor = 'var(--primary)';
+                    dropZone.style.background = 'rgba(102, 126, 234, 0.05)';
+
+                    const file = e.dataTransfer.files[0];
+                    if (file) handleFileUpload(file);
+                });
+
+                // File input change
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) handleFileUpload(file);
+                });
+
+                // Generate button
+                const generateBtn = document.getElementById('generateBtn');
+                if (generateBtn) {
+                    generateBtn.addEventListener('click', generateConfig);
+                }
+
+                // Download button
+                const downloadBtn = document.getElementById('downloadBtn');
+                if (downloadBtn) {
+                    downloadBtn.addEventListener('click', () => generator.downloadConfigPlist());
+                }
+
+                // Restart button
+                const restartBtn = document.getElementById('restartBtn');
+                if (restartBtn) {
+                    restartBtn.addEventListener('click', resetAnalyzer);
+                }
+            }
+
+            async function handleFileUpload(file) {
+                try {
+                    // Show file info
+                    document.getElementById('fileName').textContent = file.name;
+                    document.getElementById('fileSize').textContent = `Size: ${(file.size / 1024).toFixed(2)} KB`;
+                    document.getElementById('fileInfo').style.display = 'block';
+
+                    // Parse hardware report
+                    currentHardwareData = await generator.parseHardwareReport(file);
+
+                    // Show macOS selection
+                    showMacOSSelection();
+                } catch (error) {
+                    alert('Error parsing file: ' + error.message);
+                    console.error(error);
+                }
+            }
+
+            function showMacOSSelection() {
+                document.getElementById('step1-upload').style.display = 'none';
+                document.getElementById('step2-macos').style.display = 'block';
+
+                const container = document.getElementById('macosVersions');
+                container.innerHTML = '';
+
+                generator.macOSVersions.forEach(version => {
+                    const card = document.createElement('div');
+                    card.style.cssText = `
+                        background: ${version.recommended ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'rgba(255,255,255,0.1)'};
+                        padding: 1.5rem;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                        border: 2px solid transparent;
+                    `;
+
+                    card.innerHTML = `
+                        <h4 style="margin: 0 0 0.5rem 0; color: white;">
+                            <i class="fas fa-apple-alt"></i> ${version.name}
+                        </h4>
+                        <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;">
+                            ${version.recommended ? '✅ Recommended' : 'Supported'}
+                        </p>
+                    `;
+
+                    card.addEventListener('click', () => selectMacOS(version));
+                    card.addEventListener('mouseenter', () => {
+                        card.style.transform = 'translateY(-4px)';
+                        card.style.boxShadow = '0 8px 20px rgba(0,0,0,0.3)';
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transform = 'translateY(0)';
+                        card.style.boxShadow = 'none';
+                    });
+
+                    container.appendChild(card);
+                });
+            }
+
+            function selectMacOS(version) {
+                selectedMacOS = version;
+                showAnalysisResults();
+            }
+
+            function showAnalysisResults() {
+                document.getElementById('step2-macos').style.display = 'none';
+                document.getElementById('step3-analysis').style.display = 'block';
+
+                // Display hardware info
+                const cpu = currentHardwareData.CPU;
+                const mobo = currentHardwareData.Motherboard;
+                const gpu = Object.values(currentHardwareData.GPU || {})[0] || {};
+                const smbios = generator.selectSMBIOS(currentHardwareData);
+
+                document.getElementById('cpuInfo').innerHTML = `
+                    <strong>${cpu["Processor Name"] || 'Unknown'}</strong><br>
+                    <small>${cpu.Codename || 'Unknown'} | ${cpu["Core Count"] || '?'} cores</small>
+                `;
+
+                document.getElementById('moboInfo').innerHTML = `
+                    <strong>${mobo.Name || 'Unknown'}</strong><br>
+                    <small>${mobo.Chipset || 'Unknown Chipset'}</small>
+                `;
+
+                document.getElementById('gpuInfo').innerHTML = `
+                    <strong>${Object.keys(currentHardwareData.GPU || {})[0] || 'Unknown GPU'}</strong><br>
+                    <small>${gpu.Manufacturer || 'Unknown'} | ${gpu["Device Type"] || 'Unknown'}</small>
+                `;
+
+                document.getElementById('smbiosInfo').innerHTML = `
+                    <strong>${smbios}</strong><br>
+                    <small>Best match for your hardware</small>
+                `;
+            }
+
+            async function generateConfig() {
+                try {
+                    const btn = document.getElementById('generateBtn');
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+
+                    await generator.generateConfig(currentHardwareData, selectedMacOS);
+
+                    // Show download step
+                    document.getElementById('step3-analysis').style.display = 'none';
+                    document.getElementById('step4-download').style.display = 'block';
+
+                    // Update SMBIOS display
+                    const smbios = generator.selectSMBIOS(currentHardwareData);
+                    document.getElementById('selectedSMBIOS').textContent = smbios;
+
+                } catch (error) {
+                    alert('Error generating config: ' + error.message);
+                    console.error(error);
+
+                    const btn = document.getElementById('generateBtn');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-cog"></i> Generate config.plist';
+                }
+            }
+
+            function resetAnalyzer() {
+                currentHardwareData = null;
+                selectedMacOS = null;
+
+                document.getElementById('step1-upload').style.display = 'block';
+                document.getElementById('step2-macos').style.display = 'none';
+                document.getElementById('step3-analysis').style.display = 'none';
+                document.getElementById('step4-download').style.display = 'none';
+                document.getElementById('fileInfo').style.display = 'none';
+                document.getElementById('fileInput').value = '';
+            }
+        })();
     </script>
 </body>
 
