@@ -1,5 +1,5 @@
 // ============================================================================
-// CONFIG.PLIST GENERATOR - Versão 2.0 com SMBIOS Dinâmico e Parser AIDA64
+// CONFIG.PLIST GENERATOR - Versão 3.0 com DeviceProperties Completos
 // Baseado em: OpCore-Simplify + Dortania OpenCore Install Guide
 // ============================================================================
 
@@ -8,6 +8,9 @@ class ConfigGenerator {
         this.hardwareData = null;
         this.selectedMacOS = null;
         this.generatedConfig = null;
+
+        // Carregar datasets (serão carregados via script tags no HTML)
+        this.loadDatasets();
 
         // macOS versions database com suporte de SMBIOS
         this.macOSVersions = [
@@ -37,6 +40,31 @@ class ConfigGenerator {
             "MacBookPro14,1": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2017, cpu: "7th Gen", gpu: "Intel" },
             "MacBookPro13,1": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2016, cpu: "6th Gen", gpu: "Intel" }
         };
+    }
+
+    // ========================================================================
+    // Carregar Datasets
+    // ========================================================================
+
+    loadDatasets() {
+        // Os datasets serão carregados via script tags no HTML
+        // Aqui apenas verificamos se estão disponíveis
+        if (typeof iGPUDatabase !== 'undefined') {
+            this.iGPUDatabase = iGPUDatabase;
+            this.getIGPUProperties = getIGPUProperties;
+        }
+        if (typeof codecLayouts !== 'undefined') {
+            this.codecLayouts = codecLayouts;
+            this.getCodecLayouts = getCodecLayouts;
+            this.getRecommendedLayout = getRecommendedLayout;
+            this.layoutIdToBytes = layoutIdToBytes;
+        }
+        if (typeof ethernetDatabase !== 'undefined') {
+            this.ethernetDatabase = ethernetDatabase;
+            this.getEthernetInfo = getEthernetInfo;
+            this.generateEthernetPropertiesHelper = generateEthernetProperties;
+            this.getRecommendedEthernetKext = getRecommendedEthernetKext;
+        }
     }
 
     // ========================================================================
@@ -559,75 +587,219 @@ class ConfigGenerator {
         return whitelist;
     }
 
+    // ========================================================================
+    // DEVICE PROPERTIES - v3.0 com Datasets Completos
+    // ========================================================================
+
     generateDeviceProperties(hw, macOS) {
         const deviceProps = {};
-        const gpu = Object.values(hw.GPU || {})[0];
 
-        if (gpu && gpu.Manufacturer === "Intel" && gpu["Device Type"] === "Integrated GPU") {
-            deviceProps["PciRoot(0x0)/Pci(0x2,0x0)"] = this.generateIGPUProperties(gpu, hw, macOS);
+        // 1. iGPU Properties (Intel Integrated Graphics)
+        for (const [gpuName, gpu] of Object.entries(hw.GPU || {})) {
+            if (gpu.Manufacturer === "Intel" && gpu["Device Type"] === "Integrated GPU") {
+                const igpuProps = this.generateIGPUPropertiesV3(gpu, hw, macOS);
+                if (igpuProps && Object.keys(igpuProps).length > 0) {
+                    const pciPath = gpu["PCI Path"] || "PciRoot(0x0)/Pci(0x2,0x0)";
+                    deviceProps[pciPath] = igpuProps;
+                }
+            }
         }
 
-        const audioCodec = this.detectAudioCodec(hw);
-        if (audioCodec) {
-            deviceProps["PciRoot(0x0)/Pci(0x1F,0x3)"] = {
-                "layout-id": audioCodec.layoutId
-            };
+        // 2. Audio Properties (AppleALC)
+        const audioProps = this.generateAudioProperties(hw);
+        if (audioProps && Object.keys(audioProps.properties).length > 0) {
+            deviceProps[audioProps.pciPath] = audioProps.properties;
+        }
+
+        // 3. Ethernet Properties
+        for (const [netName, netProps] of Object.entries(hw.Network || {})) {
+            const ethernetProps = this.generateEthernetPropertiesV3(netProps);
+            if (ethernetProps && Object.keys(ethernetProps).length > 0) {
+                const pciPath = netProps["PCI Path"] || "PciRoot(0x0)/Pci(0x1F,0x6)";
+                deviceProps[pciPath] = ethernetProps;
+            }
+        }
+
+        // 4. Storage Controllers (built-in)
+        for (const [storageName, storageProps] of Object.entries(hw["Storage Controllers"] || {})) {
+            if (storageProps["PCI Path"]) {
+                deviceProps[storageProps["PCI Path"]] = {
+                    "built-in": "01"
+                };
+            }
         }
 
         return deviceProps;
     }
 
-    detectAudioCodec(hw) {
-        if (hw.Sound) {
-            for (const [name, props] of Object.entries(hw.Sound)) {
-                const deviceId = props["Device ID"];
-                if (deviceId && deviceId.startsWith("10EC-")) {
-                    const codecId = deviceId.split("-")[1];
+    // ========================================================================
+    // AUDIO PROPERTIES - v3.0 com Database de Codecs
+    // ========================================================================
 
-                    const layoutMap = {
-                        "1220": 1,
-                        "0892": 1,
-                        "0887": 1,
-                        "0256": 11,
-                        "0255": 3
-                    };
-
-                    return {
-                        codecId: codecId,
-                        layoutId: layoutMap[codecId] || 1
-                    };
-                }
-            }
+    generateAudioProperties(hw) {
+        if (!hw.Sound || Object.keys(hw.Sound).length === 0) {
+            return null;
         }
+
+        // Procurar codec de áudio
+        for (const [name, props] of Object.entries(hw.Sound)) {
+            const deviceId = props["Device ID"];
+            if (!deviceId) continue;
+
+            // Verificar se temos layouts para este codec
+            let layoutId = 1; // Fallback
+
+            if (this.getRecommendedLayout && typeof this.getRecommendedLayout === 'function') {
+                layoutId = this.getRecommendedLayout(deviceId);
+            } else {
+                // Fallback para codecs comuns se dataset não estiver carregado
+                const codecMap = {
+                    "10EC-1220": 1,
+                    "10EC-0892": 1,
+                    "10EC-0887": 1,
+                    "10EC-0256": 11,
+                    "10EC-0295": 3,
+                    "10EC-0298": 3
+                };
+                layoutId = codecMap[deviceId] || 1;
+            }
+
+            // Converter layout ID para bytes (little-endian)
+            let layoutBytes;
+            if (this.layoutIdToBytes && typeof this.layoutIdToBytes === 'function') {
+                layoutBytes = this.layoutIdToBytes(layoutId);
+            } else {
+                // Fallback manual
+                const bytes = new Uint8Array(4);
+                bytes[0] = layoutId & 0xFF;
+                layoutBytes = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+            }
+
+            // Retornar propriedades
+            return {
+                pciPath: props["PCI Path"] || "PciRoot(0x0)/Pci(0x1F,0x3)",
+                properties: {
+                    "layout-id": layoutBytes
+                },
+                codecId: deviceId,
+                layoutId: layoutId
+            };
+        }
+
         return null;
     }
 
-    generateIGPUProperties(gpu, hw, macOS) {
-        const props = {};
+    // ========================================================================
+    // iGPU PROPERTIES - v3.0 com Database Completo
+    // ========================================================================
+
+    generateIGPUPropertiesV3(gpu, hw, macOS) {
+        const deviceId = gpu["Device ID"];
+        if (!deviceId) return {};
+
+        // Detectar plataforma
+        let platform = hw.Motherboard.Platform || "Desktop";
+        if (hw.Motherboard.Name && hw.Motherboard.Name.toUpperCase().includes("NUC")) {
+            platform = "NUC";
+        }
+
+        // Verificar se há monitor conectado na iGPU
+        let hasMonitor = true;
+        if (hw.GPU) {
+            const discreteGPU = Object.values(hw.GPU).find(g => g["Device Type"] === "Discrete GPU");
+            if (discreteGPU) {
+                // Se houver dGPU, assumir que iGPU é headless
+                hasMonitor = false;
+            }
+        }
+
+        // Usar dataset se disponível
+        if (this.getIGPUProperties && typeof this.getIGPUProperties === 'function') {
+            const props = this.getIGPUProperties(deviceId, platform, hasMonitor);
+            if (props) {
+                return props;
+            }
+        }
+
+        // Fallback para gerações comuns se dataset não estiver carregado
         const codename = gpu.Codename || hw.CPU.Codename || "";
-        const platform = hw.Motherboard.Platform;
+        const props = {};
 
         if (codename.includes("Coffee") || codename.includes("Comet")) {
             if (platform === "Desktop") {
-                props["AAPL,ig-platform-id"] = "07009B3E";
-                props["device-id"] = "9B3E0000";
+                if (hasMonitor) {
+                    props["AAPL,ig-platform-id"] = "00009B3E";
+                    props["device-id"] = "9B3E0000";
+                    props["framebuffer-patch-enable"] = "01000000";
+                    props["framebuffer-stolenmem"] = "00003001";
+                    props["framebuffer-fbmem"] = "00009000";
+                } else {
+                    props["AAPL,ig-platform-id"] = "07009B3E";
+                    props["device-id"] = "9B3E0000";
+                }
             } else {
                 props["AAPL,ig-platform-id"] = "0900A53E";
+                props["framebuffer-patch-enable"] = "01000000";
+                props["framebuffer-stolenmem"] = "00003001";
             }
-            props["framebuffer-patch-enable"] = "01000000";
-            props["framebuffer-stolenmem"] = "00003001";
         }
         else if (codename.includes("Kaby")) {
             if (platform === "Desktop") {
                 props["AAPL,ig-platform-id"] = "00001259";
+                props["framebuffer-stolenmem"] = "00003001";
+                props["framebuffer-fbmem"] = "00009000";
             } else {
-                props["AAPL,ig-platform-id"] = "00001B59";
+                props["AAPL,ig-platform-id"] = "00001659";
+                props["framebuffer-stolenmem"] = "00003001";
+                props["framebuffer-fbmem"] = "00009000";
             }
-            props["device-id"] = "16590000";
-            props["framebuffer-patch-enable"] = "01000000";
+        }
+        else if (codename.includes("Skylake")) {
+            if (platform === "Desktop") {
+                props["AAPL,ig-platform-id"] = "00001219";
+            } else {
+                props["AAPL,ig-platform-id"] = "00001619";
+            }
+            props["framebuffer-stolenmem"] = "00003001";
+            props["framebuffer-fbmem"] = "00009000";
         }
 
         return props;
+    }
+
+    // ========================================================================
+    // ETHERNET PROPERTIES - v3.0 com Database
+    // ========================================================================
+
+    generateEthernetPropertiesV3(netProps) {
+        const deviceId = netProps["Device ID"];
+        if (!deviceId) return {};
+
+        // Usar dataset se disponível
+        if (this.generateEthernetPropertiesHelper && typeof this.generateEthernetPropertiesHelper === 'function') {
+            return this.generateEthernetPropertiesHelper(deviceId);
+        }
+
+        // Fallback: apenas marcar como built-in
+        return {
+            "built-in": "01"
+        };
+    }
+
+    // Manter função antiga para compatibilidade
+    generateIGPUProperties(gpu, hw, macOS) {
+        return this.generateIGPUPropertiesV3(gpu, hw, macOS);
+    }
+
+    detectAudioCodec(hw) {
+        const audioProps = this.generateAudioProperties(hw);
+        if (audioProps) {
+            return {
+                codecId: audioProps.codecId,
+                layoutId: audioProps.layoutId
+            };
+        }
+        return null;
     }
 
     generateKernel(hw, macOS) {
