@@ -131,23 +131,33 @@ class ConfigGenerator {
     parseAIDA64Improved(htmlContent) {
         console.log("Parsing AIDA64 HTML...");
 
-        // Extrair CPU Name (procurar por "(CPUID) Nome da CPU" ou "13th Gen Intel")
+        // Extrair CPU Name (Priorizar CPUID que é mais preciso)
         let cpuName = this.extractAIDA64Value(htmlContent, [
             "(CPUID) Nome da CPU",
+            "(CPUID) CPU Name",
+            "Nome da CPU",
+            "CPU Alias",
             "CPU Type",
-            "Processor Type"
+            "Tipo de processador" // Deixar por último pois pode conter listas genéricas
         ]);
 
-        // Se não encontrou, procurar diretamente por "13th Gen Intel" ou "i5-13600KF"
-        if (!cpuName || cpuName === "Unknown CPU") {
-            const cpuMatch = htmlContent.match(/13th Gen Intel.*?i\d-\d+[A-Z]{0,2}/i) ||
+        // Se o nome for genérico (ex: "Intel Core i3/i5/i7"), tentar extrair o modelo específico dentro dele
+        // Ex: "Intel Core i3/i5/i7 ... (Intel Core i7-8550U)"
+        if (cpuName && (cpuName.includes("i3/i5/i7") || cpuName.includes("M/H"))) {
+            const specificModel = cpuName.match(/\(Intel Core (i\d-\d+[A-Z]{0,2})\)/i);
+            if (specificModel) {
+                cpuName = specificModel[1]; // "i7-8550U"
+            }
+        }
+
+        // Se ainda não encontrou ou é muito genérico, procurar diretamente por padrões
+        if (!cpuName || cpuName === "Unknown CPU" || cpuName.includes("Unknown")) {
+            const cpuMatch = htmlContent.match(/Intel Core i\d-\d+[A-Z]{0,2}/i) ||
+                htmlContent.match(/13th Gen Intel.*?i\d-\d+[A-Z]{0,2}/i) ||
                 htmlContent.match(/\d+th Gen Intel.*?Core.*?i\d-\d+[A-Z]{0,2}/i) ||
-                htmlContent.match(/Intel Core i\d-\d+[A-Z]{0,2}/i) ||
                 htmlContent.match(/AMD Ryzen \d \d+[A-Z]{0,2}/i);
             if (cpuMatch) {
                 cpuName = cpuMatch[0].replace(/<[^>]+>/g, '').trim();
-            } else {
-                cpuName = "Unknown CPU";
             }
         }
 
