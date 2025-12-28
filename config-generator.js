@@ -377,8 +377,8 @@ class ConfigGenerator {
     extractAIDA64AllValues(html, labels) {
         let values = [];
         for (const label of labels) {
-            // Regex global e abrangente (usa .*? para pular tags internas)
-            const pattern = new RegExp(`${label}.*?<TD[^>]*>([\\s\\S]*?)<\\/TD>`, 'gi');
+            // Regex global e abrangente (usa [\s\S]*? para pegar TUDO incluindo quebras de linha entre label e valor)
+            const pattern = new RegExp(`${label}[\\s\\S]*?<TD[^>]*>([\\s\\S]*?)<\\/TD>`, 'gi');
             let match;
             while ((match = pattern.exec(html)) !== null) {
                 let value = match[1].trim();
