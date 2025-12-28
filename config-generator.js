@@ -291,6 +291,7 @@ class ConfigGenerator {
 
             // Adicionar GPU
             data.GPU[gpuName] = {
+                "Device Name": gpuName,
                 "Device Type": gpuName.includes("Intel") && (gpuName.includes("UHD") || gpuName.includes("HD")) ? "Integrated GPU" : "Discrete GPU",
                 "Manufacturer": this.detectGPUManufacturer(gpuName),
                 "Codename": this.detectGPUCodename(gpuName)
