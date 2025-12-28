@@ -7,3 +7,12 @@
 !datasets/
 !Report*.json
 !Report*.htm
+
+# Arquivos privados (apenas local)
+README-MELHORIAS.md
+RESUMO-MELHORIAS.md
+MELHORIAS-GUIA.md
+GUIA-IMPLEMENTACAO.md
+INDEX.md
+PLANO-CONFIG-GENERATOR-V3.md
+melhorias/
