@@ -9208,7 +9208,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 const cpu = currentHardwareData.CPU;
                 const mobo = currentHardwareData.Motherboard;
                 const gpu = Object.values(currentHardwareData.GPU || {})[0] || {};
-                const smbios = generator.selectSMBIOS(currentHardwareData);
+                const smbios = generator.selectSMBIOS(currentHardwareData, selectedMacOS);
 
                 document.getElementById('cpuInfo').innerHTML = `
                     <strong>${cpu["Processor Name"] || 'Unknown'}</strong><br>
@@ -9244,7 +9244,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                     document.getElementById('step4-download').style.display = 'block';
 
                     // Update SMBIOS display
-                    const smbios = generator.selectSMBIOS(currentHardwareData);
+                    const smbios = generator.selectSMBIOS(currentHardwareData, selectedMacOS);
                     document.getElementById('selectedSMBIOS').textContent = smbios;
 
                 } catch (error) {

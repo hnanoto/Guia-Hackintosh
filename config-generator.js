@@ -1,6 +1,6 @@
 // ============================================================================
-// CONFIG.PLIST GENERATOR - Versão Melhorada com Lógica OpCore Simplify
-// Baseado em: OpCore-Simplify/Scripts/config_prodigy.py + report_validator.py
+// CONFIG.PLIST GENERATOR - Versão 2.0 com SMBIOS Dinâmico e Parser AIDA64
+// Baseado em: OpCore-Simplify + Dortania OpenCore Install Guide
 // ============================================================================
 
 class ConfigGenerator {
@@ -9,18 +9,37 @@ class ConfigGenerator {
         this.selectedMacOS = null;
         this.generatedConfig = null;
 
-        // macOS versions database
+        // macOS versions database com suporte de SMBIOS
         this.macOSVersions = [
-            { name: "macOS Sequoia 15.x", darwin: "24.0.0", recommended: true },
-            { name: "macOS Sonoma 14.x", darwin: "23.0.0", recommended: true },
-            { name: "macOS Ventura 13.x", darwin: "22.0.0", recommended: false },
-            { name: "macOS Monterey 12.x", darwin: "21.0.0", recommended: false },
-            { name: "macOS Big Sur 11.x", darwin: "20.0.0", recommended: false }
+            { name: "macOS Sequoia 15.x", darwin: "24.0.0", recommended: true, minYear: 2017 },
+            { name: "macOS Sonoma 14.x", darwin: "23.0.0", recommended: true, minYear: 2017 },
+            { name: "macOS Ventura 13.x", darwin: "22.0.0", recommended: false, minYear: 2017 },
+            { name: "macOS Monterey 12.x", darwin: "21.0.0", recommended: false, minYear: 2015 },
+            { name: "macOS Big Sur 11.x", darwin: "20.0.0", recommended: false, minYear: 2013 }
         ];
+
+        // SMBIOS Database com suporte de macOS
+        this.smbiosDatabase = {
+            // Mac Pro
+            "MacPro7,1": { type: "desktop", minDarwin: "19.0.0", maxDarwin: "99.0.0", year: 2019, cpu: "Xeon W", gpu: "AMD" },
+            "iMacPro1,1": { type: "desktop", minDarwin: "17.0.0", maxDarwin: "99.0.0", year: 2017, cpu: "Xeon W", gpu: "AMD" },
+
+            // iMac
+            "iMac20,1": { type: "desktop", minDarwin: "19.0.0", maxDarwin: "99.0.0", year: 2020, cpu: "10th Gen", gpu: "AMD/Intel" },
+            "iMac19,1": { type: "desktop", minDarwin: "18.0.0", maxDarwin: "99.0.0", year: 2019, cpu: "9th Gen", gpu: "AMD" },
+            "iMac18,3": { type: "desktop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2017, cpu: "7th Gen", gpu: "AMD" },
+            "iMac17,1": { type: "desktop", minDarwin: "15.0.0", maxDarwin: "99.0.0", year: 2015, cpu: "6th Gen", gpu: "AMD" },
+
+            // MacBook Pro
+            "MacBookPro16,1": { type: "laptop", minDarwin: "19.0.0", maxDarwin: "99.0.0", year: 2019, cpu: "9th Gen", gpu: "AMD" },
+            "MacBookPro15,1": { type: "laptop", minDarwin: "17.0.0", maxDarwin: "99.0.0", year: 2018, cpu: "8th Gen", gpu: "AMD" },
+            "MacBookPro14,1": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2017, cpu: "7th Gen", gpu: "Intel" },
+            "MacBookPro13,1": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2016, cpu: "6th Gen", gpu: "Intel" }
+        };
     }
 
     // ========================================================================
-    // STEP 1: Parse Hardware Report (JSON or AIDA64 HTML)
+    // STEP 1: Parse Hardware Report (JSON or AIDA64 HTML) - MELHORADO
     // ========================================================================
 
     async parseHardwareReport(file) {
@@ -28,12 +47,10 @@ class ConfigGenerator {
         const fileType = file.name.toLowerCase().endsWith('.json') ? 'json' : 'html';
 
         if (fileType === 'json') {
-            // HardwareSniffer JSON - formato já validado
             const data = JSON.parse(content);
             return this.validateAndCleanReport(data);
         } else {
-            // AIDA64 HTML - parsing básico
-            return this.parseAIDA64(content);
+            return this.parseAIDA64Improved(content);
         }
     }
 
@@ -47,17 +64,14 @@ class ConfigGenerator {
     }
 
     validateAndCleanReport(data) {
-        // Validação básica do formato HardwareSniffer
         if (!data.CPU || !data.Motherboard || !data.BIOS) {
             throw new Error('Invalid hardware report: missing required sections');
         }
 
-        // Normalizar codename do CPU
         if (data.CPU.Codename) {
             data.CPU.Codename = this.normalizeCPUCodename(data.CPU.Codename);
         }
 
-        // Garantir que GPU existe
         if (!data.GPU || Object.keys(data.GPU).length === 0) {
             data.GPU = {
                 "Unknown GPU": {
@@ -71,8 +85,152 @@ class ConfigGenerator {
         return data;
     }
 
+    // ========================================================================
+    // PARSER AIDA64 MELHORADO - Leitura robusta de HTML bagunçado
+    // ========================================================================
+
+    parseAIDA64Improved(htmlContent) {
+        console.log("Parsing AIDA64 HTML...");
+
+        // Criar um objeto de dados limpo
+        const data = {
+            CPU: {
+                "Processor Name": this.extractAIDA64Value(htmlContent, [
+                    "Tipo de processador",
+                    "Processor Type",
+                    "CPU Type"
+                ]) || "Unknown CPU",
+                "Manufacturer": "Intel",
+                "Codename": "Unknown",
+                "Core Count": "4"
+            },
+            Motherboard: {
+                "Name": this.extractAIDA64Value(htmlContent, [
+                    "Nome da Placa Mãe",
+                    "Motherboard Name",
+                    "Motherboard"
+                ]) || "Unknown",
+                "Platform": "Desktop",
+                "Chipset": this.extractAIDA64Value(htmlContent, [
+                    "Chipset",
+                    "System Chipset",
+                    "Chipset da Placa-Mãe"
+                ]) || "Unknown"
+            },
+            GPU: {},
+            BIOS: {
+                "Firmware Type": this.extractAIDA64Value(htmlContent, [
+                    "Tipo de BIOS",
+                    "BIOS Type"
+                ]) || "UEFI"
+            },
+            Monitor: {},
+            Network: {},
+            Sound: {}
+        };
+
+        // Detectar CPU
+        const cpuName = data.CPU["Processor Name"];
+        if (cpuName.includes("AMD")) {
+            data.CPU.Manufacturer = "AMD";
+        } else {
+            data.CPU.Manufacturer = "Intel";
+        }
+        data.CPU.Codename = this.detectCPUCodenameFromName(cpuName);
+
+        // Detectar GPU
+        const gpuName = this.extractAIDA64Value(htmlContent, [
+            "Adaptador gráfico",
+            "Video Adapter",
+            "Graphics Card",
+            "Placa de Vídeo"
+        ]) || "Unknown GPU";
+
+        data.GPU[gpuName] = {
+            "Device Type": gpuName.includes("Intel") ? "Integrated GPU" : "Discrete GPU",
+            "Manufacturer": this.detectGPUManufacturer(gpuName),
+            "Codename": this.detectGPUCodename(gpuName)
+        };
+
+        // Detectar Audio
+        const audioDevice = this.extractAIDA64Value(htmlContent, [
+            "Realtek",
+            "Audio Device",
+            "Sound Card"
+        ]);
+
+        if (audioDevice && audioDevice.includes("ALC")) {
+            const codecMatch = audioDevice.match(/ALC(\d+)/);
+            if (codecMatch) {
+                data.Sound[audioDevice] = {
+                    "Bus Type": "HDAUDIO",
+                    "Device ID": `10EC-${codecMatch[1]}`
+                };
+            }
+        }
+
+        return this.validateAndCleanReport(data);
+    }
+
+    extractAIDA64Value(html, labels) {
+        for (const label of labels) {
+            // Procurar por padrões de tabela HTML
+            const patterns = [
+                new RegExp(`${label}[^<]*<TD[^>]*>([^<]+)`, 'i'),
+                new RegExp(`${label}.*?<TD[^>]*>\\s*([^<]+)`, 'i'),
+                new RegExp(`>${label}<.*?<TD[^>]*>([^<]+)`, 'i')
+            ];
+
+            for (const pattern of patterns) {
+                const match = html.match(pattern);
+                if (match && match[1]) {
+                    let value = match[1].trim();
+                    // Limpar HTML entities
+                    value = value.replace(/&nbsp;/g, ' ');
+                    value = value.replace(/&amp;/g, '&');
+                    value = value.replace(/<[^>]+>/g, '');
+                    value = value.trim();
+
+                    if (value && value.length > 0 && value.length < 200) {
+                        return value;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    detectCPUCodenameFromName(cpuName) {
+        const codenameMap = {
+            "14th Gen": "Raptor Lake Refresh",
+            "13th Gen": "Raptor Lake",
+            "12th Gen": "Alder Lake",
+            "11th Gen": "Rocket Lake",
+            "10th Gen": "Comet Lake",
+            "9th Gen": "Coffee Lake Refresh",
+            "8th Gen": "Coffee Lake",
+            "7th Gen": "Kaby Lake",
+            "6th Gen": "Skylake",
+            "5th Gen": "Broadwell",
+            "4th Gen": "Haswell",
+            "Ryzen 9 7": "Raphael",
+            "Ryzen 7 7": "Raphael",
+            "Ryzen 5 7": "Raphael",
+            "Ryzen 9 5": "Vermeer",
+            "Ryzen 7 5": "Vermeer",
+            "Ryzen 5 5": "Vermeer"
+        };
+
+        for (const [key, value] of Object.entries(codenameMap)) {
+            if (cpuName.includes(key)) {
+                return value;
+            }
+        }
+
+        return "Unknown";
+    }
+
     normalizeCPUCodename(codename) {
-        // Remover sufixos como "-S", "-P", etc. para normalização
         const cleanCodename = codename.replace(/-[A-Z]$/, '');
 
         const codenameMap = {
@@ -88,10 +246,7 @@ class ConfigGenerator {
             "Ivy Bridge": "Ivy Bridge",
             "Sandy Bridge": "Sandy Bridge",
             "Raphael": "Raphael",
-            "Vermeer": "Vermeer",
-            "Matisse": "Matisse",
-            "Pinnacle Ridge": "Pinnacle Ridge",
-            "Summit Ridge": "Summit Ridge"
+            "Vermeer": "Vermeer"
         };
 
         for (const [key, value] of Object.entries(codenameMap)) {
@@ -103,84 +258,79 @@ class ConfigGenerator {
         return cleanCodename;
     }
 
-    parseAIDA64(htmlContent) {
-        // Parsing básico de AIDA64 (pode ser melhorado)
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlContent, 'text/html');
+    detectGPUManufacturer(gpuName) {
+        if (gpuName.includes("Intel")) return "Intel";
+        if (gpuName.includes("AMD") || gpuName.includes("Radeon")) return "AMD";
+        if (gpuName.includes("NVIDIA") || gpuName.includes("GeForce")) return "NVIDIA";
+        return "Unknown";
+    }
 
-        return {
-            CPU: {
-                "Processor Name": "Unknown CPU",
-                "Manufacturer": "Intel",
-                "Codename": "Unknown",
-                "Core Count": "4"
-            },
-            Motherboard: {
-                "Name": "Unknown",
-                "Platform": "Desktop",
-                "Chipset": "Unknown"
-            },
-            GPU: {
-                "Unknown GPU": {
-                    "Device Type": "Unknown",
-                    "Manufacturer": "Unknown",
-                    "Codename": "Unknown"
-                }
-            },
-            BIOS: {
-                "Firmware Type": "UEFI"
-            },
-            Monitor: {},
-            Network: {},
-            Sound: {}
-        };
+    detectGPUCodename(gpuName) {
+        if (gpuName.includes("RX 6")) return "Navi 2x";
+        if (gpuName.includes("RX 5")) return "Navi 1x";
+        if (gpuName.includes("UHD 630") || gpuName.includes("UHD Graphics 630")) return "Coffee Lake";
+        if (gpuName.includes("UHD 620") || gpuName.includes("HD 630")) return "Kaby Lake";
+        if (gpuName.includes("HD 530")) return "Skylake";
+        return "Unknown";
     }
 
     // ========================================================================
-    // STEP 2: SMBIOS Selection (Lógica melhorada)
+    // STEP 2: SMBIOS Selection DINÂMICO por versão do macOS - CORRIGIDO
     // ========================================================================
 
-    selectSMBIOS(hardwareData) {
+    selectSMBIOS(hardwareData, macOSVersion) {
         const cpu = hardwareData.CPU;
         const gpu = Object.values(hardwareData.GPU || {})[0];
         const platform = hardwareData.Motherboard.Platform;
+        const darwinVersion = macOSVersion ? macOSVersion.darwin : "24.0.0";
+
+        console.log(`Selecting SMBIOS for ${cpu.Codename} on macOS ${darwinVersion}`);
 
         // AMD Ryzen Desktop
         if (cpu.Manufacturer === "AMD") {
             if (platform === "Laptop") {
-                return "MacBookPro16,1"; // Fallback para laptops AMD
+                return this.getBestSMBIOS("MacBookPro16,1", darwinVersion);
             }
-            // Desktop AMD com GPU dedicada
-            if (gpu && gpu["Device Type"] === "Discrete GPU") {
-                return "MacPro7,1"; // Melhor para Sequoia/Sonoma
+
+            // MacPro7,1 só funciona em Catalina+ (19.0.0+)
+            if (this.parseDarwinVersion(darwinVersion) >= this.parseDarwinVersion("19.0.0")) {
+                if (gpu && gpu["Device Type"] === "Discrete GPU") {
+                    return "MacPro7,1";
+                }
             }
-            return "iMacPro1,1"; // AMD sem dGPU
+
+            // Fallback para iMacPro1,1 (High Sierra+)
+            return "iMacPro1,1";
         }
 
         // Intel Desktop
         if (platform === "Desktop") {
-            // Com AMD dGPU - MacPro7,1 é ideal
-            if (gpu && gpu.Manufacturer === "AMD" && gpu["Device Type"] === "Discrete GPU") {
-                return "MacPro7,1";
-            }
-
-            // Intel iGPU - baseado na geração
             const codename = cpu.Codename || "";
 
+            // AMD dGPU - MacPro7,1 se macOS suportar
+            if (gpu && gpu.Manufacturer === "AMD" && gpu["Device Type"] === "Discrete GPU") {
+                if (this.parseDarwinVersion(darwinVersion) >= this.parseDarwinVersion("21.0.0")) {
+                    return "MacPro7,1"; // Monterey+
+                }
+                return "iMacPro1,1"; // Big Sur e anteriores
+            }
+
+            // Intel iGPU - baseado na geração E compatibilidade com macOS
             if (codename.includes("Alder") || codename.includes("Raptor")) {
-                return "iMac20,1"; // 10th gen é o mais próximo suportado
+                // 12th/13th gen - usar iMac20,1 (10th gen é o mais próximo)
+                return this.getBestSMBIOS("iMac20,1", darwinVersion);
             }
             if (codename.includes("Rocket") || codename.includes("Comet")) {
-                return "iMac20,1"; // 10th gen
+                return this.getBestSMBIOS("iMac20,1", darwinVersion);
             }
             if (codename.includes("Coffee")) {
-                return "iMac19,1"; // 9th gen
+                return this.getBestSMBIOS("iMac19,1", darwinVersion);
             }
             if (codename.includes("Kaby") || codename.includes("Skylake")) {
-                return "iMac18,3"; // 7th gen
+                return this.getBestSMBIOS("iMac18,3", darwinVersion);
             }
             if (codename.includes("Broadwell") || codename.includes("Haswell")) {
-                return "iMac17,1"; // 5th gen
+                return this.getBestSMBIOS("iMac17,1", darwinVersion);
             }
         }
 
@@ -189,29 +339,66 @@ class ConfigGenerator {
             const codename = cpu.Codename || "";
 
             if (codename.includes("Coffee") || codename.includes("Comet")) {
-                return "MacBookPro16,1"; // 9th/10th gen
+                return this.getBestSMBIOS("MacBookPro16,1", darwinVersion);
             }
             if (codename.includes("Kaby")) {
-                return "MacBookPro14,1"; // 7th gen
+                return this.getBestSMBIOS("MacBookPro14,1", darwinVersion);
             }
             if (codename.includes("Skylake")) {
-                return "MacBookPro13,1"; // 6th gen
+                return this.getBestSMBIOS("MacBookPro13,1", darwinVersion);
             }
         }
 
         // Default fallback
-        return "iMac20,1";
+        return this.getBestSMBIOS("iMac20,1", darwinVersion);
+    }
+
+    getBestSMBIOS(preferredModel, darwinVersion) {
+        const smbios = this.smbiosDatabase[preferredModel];
+
+        if (!smbios) {
+            return preferredModel;
+        }
+
+        // Verificar se o SMBIOS é compatível com a versão do macOS
+        const minDarwin = this.parseDarwinVersion(smbios.minDarwin);
+        const maxDarwin = this.parseDarwinVersion(smbios.maxDarwin);
+        const currentDarwin = this.parseDarwinVersion(darwinVersion);
+
+        if (currentDarwin >= minDarwin && currentDarwin <= maxDarwin) {
+            return preferredModel;
+        }
+
+        // Se não for compatível, buscar alternativa
+        console.warn(`${preferredModel} não é compatível com macOS ${darwinVersion}`);
+
+        // Fallback seguro
+        if (currentDarwin >= this.parseDarwinVersion("20.0.0")) {
+            return "iMac20,1"; // Big Sur+
+        } else if (currentDarwin >= this.parseDarwinVersion("18.0.0")) {
+            return "iMac19,1"; // Mojave/Catalina
+        } else {
+            return "iMac18,3"; // High Sierra
+        }
+    }
+
+    parseDarwinVersion(version) {
+        const parts = version.split('.').map(Number);
+        return parts[0] * 10000 + (parts[1] || 0) * 100 + (parts[2] || 0);
     }
 
     // ========================================================================
-    // STEP 3: Generate Config.plist (Lógica completa do OpCore Simplify)
+    // STEP 3: Generate Config.plist - Usando SMBIOS dinâmico
     // ========================================================================
 
     async generateConfig(hardwareData, macOSVersion) {
         this.hardwareData = hardwareData;
         this.selectedMacOS = macOSVersion;
 
-        const smbiosModel = this.selectSMBIOS(hardwareData);
+        // SMBIOS agora é selecionado com base na versão do macOS
+        const smbiosModel = this.selectSMBIOS(hardwareData, macOSVersion);
+
+        console.log(`Generating config for ${smbiosModel} on macOS ${macOSVersion.name}`);
 
         const config = {
             "ACPI": {
@@ -277,7 +464,6 @@ class ConfigGenerator {
     generateMmioWhitelist(chipset) {
         const whitelist = [];
 
-        // Ice Lake chipsets
         if (chipset.includes("Ice Lake")) {
             whitelist.push({
                 "Address": 4284481536,
@@ -286,7 +472,6 @@ class ConfigGenerator {
             });
         }
 
-        // AMD B650/X670 chipsets
         if (chipset.includes("B650") || chipset.includes("X670")) {
             whitelist.push({
                 "Address": 4244635648,
@@ -302,12 +487,10 @@ class ConfigGenerator {
         const deviceProps = {};
         const gpu = Object.values(hw.GPU || {})[0];
 
-        // iGPU Properties for Intel
         if (gpu && gpu.Manufacturer === "Intel" && gpu["Device Type"] === "Integrated GPU") {
             deviceProps["PciRoot(0x0)/Pci(0x2,0x0)"] = this.generateIGPUProperties(gpu, hw, macOS);
         }
 
-        // Audio Layout (Realtek ALC1220 detectado)
         const audioCodec = this.detectAudioCodec(hw);
         if (audioCodec) {
             deviceProps["PciRoot(0x0)/Pci(0x1F,0x3)"] = {
@@ -319,21 +502,18 @@ class ConfigGenerator {
     }
 
     detectAudioCodec(hw) {
-        // Detectar codec de áudio do Sound
         if (hw.Sound) {
             for (const [name, props] of Object.entries(hw.Sound)) {
                 const deviceId = props["Device ID"];
                 if (deviceId && deviceId.startsWith("10EC-")) {
-                    // Realtek codec detectado
                     const codecId = deviceId.split("-")[1];
 
-                    // Mapeamento de layouts comuns
                     const layoutMap = {
-                        "1220": 1,  // ALC1220
-                        "0892": 1,  // ALC892
-                        "0887": 1,  // ALC887
-                        "0256": 11, // ALC256
-                        "0255": 3   // ALC255
+                        "1220": 1,
+                        "0892": 1,
+                        "0887": 1,
+                        "0256": 11,
+                        "0255": 3
                     };
 
                     return {
@@ -351,7 +531,6 @@ class ConfigGenerator {
         const codename = gpu.Codename || hw.CPU.Codename || "";
         const platform = hw.Motherboard.Platform;
 
-        // Coffee Lake / Comet Lake (UHD 630)
         if (codename.includes("Coffee") || codename.includes("Comet")) {
             if (platform === "Desktop") {
                 props["AAPL,ig-platform-id"] = "07009B3E";
@@ -362,7 +541,6 @@ class ConfigGenerator {
             props["framebuffer-patch-enable"] = "01000000";
             props["framebuffer-stolenmem"] = "00003001";
         }
-        // Kaby Lake (HD 630)
         else if (codename.includes("Kaby")) {
             if (platform === "Desktop") {
                 props["AAPL,ig-platform-id"] = "00001259";
@@ -416,14 +594,11 @@ class ConfigGenerator {
 
         const cpuCodename = hw.CPU.Codename || "";
 
-        // CPU ID spoofing para gerações não suportadas
         if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor")) {
-            // Spoof para Comet Lake (10th gen)
             emulate.Cpuid1Data = "55060A0000000000000000000000000000000000";
             emulate.Cpuid1Mask = "FFFFFFFF00000000000000000000000000000000";
         }
         else if (cpuCodename.includes("Rocket")) {
-            // Spoof para Comet Lake
             emulate.Cpuid1Data = "55060A0000000000000000000000000000000000";
             emulate.Cpuid1Mask = "FFFFFFFF00000000000000000000000000000000";
         }
@@ -493,7 +668,6 @@ class ConfigGenerator {
     generateBootArgs(hw, macOS) {
         const args = ["-v", "debug=0x100", "keepsyms=1"];
 
-        // AMD GPU com Navi
         const gpu = Object.values(hw.GPU || {})[0];
         if (gpu && gpu.Manufacturer === "AMD" && gpu.Codename) {
             if (gpu.Codename.includes("Navi")) {
@@ -501,7 +675,6 @@ class ConfigGenerator {
             }
         }
 
-        // Audio layout
         const audioCodec = this.detectAudioCodec(hw);
         if (audioCodec) {
             args.push(`alcid=${audioCodec.layoutId}`);
@@ -512,9 +685,9 @@ class ConfigGenerator {
 
     generateCSRConfig(macOS) {
         const version = parseInt(macOS.darwin.split('.')[0]);
-        if (version >= 20) return "030A0000"; // Big Sur+
-        if (version >= 18) return "FF070000"; // Mojave/Catalina
-        return "FF030000"; // High Sierra e anteriores
+        if (version >= 20) return "030A0000";
+        if (version >= 18) return "FF070000";
+        return "FF030000";
     }
 
     generatePlatformInfo(smbiosModel) {
@@ -573,7 +746,6 @@ class ConfigGenerator {
         const drivers = [];
         const cpuCodename = hw.CPU.Codename || "";
 
-        // HfsPlus ou HfsPlusLegacy baseado na geração
         if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor")) {
             drivers.push("HfsPlusLegacy.efi");
         } else {
@@ -583,7 +755,6 @@ class ConfigGenerator {
         drivers.push("OpenRuntime.efi");
         drivers.push("ResetNvramEntry.efi");
 
-        // OpenCanopy para GUI (apenas UEFI)
         if (hw.BIOS["Firmware Type"] === "UEFI") {
             drivers.push("OpenCanopy.efi");
         }
@@ -591,20 +762,11 @@ class ConfigGenerator {
         return drivers;
     }
 
-    // ========================================================================
-    // QUIRKS DETECTION (Lógica melhorada)
-    // ========================================================================
-
+    // Quirks detection
     needsDevirtualiseMmio(chipset, cpuCodename) {
-        // Z390, Z490, Z590, Z690, Z790 precisam
         if (chipset.match(/Z[3-7]90/)) return true;
-
-        // AMD B650/X670
         if (chipset.includes("B650") || chipset.includes("X670")) return true;
-
-        // Ice Lake
         if (cpuCodename.includes("Ice Lake")) return true;
-
         return false;
     }
 
@@ -612,18 +774,13 @@ class ConfigGenerator {
         const cpuManufacturer = hw.CPU.Manufacturer;
         const chipset = hw.Motherboard.Chipset || "";
 
-        // AMD não precisa
         if (cpuManufacturer === "AMD") return false;
-
-        // Z490+ não precisa
         if (chipset.match(/Z[4-7]90/)) return false;
 
-        // Gerações mais antigas precisam
         return true;
     }
 
     needsProtectUefiServices(chipset) {
-        // Z490, Z590, Z690, Z790 precisam
         return chipset.match(/Z[4-7]90/) !== null;
     }
 
@@ -634,15 +791,12 @@ class ConfigGenerator {
 
     selectSecureBootModel(macOS) {
         const version = parseInt(macOS.darwin.split('.')[0]);
-        if (version < 20) return "Disabled"; // Catalina e anteriores
-        if (version < 23) return "Default";  // Big Sur/Monterey
-        return "Disabled"; // Sonoma+ (para compatibilidade)
+        if (version < 20) return "Disabled";
+        if (version < 23) return "Default";
+        return "Disabled";
     }
 
-    // ========================================================================
-    // DOWNLOAD CONFIG.PLIST
-    // ========================================================================
-
+    // Download
     downloadConfigPlist() {
         if (!this.generatedConfig) {
             throw new Error('No config generated yet');
@@ -712,5 +866,5 @@ class ConfigGenerator {
     }
 }
 
-// Export for use in HTML
+// Export
 window.ConfigGenerator = ConfigGenerator;
