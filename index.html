@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -1051,112 +1051,246 @@
                 </div>
             </div>
 
+            <!-- 1. Must-Haves -->
+            <h3
+                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                <i class="fas fa-exclamation-circle"></i> <span data-i18n="kext-category-musthave">Essenciais
+                    (Obrigatórios)</span>
+            </h3>
             <div class="table-container">
-                <table>
+                <table style="width: 100%;">
                     <thead>
                         <tr>
                             <th data-i18n="th-kext">Kext</th>
                             <th data-i18n="th-function">Função</th>
-                            <th data-i18n="th-required">Obrigatório</th>
                             <th data-i18n="th-link">Link</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><strong>Lilu.kext</strong></td>
-                            <td><span data-i18n="kext-desc-lilu">Base essencial para outros kexts</span></td>
-                            <td><i class="fas fa-check-circle" style="color: var(--success)"></i> <span
-                                    data-i18n="req-yes">Sim</span></td>
-                            <td><a href="https://github.com/acidanthera/Lilu" target="_blank"
+                            <td data-i18n="kext-desc-lilu">Base essencial para patches de kext, processos e bibliotecas.
+                            </td>
+                            <td><a href="https://github.com/acidanthera/Lilu/releases" target="_blank"
                                     style="color: var(--primary)">GitHub</a></td>
                         </tr>
                         <tr>
                             <td><strong>VirtualSMC.kext</strong></td>
-                            <td><span data-i18n="kext-desc-vsmc">Emulação SMC (obrigatório para boot)</span></td>
-                            <td><i class="fas fa-check-circle" style="color: var(--success)"></i> <span
-                                    data-i18n="req-yes">Sim</span></td>
-                            <td><a href="https://github.com/acidanthera/VirtualSMC" target="_blank"
+                            <td data-i18n="kext-desc-vsmc">Emulação avançada do chip SMC. Obrigatório para boot.</td>
+                            <td><a href="https://github.com/acidanthera/VirtualSMC/releases" target="_blank"
                                     style="color: var(--primary)">GitHub</a></td>
                         </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 2. VirtualSMC Plugins -->
+            <h3
+                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                <i class="fas fa-plug"></i> <span data-i18n="kext-category-plugins">Plugins VirtualSMC</span>
+            </h3>
+            <div class="table-container">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th data-i18n="th-kext">Kext</th>
+                            <th data-i18n="th-function">Função</th>
+                            <th data-i18n="th-required">Uso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>SMCProcessor.kext</strong></td>
+                            <td data-i18n="kext-desc-smcproc">Monitoramento de temperatura da CPU.</td>
+                            <td data-i18n="req-intel-amd">Intel & AMD (Zen)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SMCSuperIO.kext</strong></td>
+                            <td data-i18n="kext-desc-smcio">Monitoramento de ventoinhas (Fan speed).</td>
+                            <td data-i18n="req-desktop-only">Desktops (maioria)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SMCLightSensor.kext</strong></td>
+                            <td data-i18n="kext-desc-smclight">Sensor de luz ambiente (ALS) para brilho automático.</td>
+                            <td data-i18n="req-laptop-only">Laptops (com sensor)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SMCBatteryManager.kext</strong></td>
+                            <td data-i18n="kext-desc-smcbatt">Monitoramento de bateria.</td>
+                            <td data-i18n="req-laptop-proper">Laptops (se medido corretamente)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AMDRyzenCPUPowerManagement.kext</strong></td>
+                            <td data-i18n="kext-desc-amd-pm">Gerenciamento de energia para APU/CPU Ryzen.</td>
+                            <td data-i18n="req-amd-only">AMD Ryzen (Substitui SMCProcessor)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 3. Graphics -->
+            <h3
+                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                <i class="fas fa-video"></i> <span data-i18n="kext-category-graphics">Gráficos</span>
+            </h3>
+            <div class="table-container">
+                <table style="width: 100%;">
+                    <tbody>
                         <tr>
                             <td><strong>WhateverGreen.kext</strong></td>
-                            <td><span data-i18n="kext-desc-weg">Patches de GPU (Intel/AMD)</span></td>
-                            <td><i class="fas fa-check-circle" style="color: var(--success)"></i> <span
-                                    data-i18n="req-yes">Sim</span></td>
-                            <td><a href="https://github.com/acidanthera/WhateverGreen" target="_blank"
+                            <td data-i18n="kext-desc-weg">Patches essenciais para GPUs Intel, AMD e NVIDIA. Fix DRM,
+                                port limits, etc.</td>
+                            <td><a href="https://github.com/acidanthera/WhateverGreen/releases" target="_blank"
                                     style="color: var(--primary)">GitHub</a></td>
                         </tr>
                         <tr>
                             <td><strong>NootRX.kext</strong></td>
-                            <td><span data-i18n="kext-desc-nootrx">Suporte AMD RX 6000/7000 series</span></td>
-                            <td><i class="fas fa-exclamation-circle" style="color: var(--warning)"></i> <span
-                                    data-i18n="req-rx6000">Se RX 6000+</span></td>
+                            <td data-i18n="kext-desc-nootrx">Suporte exclusivo para AMD RX 6000/7000 (Navi 2x/3x).
+                                **INCOMPATÍVEL com WEG**.</td>
                             <td><a href="https://github.com/ChefKissInc/NootRX" target="_blank"
                                     style="color: var(--primary)">GitHub</a></td>
                         </tr>
                         <tr>
-                            <td><strong>AppleALC.kext</strong></td>
-                            <td><span data-i18n="kext-desc-alc">Áudio nativo</span></td>
-                            <td><i class="fas fa-check-circle" style="color: var(--success)"></i> <span
-                                    data-i18n="req-yes">Sim</span></td>
-                            <td><a href="https://github.com/acidanthera/AppleALC" target="_blank"
+                            <td><strong>NootedRed.kext</strong></td>
+                            <td data-i18n="kext-desc-nooted">Suporte para APUs AMD Ryzen (Vega iGPU).</td>
+                            <td><a href="https://github.com/ChefKissInc/NootedRed" target="_blank"
                                     style="color: var(--primary)">GitHub</a></td>
                         </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 4. Audio & Network -->
+            <h3
+                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                <i class="fas fa-volume-up"></i> <span data-i18n="kext-category-audio-net">Áudio e Rede</span>
+            </h3>
+            <div class="table-container">
+                <table style="width: 100%;">
+                    <tbody>
                         <tr>
-                            <td><strong>IntelMausiEthernet.kext</strong></td>
-                            <td><span data-i18n="kext-desc-mausi">Ethernet Intel</span></td>
-                            <td><i class="fas fa-exclamation-circle" style="color: var(--warning)"></i> <span
-                                    data-i18n="req-intel-lan">Se Intel LAN</span></td>
-                            <td><a href="https://github.com/acidanthera/IntelMausi" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
+                            <td><strong>AppleALC.kext</strong></td>
+                            <td data-i18n="kext-desc-alc">Patches de áudio nativo para codecs Realtek, CX, etc.</td>
+                            <td data-i18n="req-essential">Essencial</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IntelMausi.kext</strong></td>
+                            <td data-i18n="kext-desc-mausi">Drivers para Ethernet Intel I217/I218/I219.</td>
+                            <td data-i18n="req-intel-lan">Intel LAN</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RealtekRTL8111.kext</strong></td>
+                            <td data-i18n="kext-desc-8111">Drivers para Ethernet Realtek Gigabit.</td>
+                            <td data-i18n="req-realtek-lan">Realtek LAN</td>
                         </tr>
                         <tr>
                             <td><strong>LucyRTL8125Ethernet.kext</strong></td>
-                            <td><span data-i18n="kext-desc-lucy">Ethernet Realtek RTL8125</span></td>
-                            <td><i class="fas fa-exclamation-circle" style="color: var(--warning)"></i> <span
-                                    data-i18n="req-rtl8125">Se RTL8125</span></td>
-                            <td><a href="https://github.com/Mieze/LucyRTL8125Ethernet" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
+                            <td data-i18n="kext-desc-8125">Drivers para Ethernet 2.5GbE Realtek.</td>
+                            <td data-i18n="req-rtl8125">Realtek 2.5G</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 5. WiFi & Bluetooth -->
+            <h3
+                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                <i class="fas fa-wifi"></i> <span data-i18n="kext-category-wifi">Wi-Fi & Bluetooth</span>
+            </h3>
+            <div class="table-container">
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th data-i18n="th-kext">Kext</th>
+                            <th data-i18n="th-desc">Descrição / Combinação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>itlwm.kext / AirportItlwm.kext</strong></td>
+                            <td>
+                                <span data-i18n="kext-desc-itlwm-combo">Intel Wi-Fi. `itlwm` (estável, precisa HeliPort)
+                                    ou `AirportItlwm` (nativo, recursos Apple).</span><br>
+                                <span style="font-size: 0.8em; color: var(--text-secondary);">+
+                                    IntelBluetoothFirmware.kext (BT)</span>
+                            </td>
                         </tr>
                         <tr>
-                            <td><strong>itlwm.kext</strong></td>
-                            <td><span data-i18n="kext-desc-itlwm">WiFi Intel</span></td>
-                            <td><i class="fas fa-exclamation-circle" style="color: var(--warning)"></i> <span
-                                    data-i18n="req-intel-wifi">Se Intel WiFi</span></td>
-                            <td><a href="https://github.com/OpenIntelWireless/itlwm" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
+                            <td><strong>AirportBrcmFixup.kext</strong></td>
+                            <td>
+                                <span data-i18n="kext-desc-brcm">Patches para Broadcom Wi-Fi não-nativos ou para forçar
+                                    carregamento.</span>
+                            </td>
                         </tr>
                         <tr>
-                            <td><strong>IntelBluetoothFirmware.kext</strong></td>
-                            <td><span data-i18n="kext-desc-bt">Bluetooth Intel</span></td>
-                            <td><i class="fas fa-exclamation-circle" style="color: var(--warning)"></i> <span
-                                    data-i18n="req-intel-bt">Se Intel BT</span></td>
-                            <td><a href="https://github.com/OpenIntelWireless/IntelBluetoothFirmware" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
+                            <td><strong>BlueToolFixup.kext</strong></td>
+                            <td>
+                                <span data-i18n="kext-desc-bluetool">Fix Bluetooth Monterey/Ventura/Sonoma
+                                    (Broadcom/Intel).</span>
+                            </td>
                         </tr>
                         <tr>
-                            <td><strong>CpuTopologyRebuild.kext</strong></td>
-                            <td><span data-i18n="kext-desc-cpu">Fix E-cores (Alder/Raptor Lake)</span></td>
-                            <td><i class="fas fa-exclamation-circle" style="color: var(--warning)"></i> <span
-                                    data-i18n="req-12-13-gen">Se 12ª/13ª gen</span></td>
-                            <td><a href="https://github.com/b00t0x/CpuTopologyRebuild" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
+                            <td><strong>BrcmPatchRAM3.kext</strong></td>
+                            <td>
+                                <span data-i18n="kext-desc-brcm-ram">Firmware uploader para Broadcom Bluetooth (requer
+                                    BrcmFirmwareData.kext).</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 6. USB & Extras -->
+            <h3
+                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                <i class="fas fa-puzzle-piece"></i> <span data-i18n="kext-category-extras">USB e Extras</span>
+            </h3>
+            <div class="table-container">
+                <table style="width: 100%;">
+                    <tbody>
+                        <tr>
+                            <td><strong>USBToolBox.kext</strong></td>
+                            <td data-i18n="kext-desc-usbtb">Mapeamento USB simples (Windows/macOS). Recomendado.</td>
+                            <td data-i18n="req-rec">Recomendado</td>
                         </tr>
                         <tr>
-                            <td><strong>NVMeFix.kext</strong></td>
-                            <td><span data-i18n="kext-desc-nvme">Otimização NVMe</span></td>
-                            <td><i class="fas fa-check-circle" style="color: var(--success)"></i> <span
-                                    data-i18n="req-rec">Recomendado</span></td>
-                            <td><a href="https://github.com/acidanthera/NVMeFix" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
+                            <td><strong>USBInjectAll.kext</strong></td>
+                            <td data-i18n="kext-desc-uia">Injeta todas as portas USB (Temporário para mapeamento).</td>
+                            <td data-i18n="req-temp">Temporário</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ECEnabler.kext</strong></td>
+                            <td data-i18n="kext-desc-ece">Corrige leitura de bateria (Status Battery) em muitos laptops.
+                            </td>
+                            <td data-i18n="req-laptop">Laptop</td>
+                        </tr>
+                        <tr>
+                            <td><strong>BrightnessKeys.kext</strong></td>
+                            <td data-i18n="kext-desc-brkeys">Habilita teclas de brilho (Fn) automaticamente.</td>
+                            <td data-i18n="req-laptop">Laptop</td>
                         </tr>
                         <tr>
                             <td><strong>RestrictEvents.kext</strong></td>
-                            <td><span data-i18n="kext-desc-restrict">Correções diversas</span></td>
-                            <td><i class="fas fa-check-circle" style="color: var(--success)"></i> <span
-                                    data-i18n="req-rec">Recomendado</span></td>
-                            <td><a href="https://github.com/acidanthera/RestrictEvents" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
+                            <td data-i18n="kext-desc-restrict">Bloqueia processos indesejados. Essencial para AMD (CPU
+                                Name) e MacPro7,1 (Memory error).</td>
+                            <td data-i18n="req-recommended">Recomendado</td>
+                        </tr>
+                        <tr>
+                            <td><strong>NVMeFix.kext</strong></td>
+                            <td data-i18n="kext-desc-nvmefix">Melhora gerenciamento de energia de SSDs NVMe não-Apple.
+                            </td>
+                            <td data-i18n="req-recommended">Recomendado</td>
+                        </tr>
+                        <tr>
+                            <td><strong>VoodooPS2Controller.kext</strong></td>
+                            <td data-i18n="kext-desc-ps2">Teclados PS2, Trackpads Synaptics/ELAN antigos.</td>
+                            <td data-i18n="req-legacy-input">Laptops/Legacy</td>
+                        </tr>
+                        <tr>
+                            <td><strong>VoodooI2C.kext</strong></td>
+                            <td data-i18n="kext-desc-i2c">Mouse/Trackpad modernos I2C (Dell XPS, etc). Requer satélite
+                                (ex: VoodooI2CHID).</td>
+                            <td data-i18n="req-modern-input">Laptops I2C</td>
                         </tr>
                     </tbody>
                 </table>
@@ -3383,29 +3517,30 @@ python3 CPUFriendFriend.command
             <div class="card">
                 <div class="card-icon"><i class="fas fa-volume-up"></i></div>
                 <h3 data-i18n="post-audio-title-main">Fixing Audio (AppleALC)</h3>
-                <p data-i18n="post-audio-desc-main">Enabling native audio using AppleALC.</p>
+                <p data-i18n="post-audio-desc-main">Habilitando áudio nativo usando AppleALC.</p>
 
-                <h4 data-i18n="post-audio-find-layout">1. Find your Audio Codec</h4>
-                <p data-i18n="post-audio-find-desc">Use Hackintool (Audio tab) or check Windows Device Manager to find
-                    your Realtek codec name (e.g., ALC256, ALC892).</p>
+                <h4 data-i18n="post-audio-find-layout">1. Descubra seu Codec de Áudio</h4>
+                <p data-i18n="post-audio-find-desc">Use o Hackintool (aba Áudio) ou verifique o Gerenciador de
+                    Dispositivos do Windows para encontrar o nome do seu codec Realtek (ex: ALC256, ALC892).</p>
 
-                <h4 data-i18n="post-audio-choose-layout">2. Choose a Layout ID</h4>
-                <p><span data-i18n="post-audio-layout-desc">Consult the supported codecs list and try layout-ids one by
-                        one.</span> <a href="https://github.com/acidanthera/AppleALC/wiki/Supported-codecs"
-                        target="_blank" style="color:var(--primary); text-decoration: underline;">See List <i
+                <h4 data-i18n="post-audio-choose-layout">2. Escolha um Layout ID</h4>
+                <p><span data-i18n="post-audio-layout-desc">Consulte a lista de codecs suportados e teste os layout-ids
+                        um por um.</span> <a href="https://github.com/acidanthera/AppleALC/wiki/Supported-codecs"
+                        target="_blank" style="color:var(--primary); text-decoration: underline;">Ver Lista <i
                             class="fas fa-external-link-alt"></i></a></p>
 
-                <h4 data-i18n="post-audio-apply">3. Apply (boot-args)</h4>
+                <h4 data-i18n="post-audio-apply">3. Aplique (boot-args)</h4>
                 <div class="code-block">
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                    <code>alcid=1  # (Replace 1 with your layout-id)</code>
+                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copiar</button>
+                    <code>alcid=1  # (Substitua 1 pelo seu layout-id)</code>
                 </div>
 
                 <div class="alert alert-info" style="margin-top:1rem;">
                     <i class="fas fa-magic"></i>
                     <div>
-                        <strong data-i18n="post-audio-hp-fix">HP Laptops:</strong>
-                        <span data-i18n="post-audio-hp-desc">Often require SSDT-HP-FixHPET for audio to work.</span>
+                        <strong data-i18n="post-audio-hp-fix">Laptops HP:</strong>
+                        <span data-i18n="post-audio-hp-desc">Frequentemente requerem SSDT-HP-FixHPET para o áudio
+                            funcionar.</span>
                     </div>
                 </div>
             </div>
@@ -3413,20 +3548,19 @@ python3 CPUFriendFriend.command
             <!-- Cosmetics (GUI & Boot Chime) -->
             <div class="card">
                 <div class="card-icon"><i class="fas fa-paint-brush"></i></div>
-                <h3 data-i18n="post-cosmetic-title">Cosmetics (OpenCanopy & Tips)</h3>
-                <p data-i18n="post-cosmetic-desc">Make your Hackintosh look premium during boot.</p>
+                <h3 data-i18n="post-cosmetic-title">Cosméticos (OpenCanopy & Dicas)</h3>
+                <p data-i18n="post-cosmetic-desc">Deixe seu Hackintosh com visual premium durante o boot.</p>
 
                 <!-- GUI -->
                 <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
                     <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                         <i class="fas fa-desktop" style="color: #A855F7; margin-right: 8px;"></i>
-                        <span data-i18n="post-gui-title">Enable Graphical GUI (OpenCanopy)</span>
+                        <span data-i18n="post-gui-title">Habilitar Interface Gráfica (OpenCanopy)</span>
                     </summary>
                     <div style="padding: 10px;">
                         <ol style="font-size: 0.9rem; padding-left: 1.5rem; margin: 0;">
-                            <li data-i18n="post-gui-step1">Download <strong>OcBinaryData</strong> (Resources folder).
-                            </li>
-                            <li data-i18n="post-gui-step2">Add <strong>OpenCanopy.efi</strong> to Drivers.</li>
+                            <li data-i18n="post-gui-step1">Baixe <strong>OcBinaryData</strong> (pasta Resources).</li>
+                            <li data-i18n="post-gui-step2">Adicione <strong>OpenCanopy.efi</strong> em Drivers.</li>
                             <li data-i18n="post-gui-step3">Config.plist -> Misc -> Boot -> <strong>PickerMode:
                                     External</strong>.</li>
                             <li data-i18n="post-gui-step4">Config.plist -> Misc -> Boot -> <strong>PickerAttributes:
@@ -3439,39 +3573,18 @@ python3 CPUFriendFriend.command
                 <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
                     <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                         <i class="fas fa-music" style="color: #F59E0B; margin-right: 8px;"></i>
-                        <span data-i18n="post-chime-title">Enable Boot Chime (Mac Sound)</span>
+                        <span data-i18n="post-chime-title">Habilitar Som de Boot (Chime)</span>
                     </summary>
-                    <div class="result-details" id="analysis-recs" style="display:none; margin-top:15px;">
-                        <h5 data-i18n="analysis-recs-title">Recommended Configuration</h5>
-
-                        <!-- macOS Version Selector -->
-                        <div style="margin-bottom: 15px;">
-                            <label for="macos-version"
-                                style="font-weight:bold; color:var(--text); display:block; margin-bottom:5px;"
-                                data-i18n="target-macos">Target macOS Version:</label>
-                            <select id="macos-version"
-                                style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--border); background:var(--card-bg); color:var(--text); font-family:inherit;"
-                                onchange="generateRecipe()">
-                                <option value="Tahoe">macOS Tahoe (26.x) - Beta</option>
-                                <option value="Sequoia">macOS Sequoia (15.x)</option>
-                                <option value="Sonoma">macOS Sonoma (14.x)</option>
-                                <option value="Ventura">macOS Ventura (13.x)</option>
-                                <option value="Monterey">macOS Monterey (12.x)</option>
-                                <option value="BigSur">macOS Big Sur (11.x)</option>
-                                <option value="Catalina">macOS Catalina (10.15) or older</option>
-                            </select>
-                        </div>
-
-                        <div id="recipe-content"></div>
-                    </div>
                     <div style="padding: 10px;">
                         <ol style="font-size: 0.9rem; padding-left: 1.5rem; margin: 0;">
-                            <li data-i18n="post-chime-step1">Enable <strong>AudioDxe.efi</strong> driver.</li>
+                            <li data-i18n="post-chime-step1">Habilite o driver <strong>AudioDxe.efi</strong> em UEFI ->
+                                Drivers.</li>
                             <li data-i18n="post-chime-step2">UEFI -> Audio -> <strong>AudioSupport: True</strong>.</li>
                             <li data-i18n="post-chime-step3">UEFI -> Audio -> <strong>AudioCodec: 0</strong>.</li>
                             <li data-i18n="post-chime-step4">UEFI -> Audio -> <strong>AudioOutMask: -1</strong>.</li>
-                            <li data-i18n="post-chime-step5">NVRAM -> w... -> 7C... -> <strong>SystemAudioVolume:
-                                    46</strong>.</li>
+                            <li data-i18n="post-chime-step5">NVRAM -> 7C436110-AB2A-4BBB-A880-FE41995C9F82 ->
+                                <strong>SystemAudioVolume: 46</strong>.
+                            </li>
                         </ol>
                     </div>
                 </details>
@@ -3480,13 +3593,13 @@ python3 CPUFriendFriend.command
                 <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
                     <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                         <i class="fas fa-eye-slash" style="color: var(--danger); margin-right: 8px;"></i>
-                        <span data-i18n="post-verbose-title">Hide Verbose Text (-v)</span>
+                        <span data-i18n="post-verbose-title">Ocultar Texto de Verbose (-v)</span>
                     </summary>
                     <div style="padding: 10px;">
-                        <p style="font-size: 0.9rem;" data-i18n="post-verbose-desc">Only remove after your system is
-                            100% stable!</p>
+                        <p style="font-size: 0.9rem;" data-i18n="post-verbose-desc">Remova apenas após seu sistema estar
+                            100% estável!</p>
                         <ul style="font-size: 0.9rem; padding-left: 1.5rem; margin: 0;">
-                            <li><span data-i18n="post-verbose-step1">NVRAM -> UUID -> boot-args: Remove
+                            <li><span data-i18n="post-verbose-step1">NVRAM -> UUID -> boot-args: Remova
                                     <code>-v</code></span>.</li>
                         </ul>
                     </div>
@@ -3779,6 +3892,211 @@ python3 SSDTTime.command
 # 6. USB Reset - Gera SSDT-RHUB</code>
                 </div>
             </div>
+
+            <!-- SSDT-PMC -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-memory"></i></div>
+                <h3>SSDT-PMC</h3>
+
+                <h4 data-i18n="acpi-pmc-what">O que faz:</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-1">Corrige NVRAM nativo em placas
+                            300-series (não-Z370)</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-2">Declara o chip FW como MMIO no
+                            ACPI</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-3">Permite que o kernel reconheça
+                            a região NVRAM</span></li>
+                </ul>
+
+                <h4 data-i18n="acpi-pmc-when">Quando usar:</h4>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-pmc-when-1">Placas 300-series
+                            verdadeiras (B360, B365, H310, H370, Z390)</span></li>
+                    <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span
+                            data-i18n="acpi-pmc-when-2">NÃO usar em Z370 (já tem NVRAM nativo)</span></li>
+                </ul>
+            </div>
+
+            <!-- SSDT-RHUB -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-usb"></i></div>
+                <h3>SSDT-RHUB</h3>
+
+                <h4 data-i18n="acpi-rhub-what">O que faz:</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-rhub-1">Reseta o USB controller
+                            (RHUB)</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-rhub-2">Corrige problemas de USB em
+                            placas 400/500-series</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-rhub-3">Necessário para algumas placas
+                            AMD</span></li>
+                </ul>
+
+                <h4 data-i18n="acpi-rhub-when">Quando usar:</h4>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-rhub-when-1">Intel 400/500/600-series
+                            (Comet Lake+)</span></li>
+                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-rhub-when-2">AMD X570, B550,
+                            A520</span></li>
+                </ul>
+            </div>
+
+            <!-- SSDT-PNLF (Laptops) -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-laptop"></i></div>
+                <h3>SSDT-PNLF <span style="color: var(--warning); font-size: 0.8em;">(Laptops)</span></h3>
+
+                <h4 data-i18n="acpi-pnlf-what">O que faz:</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pnlf-1">Habilita controle de brilho do
+                            painel LCD</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pnlf-2">Cria device PNLF para
+                            backlight</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pnlf-3">Permite ajuste via teclas
+                            Fn</span></li>
+                </ul>
+
+                <h4 data-i18n="acpi-pnlf-when">Quando usar:</h4>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-pnlf-when-1">TODOS os laptops com iGPU
+                            Intel</span></li>
+                    <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span
+                            data-i18n="acpi-pnlf-when-2">NÃO necessário em desktops</span></li>
+                </ul>
+            </div>
+
+            <!-- SSDT-GPI0 (Laptops) -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-hand-pointer"></i></div>
+                <h3>SSDT-GPI0 <span style="color: var(--warning); font-size: 0.8em;">(Laptops)</span></h3>
+
+                <h4 data-i18n="acpi-gpi0-what">O que faz:</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-gpi0-1">Habilita trackpad I2C</span>
+                    </li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-gpi0-2">Cria stub GPIO para
+                            VoodooI2C</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-gpi0-3">Melhora gestos
+                            multi-touch</span></li>
+                </ul>
+
+                <h4 data-i18n="acpi-gpi0-when">Quando usar:</h4>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-gpi0-when-1">Laptops com trackpad
+                            I2C</span></li>
+                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-gpi0-when-2">Alternativa ao SSDT-XOSI
+                            (mais seguro)</span></li>
+                </ul>
+            </div>
+
+            <!-- SSDT-CPUR (AMD) -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-microchip" style="color: #EF4444;"></i></div>
+                <h3>SSDT-CPUR <span style="color: #EF4444; font-size: 0.8em;">(AMD)</span></h3>
+
+                <h4 data-i18n="acpi-cpur-what">O que faz:</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-cpur-1">Corrige detecção de CPU em
+                            placas B550/A520</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-cpur-2">Declara todos os cores da
+                            CPU</span></li>
+                    <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-cpur-3">Necessário para boot em
+                            algumas placas</span></li>
+                </ul>
+
+                <h4 data-i18n="acpi-cpur-when">Quando usar:</h4>
+                <ul>
+                    <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-cpur-when-1">AMD B550 e A520
+                            APENAS</span></li>
+                    <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span
+                            data-i18n="acpi-cpur-when-2">NÃO usar em X570, B450, X470, etc.</span></li>
+                </ul>
+            </div>
+
+            <!-- Tabela de Requisitos por Plataforma -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-table"></i></div>
+                <h3 data-i18n="acpi-platform-title">📋 SSDTs Necessários por Plataforma</h3>
+
+                <div class="alert alert-success">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong data-i18n="acpi-platform-tip">Dica:</strong>
+                        <span data-i18n="acpi-platform-tip-desc">Use SSDTTime para gerar automaticamente os SSDTs
+                            necessários para seu hardware!</span>
+                    </div>
+                </div>
+
+                <h4 data-i18n="acpi-desktop-title">🖥️ Desktop Intel:</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="acpi-th-generation">Geração</th>
+                                <th data-i18n="acpi-th-ssdts">SSDTs Necessários</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Penryn - Ivy Bridge</td>
+                                <td>SSDT-EC + CPU-PM (manual)</td>
+                            </tr>
+                            <tr>
+                                <td>Haswell - Skylake</td>
+                                <td>SSDT-EC + SSDT-PLUG</td>
+                            </tr>
+                            <tr>
+                                <td>Kaby Lake - Coffee Lake</td>
+                                <td>SSDT-EC-USBX + SSDT-PLUG</td>
+                            </tr>
+                            <tr>
+                                <td>Comet Lake (400-series)</td>
+                                <td>SSDT-EC-USBX + SSDT-PLUG + SSDT-AWAC + SSDT-RHUB</td>
+                            </tr>
+                            <tr>
+                                <td>Rocket Lake (500-series)</td>
+                                <td>SSDT-EC-USBX + SSDT-PLUG + SSDT-AWAC + SSDT-RHUB</td>
+                            </tr>
+                            <tr>
+                                <td>Alder/Raptor Lake (600/700)</td>
+                                <td>SSDT-EC-USBX + SSDT-PLUG-ALT + SSDT-AWAC + SSDT-RHUB</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 data-i18n="acpi-laptop-title">💻 Laptop Intel:</h4>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong data-i18n="acpi-laptop-warning">Atenção:</strong>
+                        <span data-i18n="acpi-laptop-warning-desc">Laptops precisam de TODOS os SSDTs de desktop +
+                            SSDT-PNLF + SSDT-GPI0 (se trackpad I2C)</span>
+                    </div>
+                </div>
+
+                <h4 data-i18n="acpi-amd-title">🔴 Desktop AMD:</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th data-i18n="acpi-th-platform">Plataforma</th>
+                                <th data-i18n="acpi-th-ssdts">SSDTs Necessários</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>B450, X470, X570</td>
+                                <td>SSDT-EC-USBX</td>
+                            </tr>
+                            <tr>
+                                <td>B550, A520</td>
+                                <td>SSDT-EC-USBX + SSDT-CPUR</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
         <!-- ========================================
@@ -3872,6 +4190,104 @@ PciRoot(0x0)/Pci(0x2,0x0)
                             Kernel Panic (essencial para debug)</span></li>
                     <li><strong>XhciPortLimit:</strong> <span data-i18n="quirk-xhci">Desabilite após mapear USBs (macOS
                             11.3+)</span></li>
+                </ul>
+            </div>
+
+            <!-- Misc Settings (Security & Boot) -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3 data-i18n="config-misc-title">Misc (Segurança & Boot)</h3>
+                <p data-i18n="config-misc-desc">Configurações críticas de segurança e comportamento de inicialização.
+                </p>
+
+                <h4 style="margin-top: 15px; color: var(--primary);">Security</h4>
+                <ul>
+                    <li><strong>SecureBootModel:</strong> <span data-i18n="quirk-secureboot">Default (x86legacy se
+                            Monterey+ em PCs antigos). 'Disabled' para instalar versões antigas.</span></li>
+                    <li><strong>Vault:</strong> <span data-i18n="quirk-vault">Optional (desabilitado). 'Secure' exige
+                            assinatura de todos os arquivos.</span></li>
+                    <li><strong>ScanPolicy:</strong> <span data-i18n="quirk-scanpolicy">0 (detectar tudo). Altere se
+                            quiser ocultar partições NTFS/Linux.</span></li>
+                </ul>
+
+                <h4 style="margin-top: 15px; color: var(--primary);">Boot</h4>
+                <ul>
+                    <li><strong>Timeout:</strong> <span data-i18n="quirk-timeout">Tempo em segundos antes do boot
+                            automático (ex: 5).</span></li>
+                    <li><strong>ShowPicker:</strong> <span data-i18n="quirk-picker">True (mostrar menu). False para boot
+                            direto.</span></li>
+                </ul>
+            </div>
+
+            <!-- NVRAM & Boot-args -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-terminal"></i></div>
+                <h3 data-i18n="config-nvram-title">NVRAM (Boot-args)</h3>
+                <p data-i18n="config-nvram-desc">Argumentos comuns de inicialização (boot-args).</p>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Argumento</th>
+                                <th data-i18n="th-description">Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>-v</code></td>
+                                <td data-i18n="arg-v">Modo Verbose (mostra logs de texto no boot). Essencial para debug.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><code>debug=0x100</code></td>
+                                <td data-i18n="arg-debug">Evita reboot automático em caso de Kernel Panic.</td>
+                            </tr>
+                            <tr>
+                                <td><code>keepsyms=1</code></td>
+                                <td data-i18n="arg-keepsyms">Mostra símbolos de debug no Kernel Panic (ajuda a
+                                    identificar a causa).</td>
+                            </tr>
+                            <tr>
+                                <td><code>alcid=1</code></td>
+                                <td data-i18n="arg-alcid">Layout ID padrão para AppleALC. Mude o número conforme seu
+                                    codec.</td>
+                            </tr>
+                            <tr>
+                                <td><code>agdpmod=pikera</code></td>
+                                <td data-i18n="arg-pikera">Necessário para GPUs AMD Navi (RX 5000/6000/7000). Corrige
+                                    tela preta.</td>
+                            </tr>
+                            <tr>
+                                <td><code>amfi=0x80</code></td>
+                                <td data-i18n="arg-amfi">Desabilita AMFI (Necessário para OCLP em Sonoma/Sequoia).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Platform Specific Recommendations -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-desktop"></i></div>
+                <h3 data-i18n="config-platform-title">Recomendações por Plataforma</h3>
+
+                <h4 style="margin-top: 15px; color: var(--primary);">💻 Laptops (Intel)</h4>
+                <ul>
+                    <li><strong>DeviceProperties:</strong> <span data-i18n="rec-lap-dp">Essencial configurar Framebuffer
+                            Patching para iGPU (tela preta/glitches).</span></li>
+                    <li><strong>NVRAM:</strong> <span data-i18n="rec-lap-nvram">Adicione <code>-igfxblr</code> se tiver
+                            problemas de backlight no boot.</span></li>
+                    <li><strong>Kernel:</strong> <span data-i18n="rec-lap-kernel">Habilite <code>PanicNoKextDump</code>.
+                            Laptops são mais propensos a panics.</span></li>
+                </ul>
+
+                <h4 style="margin-top: 15px; color: var(--primary);">🖥️ Desktops (AMD)</h4>
+                <ul>
+                    <li><strong>Kernel:</strong> <span data-i18n="rec-amd-kernel">Aplique os Patches de Kernel para AMD
+                            Ryzen (obrigatório).</span></li>
+                    <li><strong>Boot-args:</strong> <span data-i18n="rec-amd-args"><code>npci=0x2000</code> ou
+                            <code>npci=0x3000</code> geralmente necessário para evitar travar no início.</span></li>
                 </ul>
             </div>
         </section>
@@ -6043,10 +6459,301 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'sec-sip-desc': 'Desactive (csr-active-config: FF0F0000) solo para instalar kexts en /System (Root Patching). Para uso normal, mantenga activado (00000000).',
                 'sec-fv-title': 'FileVault (Cifrado)',
                 'sec-fv-desc': 'Requiere configuración compleja (Misc -> Security -> Vault). No active sin leer la documentación oficial o perderá acceso a los datos.',
+
+                // POST-INSTALL EXTRA
+                'post-install-title': 'Post-Instalación',
+                'post-install-desc': 'Configuraciones esenciales después de instalar macOS',
+                'post-install-success': '¡Felicidades! ¡macOS instalado con éxito!',
+                'post-install-next': 'Ahora vamos a configurar funcionalidades esenciales.',
+                'post-guide-title': 'Cómo Seguir esta Guía',
+                'post-guide-intro': 'No todas las secciones son obligatorias. Enfóquese en lo esencial:',
+                'post-cat-universal': 'Universal & USB',
+                'post-cat-universal-desc': 'Recomendado para TODOS (Estabilidad).',
+                'post-cat-laptop': 'Portátiles',
+                'post-cat-laptop-desc': 'Esencial para batería y trackpad.',
+                'post-cat-security': 'Seguridad',
+                'post-cat-security-desc': 'FileVault y SIP (Opcional).',
+                'post-cat-cosmetic': 'Cosméticos',
+                'post-cat-cosmetic-desc': 'GUI, Sonido de Arranque, Dual Boot.',
+
+                'post-usb-title': '1. Mapeo USB (CRÍTICO)',
+                'post-usb-desc': 'El mapeo USB es ESENCIAL para estabilidad y sleep.',
+                'post-usb-why': '¿Por qué mapear USB?',
+                'post-usb-reason-1': 'macOS tiene límite de 15 puertos',
+                'post-usb-reason-2': 'Previene problemas de sleep/wake',
+                'post-usb-reason-3': 'Mejora estabilidad general',
+                'post-usb-reason-4': 'Corrige Bluetooth/WiFi',
+                'post-usb-reason-5': 'Necesario para iServices',
+
+                'post-cosmetic-title': 'Cosméticos (OpenCanopy & Tips)',
+                'post-cosmetic-desc': 'Haga que su Hackintosh luzca premium en el arranque.',
+                'post-gui-title': 'Habilitar Interfaz Gráfica (OpenCanopy)',
+                'post-gui-step1': 'Descargue OcBinaryData (carpeta Resources).',
+                'post-gui-step2': 'Agregue OpenCanopy.efi en Drivers.',
+                'post-gui-step3': 'Config.plist -> Misc -> Boot -> PickerMode: External.',
+                'post-gui-step4': 'Config.plist -> Misc -> Boot -> PickerAttributes: 17.',
+
+                'post-chime-title': 'Habilitar Sonido de Arranque (Chime)',
+                'post-chime-step1': 'Habilite el driver AudioDxe.efi en UEFI -> Drivers.',
+                'post-chime-step2': 'UEFI -> Audio -> AudioSupport: True.',
+                'post-chime-step3': 'UEFI -> Audio -> AudioCodec: 0.',
+                'post-chime-step4': 'UEFI -> Audio -> AudioOutMask: -1.',
+                'post-chime-step5': 'NVRAM -> ... -> SystemAudioVolume: 46.',
+
+                'post-verbose-title': 'Ocultar Texto Verbose (-v)',
+                'post-verbose-desc': '¡Solo elimine después de que su sistema sea 100% estable!',
             },
+            'en': {
+                // UI Elements
+                'loading': 'Loading updates...',
+                'language': 'Language',
+                'title': 'Hackintosh Guide',
+
+                // Badges & Hero
+                'opencore-version': 'OpenCore',
+                'december': 'December',
+                'auto-update': 'Auto-update',
+                'main-title': 'Complete Hackintosh Guide',
+                'main-description': 'The most complete and updated guide to create your EFI from scratch using OpenCore. Compatible with macOS Sequoia 15.x and ready for macOS Tahoe 26.x (2025).',
+                'live-updates': 'Real-Time Updates',
+                'live-updates-desc': 'This guide automatically fetches the latest versions of OpenCore, kexts, and tools via GitHub API.',
+
+                // Navigation
+                'nav-home': 'Home',
+                'nav-req': 'Requirements',
+                'nav-smbios': 'SMBIOS',
+                'nav-hw': 'Hardware',
+                'nav-install': 'Installation',
+                'nav-tools': 'Tools',
+                'nav-resources': 'Resources',
+
+                // Sections
+                'sec-smbios-title': 'Choose your SMBIOS',
+                'sec-smbios-desc': 'Essential for Power Management and iServices (iMessage/FaceTime).',
+                'sec-hw-title': 'Configurations by Generation',
+                'sec-hw-desc': 'Specific Guides for Intel (Desktop/Laptop) and AMD.',
+                'sec-kexts-title': 'Essential Kexts',
+                'sec-kexts-desc': 'Drivers required for hardware to work.',
+
+                'req-title': 'Minimum Requirements',
+                'req-desc': 'Check if your hardware is compatible before starting.',
+                'req-usb': 'USB Flash Drive 16GB+',
+                'req-internet': 'Internet Connection (Ethernet preferred)',
+                'req-os': 'Time and Pacience (Critical)',
+
+                // Kexts (Detailed)
+                'alert-kexts': 'Attention: Use only kexts necessary for your hardware. Excess kexts cause instability.',
+                'kext-category-musthave': 'Must-Haves (Required)',
+                'kext-category-plugins': 'VirtualSMC Plugins',
+                'kext-category-graphics': 'Graphics (GPU)',
+                'kext-category-audio-net': 'Audio & Ethernet',
+                'kext-category-wifi': 'Wi-Fi & Bluetooth',
+                'kext-category-extras': 'USB & Extras',
+
+                'th-kext': 'Kext', 'th-function': 'Function', 'th-required': 'Required', 'th-link': 'Link',
+                'th-hardware': 'Hardware', 'th-smbios-rec': 'SMBIOS Rec', 'th-compat': 'Compat', 'th-notes': 'Notes',
+                'th-bootarg': 'Boot-arg', 'th-usage': 'Usage',
+                'th-desc': 'Description',
+
+                'kext-desc-lilu': 'Essential base for other kexts',
+                'kext-desc-vsmc': 'SMC Emulation (required for boot)',
+                'kext-desc-weg': 'GPU Patches (Intel/AMD)',
+                'kext-desc-nootrx': 'AMD RX 6000/7000 series Support',
+                'kext-desc-nooted': 'AMD APU (Ryzen iGPU) Support',
+                'kext-desc-alc': 'Native Audio',
+                'kext-desc-mausi': 'Intel Ethernet',
+                'kext-desc-lucy': 'Realtek RTL8125 Ethernet',
+                'kext-desc-8111': 'Realtek RTL8111 Ethernet',
+                'kext-desc-itlwm': 'Intel WiFi',
+                'kext-desc-bt': 'Intel Bluetooth',
+                'kext-desc-cpu': 'E-cores Fix (Alder/Raptor Lake)',
+                'kext-desc-nvme': 'NVMe Optimization',
+                'kext-desc-restrict': 'Misc Fixes',
+                'kext-desc-usbtb': 'USB Mapping (Windows)',
+                'kext-desc-uia': 'Legacy USB Injection',
+                'kext-desc-brkeys': 'Brightness Keys',
+                'kext-desc-ec': 'Laptop EC Fix',
+                'kext-desc-ps2': 'Laptop Keyboard/Trackpad',
+                'kext-desc-i2c': 'Advanced Touchpads',
+                'kext-desc-brcm-ram': 'Bluetooth Firmware RAM Store',
+                'kext-desc-bluetool': 'Fix Bluetooth on Monterey+',
+                'kext-desc-itlwm-combo': 'itlwm (Ethernet-like) or AirportItlwm (Native)',
+
+                'req-yes': 'Yes', 'req-rx6000': 'If RX 6000+', 'req-intel-lan': 'If Intel LAN', 'req-rtl8125': 'If RTL8125',
+                'req-intel-wifi': 'If Intel WiFi', 'req-intel-bt': 'If Intel BT', 'req-12-13-gen': 'If 12th/13th gen', 'req-rec': 'Rec.',
+                'req-essential': 'Essential', 'req-desktop-only': 'Desktop Only', 'req-laptop-only': 'Laptop Only',
+                'req-amd-only': 'AMD Only', 'req-realtek-lan': 'If Realtek LAN',
+                'req-legacy-input': 'Legacy Input', 'req-modern-input': 'Modern Input',
+
+                // ACPI
+                'acpi-title': 'ACPI and SSDTs Explained',
+                'acpi-desc': 'Understand what each SSDT does and when to use it',
+                'acpi-what': 'What is ACPI?',
+                'acpi-what-desc': 'ACPI (Advanced Configuration and Power Interface) is a spec defining hardware tables for the OS. SSDTs are secondary tables adding or modifying functionality.',
+                'acpi-ec-what': 'What it does:',
+                'acpi-ec-1': 'Creates a fake Embedded Controller (EC)',
+                'acpi-ec-2': 'Injects USB power properties',
+                'acpi-ec-3': 'Required to boot Catalina+',
+                'acpi-ec-when': 'When to use:',
+                'acpi-ec-when-1': 'Desktop: ALWAYS (Required)',
+                'acpi-ec-when-2': 'Laptop: Use SSDT-EC-LAPTOP',
+                'acpi-plug-what': 'What it does:',
+                'acpi-plug-1': 'Enables XCPM (XNU CPU Power Management)',
+                'acpi-plug-when-1': 'Intel Haswell (4th gen) or newer',
+                'acpi-plug-when-2': 'DO NOT use on AMD (use DummyPowerManagement)',
+                'acpi-awac-what': 'What it does:',
+                'acpi-awac-1': 'Forces Legacy RTC usage',
+                'acpi-awac-2': 'Disables AWAC',
+                'acpi-awac-when-1': 'Intel 300 series+',
+                'acpi-rhub-what': 'What it does:',
+                'acpi-rhub-1': 'Resets USB RHUB',
+                'acpi-rhub-when-1': 'Intel 400/500/600 series',
+                'acpi-pnlf-what': 'What it does:',
+                'acpi-pnlf-1': 'Enables Backlight Control',
+                'acpi-pnlf-when': 'All Laptops',
+                'acpi-cpur-when': 'AMD B550/A520 Boards',
+
+                'acpi-desktop-title': '🖥️ Desktop Intel:',
+                'acpi-laptop-title': '💻 Laptop Intel:',
+                'acpi-amd-title': '🔴 Desktop AMD:',
+                'acpi-th-generation': 'Generation',
+                'acpi-th-ssdts': 'Required SSDTs',
+                'acpi-laptop-warning': 'Warning:',
+                'acpi-laptop-warning-desc': 'Laptops need ALL desktop SSDTs + SSDT-PNLF + SSDT-GPI0 (if I2C).',
+                'acpi-compile-title': 'How to Compile SSDTs',
+                'acpi-compile-desc': 'Use SSDTTime to generate automatically.',
+
+                // Config.plist
+                'config-title': 'Detailed Config.plist',
+                'config-desc': 'Fine-tuning for maximum stability and performance',
+                'config-booter-title': 'Booter Quirks',
+                'config-booter-desc': 'Essential fixes for the bootloader.',
+                'th-description': 'Description',
+                'th-platform': 'Platform',
+                'quirk-defrag': 'Fixes UEFI runtime services',
+                'config-kernel-title': 'Kernel Quirks',
+                'config-kernel-desc': 'Patches applied directly to the macOS kernel.',
+                'quirk-cfg': 'Required if CFG-Lock is enabled in BIOS',
+                'quirk-iomapper': 'Required if VT-d is enabled in BIOS',
+                'quirk-panic': 'Prevents instant reboot on Kernel Panic',
+                'quirk-xhci': 'Disable after mapping USBs',
+                'config-misc-title': 'Misc (Security & Boot)',
+                'config-misc-desc': 'Critical security and boot behavior settings.',
+                'quirk-secureboot': 'Default (x86legacy if Monterey+ on old PCs).',
+                'quirk-vault': 'Optional (Disabled).',
+                'quirk-scanpolicy': '0 (Detect all).',
+                'config-nvram-title': 'NVRAM (Boot-args)',
+                'config-nvram-desc': 'Common bootpad arguments.',
+                'arg-v': 'Verbose Mode (Text logs).',
+                'arg-debug': 'Prevents auto-reboot on panic.',
+                'arg-keepsyms': 'Shows debug symbols.',
+                'arg-alcid': 'Audio Layout ID.',
+                'arg-pikera': 'Required for AMD Navi GPUs.',
+                'arg-amfi': 'Disables AMFI (Required for OCLP).',
+                'config-platform-title': 'Platform Recommendations',
+                'rec-lap-dp': 'Framebuffer patching essential for iGPU.',
+                'rec-lap-nvram': 'Add -igfxblr if backlight issues occur.',
+                'rec-lap-kernel': 'Enable PanicNoKextDump.',
+                'rec-amd-kernel': 'Apply Ryzen Kernel Patches.',
+
+                // Post-Install
+                'post-install-title': 'Post-Installation',
+                'post-install-desc': 'Essential setup after installing macOS',
+                'post-install-success': 'Congratulations! macOS installed successfully!',
+                'post-install-next': 'Now let\'s configure essential features.',
+                'post-guide-title': 'How to Follow Guide',
+                'post-guide-intro': 'Not all sections are mandatory. Focus on essentials:',
+                'post-cat-universal': 'Universal & USB',
+                'post-cat-universal-desc': 'Recommended for ALL (Stability).',
+                'post-cat-laptop': 'Laptops',
+                'post-cat-laptop-desc': 'Essential for battery and trackpad.',
+                'post-cat-security': 'Security',
+                'post-cat-security-desc': 'FileVault & SIP.',
+                'post-cat-cosmetic': 'Cosmetic',
+                'post-cat-cosmetic-desc': 'GUI, Boot Chime.',
+
+                'post-usb-title': '1. USB Mapping (CRITICAL)',
+                'post-usb-desc': 'USB mapping is ESSENTIAL for stability.',
+                'post-usb-why': 'Why map USB?',
+                'post-usb-reason-1': 'macOS 15 port limit',
+                'post-usb-reason-2': 'Prevents sleep issues',
+                'post-usb-warning': 'Important:',
+                'post-usb-warning-desc': 'Remove XhciPortLimit quirk after mapping!',
+
+                'post-sleep-title': '2. Fixing Sleep/Wake',
+                'post-sleep-desc': 'Settings for perfect sleep.',
+                'post-sleep-bios': 'BIOS Settings for Sleep',
+                'post-sleep-bios-1': 'Disable Wake on LAN',
+                'post-sleep-bios-2': 'Disable USB Wake',
+
+                'post-iservices-title': '3. iServices',
+                'post-iservices-desc': 'Fixing iMessage & FaceTime.',
+                'post-iservices-warning': 'WARNING:',
+                'post-iservices-warning-desc': 'Use UNIQUE serials!',
+                'post-iservices-steps': 'Step-by-Step',
+                'post-iservices-step-1-title': 'Generate unique SMBIOS',
+                'post-iservices-step-2-title': 'Check Serial',
+                'post-iservices-step-3-title': 'Configure ROM',
+                'post-iservices-step-4-title': 'Clear NVRAM',
+                'post-iservices-step-5-title': 'Sign in to iCloud',
+
+                'post-power-title': '4. Power Management',
+                'post-power-desc': 'Optimize power consumption.',
+                'post-power-intel': 'Intel PM',
+                'post-power-intel-1': 'Use SSDT-PLUG (Required)',
+                'post-power-amd': 'AMD PM',
+                'post-power-amd-1': 'DummyPowerManagement = True',
+
+                'post-drm-title': '5. DRM',
+                'post-drm-desc': 'Netflix, AppleTV+ fix.',
+
+                'post-audio-title-main': 'Fixing Audio (AppleALC)',
+                'post-audio-desc-main': 'Enabling native audio.',
+                'post-audio-find-layout': '1. Find your Codec',
+                'post-audio-find-desc': 'Use Hackintool or Windows Device Manager.',
+                'post-audio-choose-layout': '2. Choose Layout ID',
+                'post-audio-apply': '3. Apply (boot-args)',
+                'btn-copy': 'Copy',
+                'post-audio-hp-fix': 'HP Laptops:',
+                'post-audio-hp-desc': 'Often need SSDT-HP-FixHPET.',
+
+                'post-cosmetic-title': 'Cosmetics (OpenCanopy)',
+                'post-cosmetic-desc': 'Premium Boot GUI.',
+                'post-gui-title': 'Enable GUI',
+                'post-gui-step1': 'Download OcBinaryData.',
+                'post-gui-step2': 'Add OpenCanopy.efi.',
+                'post-gui-step3': 'PickerMode: External.',
+                'post-gui-step4': 'PickerAttributes: 17.',
+
+                'post-chime-title': 'Enable Boot Chime',
+                'post-chime-step1': 'Enable AudioDxe.efi.',
+                'post-chime-step5': 'Set SystemAudioVolume.',
+
+                'post-verbose-title': 'Hide Verbose (-v)',
+                'post-verbose-desc': 'Only after system is stable!',
+
+                // Maintenance
+                'maint-title': 'Maintenance & Security',
+                'maint-update-desc': 'Update safely.',
+                'sec-security-title': 'Security (SIP & FileVault)',
+
+                // Tools Header
+                'repo-tools': 'Top Tools',
+                'tops-title': 'Top Tools 2.0',
+                'tops-desc-1': 'Ultimate All-in-One Tool!',
+                'tops-included': 'Included Tools (23+):',
+
+                // Hardware Analysis Keys from deprecated section (kept for safety if used elsewhere)
+                'config-gen-title': 'Config Generator',
+                'lbl-cpu': 'CPU', 'lbl-mb': 'Motherboard', 'lbl-gpu': 'GPU', 'lbl-audio': 'Audio', 'lbl-eth': 'Ethernet',
+                'config-text-smbios': 'SMBIOS', 'config-text-kexts': 'Kexts', 'config-text-bootargs': 'Boot-args',
+
+                // Dynamic Generator
+                'target-macos': 'Target macOS Version:',
+            }
         };
 
-        let currentLang = 'pt-BR';
+        let currentLang = 'en';
 
         // ========================================
         // HELPER FUNCTIONS
