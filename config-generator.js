@@ -227,6 +227,27 @@ class ConfigGenerator {
             }
         }
 
+        // Detectar Plataforma (Desktop vs Laptop)
+        let platform = "Desktop";
+
+        // 1. Checar sufixo da CPU (U, H, HQ, HK, Y, G1, G4, G7, M)
+        // Ex: i7-8550U, i7-7700HQ, i5-1135G7
+        if (cpuName.match(/i\d-\d+[UHYM]|HQ|HK|G[147]/)) {
+            platform = "Laptop";
+        }
+
+        // 2. Checar presença de bateria ou touchpad no relatório
+        if (platform === "Desktop") {
+            if (htmlContent.match(/Bateria|Battery|Gerenciamento de energia|Power Management/i)) {
+                if (htmlContent.match(/Charge Level|Nível de carga|Capacidade|Capacity/i)) {
+                    platform = "Laptop";
+                }
+            }
+            if (htmlContent.match(/Touchpad|Trackpad|Synaptics|ELAN|ALPS/i)) {
+                platform = "Laptop";
+            }
+        }
+
         // Criar objeto de dados
         const data = {
             CPU: {
@@ -237,7 +258,7 @@ class ConfigGenerator {
             },
             Motherboard: {
                 "Name": moboName,
-                "Platform": "Desktop",
+                "Platform": platform,
                 "Chipset": chipset
             },
             GPU: {},
