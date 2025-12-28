@@ -4,5 +4,6 @@
 !*.plist
 !*.js
 !*.md
+!datasets/
 !Report*.json
 !Report*.htm
