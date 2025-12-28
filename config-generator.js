@@ -811,10 +811,18 @@ class ConfigGenerator {
         }
 
         // Fallback para gerações comuns se dataset não estiver carregado
+        // ATENÇÃO: Se não tiver Device ID, tentamos adivinhar pelo nome da GPU e Geração da CPU
         const codename = gpu.Codename || hw.CPU.Codename || "";
+        const gpuName = gpu["Device Name"] || gpu.Manufacturer || ""; // AIDA64 parsing coloca nome em Manufacturer às vezes ou chave pai
+        const isUHD620 = JSON.stringify(gpu).includes("620"); // Verificação segura no objeto GPU
+
         const props = {};
 
-        if (codename.includes("Coffee") || codename.includes("Comet")) {
+        // Kaby Lake Refresh (8th Gen mas usa gráfico Kaby Lake)
+        // Se for Coffee Lake mas GPU for 620, tratar como Kaby Lake
+        const isKabyLakeR = (codename.includes("Coffee") && isUHD620);
+
+        if ((codename.includes("Coffee") || codename.includes("Comet")) && !isKabyLakeR) {
             if (platform === "Desktop") {
                 if (hasMonitor) {
                     props["AAPL,ig-platform-id"] = "00009B3E";
@@ -832,7 +840,7 @@ class ConfigGenerator {
                 props["framebuffer-stolenmem"] = "00003001";
             }
         }
-        else if (codename.includes("Kaby")) {
+        else if (codename.includes("Kaby") || isKabyLakeR) {
             if (platform === "Desktop") {
                 props["AAPL,ig-platform-id"] = "00001259";
                 props["framebuffer-stolenmem"] = "00003001";
