@@ -328,8 +328,18 @@ class ConfigGenerator {
                 const match = html.match(pattern);
                 if (match && match[1]) {
                     let value = match[1].trim();
-                    // Remover tags HTML internas (como <a href>, <b>, etc.)
-                    value = value.replace(/<[^>]+>/g, '');
+
+                    // Limpar HTML tags de forma segura usando DOM (Superior ao regex)
+                    if (typeof document !== 'undefined') {
+                        const tempDiv = document.createElement("div");
+                        tempDiv.innerHTML = value;
+                        value = tempDiv.textContent || tempDiv.innerText || "";
+                    } else {
+                        // Fallback para ambiente sem DOM
+                        value = value.replace(/<[^>]+>/g, '');
+                    }
+
+                    // Limpar HTML entities (caso sobrem)
                     // Limpar HTML entities
                     value = value.replace(/&nbsp;/g, ' ');
                     value = value.replace(/&amp;/g, '&');
@@ -345,6 +355,7 @@ class ConfigGenerator {
     }
 
     detectCPUCodenameFromName(cpuName) {
+        // Mapeamento por texto explícito
         const codenameMap = {
             "14th Gen": "Raptor Lake Refresh",
             "13th Gen": "Raptor Lake",
@@ -370,6 +381,22 @@ class ConfigGenerator {
                 return value;
             }
         }
+
+        // Detecção por número do modelo (Regex)
+        // Intel Core
+        if (cpuName.match(/i\d-14\d{3}/)) return "Raptor Lake Refresh";
+        if (cpuName.match(/i\d-13\d{3}/)) return "Raptor Lake";
+        if (cpuName.match(/i\d-12\d{3}/)) return "Alder Lake";
+        if (cpuName.match(/i\d-11\d{3}/)) return "Tiger Lake"; // Mobile 11th é Tiger, Desktop é Rocket. Assumindo Tiger para mobile/geral.
+        if (cpuName.match(/i\d-10\d{3}/)) return "Comet Lake"; // ou Ice Lake (com G7), mas Comet é bom default
+        if (cpuName.match(/i\d-9\d{3}/)) return "Coffee Lake Refresh";
+        if (cpuName.match(/i\d-8\d{3}/)) return "Coffee Lake"; // Inclui Kaby Lake-R (8250U/8550U) tratados como Coffee/Kaby para fins de Hackintosh
+        if (cpuName.match(/i\d-7\d{3}/)) return "Kaby Lake";
+        if (cpuName.match(/i\d-6\d{3}/)) return "Skylake";
+        if (cpuName.match(/i\d-5\d{3}/)) return "Broadwell";
+        if (cpuName.match(/i\d-4\d{3}/)) return "Haswell";
+        if (cpuName.match(/i\d-3\d{3}/)) return "Ivy Bridge";
+        if (cpuName.match(/i\d-2\d{3}/)) return "Sandy Bridge";
 
         return "Unknown";
     }
