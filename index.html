@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Complete and Professional Hackintosh Guide - OpenCore 1.0.5+ | Updated December 2024">
-    <title>Complete Hackintosh Guide | OpenCore 2024-2025</title>
+        content="Complete and Professional Hackintosh Guide - OpenCore 1.0.6+ | Updated December 2025">
+    <title>Complete Hackintosh Guide | OpenCore 2025-2026</title>
 
     <!-- Discord Integration / Open Graph Meta Tags -->
     <meta property="og:type" content="website">
@@ -902,8 +902,8 @@
         <div class="version-badge">
             <i class="fas fa-rocket"></i>
             <span data-i18n="opencore-version">OpenCore</span>
-            <span id="opencoreVersion">1.0.5</span> |
-            <span data-i18n="december">December</span> 2024
+            <span id="opencoreVersion">1.0.6</span> |
+            <span data-i18n="december">December</span> 2025
             <span class="auto-update-badge">
                 <div class="pulse"></div>
                 <span data-i18n="auto-update">Auto-update</span>
@@ -911,14 +911,14 @@
         </div>
         <h1 data-i18n="main-title">Complete Hackintosh Guide</h1>
         <p data-i18n="main-description">The most complete and updated guide to create your EFI from scratch using
-            OpenCore. Compatible with macOS Sequoia 15.x and ready for macOS Tahoe 26.x (2025).</p>
+            OpenCore. Compatible with macOS Sequoia 15.x and ready for macOS Tahoe 26.x (2026).</p>
     </section>
 
     <!-- Stats -->
     <div class="stats">
         <div class="stat-card">
             <i class="fas fa-microchip"></i>
-            <h3>1.0.5</h3>
+            <h3>1.0.6</h3>
             <p data-i18n="stat-oc-version">OpenCore Version</p>
         </div>
         <div class="stat-card">
@@ -1310,7 +1310,7 @@
             <div class="alert alert-success">
                 <i class="fas fa-lightbulb"></i>
                 <div>
-                    <strong data-i18n="alert-smbios">2024 Update: For macOS Sequoia 15.x and Tahoe 26.x, MacPro7,1 is
+                    <strong data-i18n="alert-smbios">2025 Update: For macOS Sequoia 15.x and Tahoe 26.x, MacPro7,1 is
                         the recommended choice for desktops with dedicated AMD GPUs.</strong>
                 </div>
             </div>
@@ -2261,7 +2261,7 @@
                         <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
                         <code>https://github.com/acidanthera/OpenCorePkg/releases</code>
                     </div>
-                    <p><span data-i18n="install-step-1-rec">Recommended version: <strong>1.0.5 or higher</strong></span>
+                    <p><span data-i18n="install-step-1-rec">Recommended version: <strong>1.0.6 or higher</strong></span>
                     </p>
                 </div>
 
@@ -2911,7 +2911,7 @@
                         and Beyond</a>
                 </p>
                 <p style="font-size: 0.9rem; color: var(--text-secondary);" data-i18n="credits-footer">
-                    Hackintosh and Beyond © 2024. All rights reserved.
+                    Hackintosh and Beyond © 2025. All rights reserved.
                 </p>
 
 
@@ -4249,7 +4249,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 <li>
                     <strong>[EB|#LOG:EXITBS:START]</strong>
                     <p data-i18n="trouble-err-eb">Booter Quirks error. Check <code>RebuildAppleMemoryMap</code>,
-                        <code>SetupVirtualMap</code> or <code>EnableWriteUnprotector</code>.</p>
+                        <code>SetupVirtualMap</code> or <code>EnableWriteUnprotector</code>.
+                    </p>
                 </li>
                 <li>
                     <strong>AppleNVMe Assert failed</strong>
@@ -4304,9 +4305,11 @@ PciRoot(0x0)/Pci(0x2,0x0)
                     <strong data-i18n="trouble-boot-stuck-title">Stuck at [EB|#LOG:EXITBS:START]:</strong>
                     <ul style="margin-top: 0.5rem;">
                         <li data-i18n="trouble-boot-stuck-1">Problem with Booter Quirks. Try enabling
-                            <code>DevirtualiseMmio</code></li>
+                            <code>DevirtualiseMmio</code>
+                        </li>
                         <li data-i18n="trouble-boot-stuck-2">Check <code>RebuildAppleMemoryMap</code> and
-                            <code>SyncRuntimePermissions</code></li>
+                            <code>SyncRuntimePermissions</code>
+                        </li>
                         <li data-i18n="trouble-boot-stuck-3">For Z390+: Disable <code>SetupVirtualMap</code></li>
                     </ul>
                 </div>
@@ -4395,7 +4398,8 @@ agdpmod=pikera      # For Navi GPUs (RX 5000/6000/7000)
                     <strong data-i18n="trouble-gpu-black-title">Black Screen after IOConsoleUsers:</strong>
                     <ul style="margin-top: 0.5rem;">
                         <li data-i18n="trouble-gpu-black-navi"><strong>Navi GPUs (RX 5000/6000/7000):</strong> Add
-                            <code>agdpmod=pikera</code> (if not using NootRX)</li>
+                            <code>agdpmod=pikera</code> (if not using NootRX)
+                        </li>
                         <li data-i18n="trouble-gpu-black-igpu"><strong>Intel iGPU:</strong> Check DeviceProperties
                             (AAPL,ig-platform-id)</li>
                         <li data-i18n="trouble-gpu-black-nvidia"><strong>NVIDIA:</strong> Not supported in Monterey+
@@ -4476,9 +4480,11 @@ PciRoot(0x0)/Pci(0x2,0x0)
             <h4 data-i18n="trouble-post-sleep-title">Sleep/Wake Issues:</h4>
             <ul>
                 <li data-i18n="trouble-post-sleep-1"><strong>Does not sleep:</strong> Check
-                    <code>pmset -g assertions</code> to see what prevents it</li>
+                    <code>pmset -g assertions</code> to see what prevents it
+                </li>
                 <li data-i18n="trouble-post-sleep-2"><strong>Immediate Wake:</strong> Disable Wake on LAN in BIOS, use
-                    <code>pmset -a darkwakes 0</code></li>
+                    <code>pmset -a darkwakes 0</code>
+                </li>
                 <li data-i18n="trouble-post-sleep-3"><strong>USB wake:</strong> Add SSDT-GPRW or SSDT-PTSWAK</li>
                 <li data-i18n="trouble-post-sleep-4"><strong>Bluetooth wake:</strong> Disable in System Preferences</li>
             </ul>
@@ -4670,7 +4676,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
     <footer>
         <p><strong data-i18n="title">Hackintosh Guide</strong> - <span data-i18n="complete-updated">Complete and Updated
                 Guide</span></p>
-        <p data-i18n="based-on">Based on Dortania OpenCore Install Guide | Updated for OpenCore 1.0.5+</p>
+        <p data-i18n="based-on">Based on Dortania OpenCore Install Guide | Updated for OpenCore 1.0.6+</p>
         <p style="margin-top: 1rem; font-size: 1rem; color: var(--text);">
             <i class="fab fa-youtube" style="color: #FF0000"></i> <strong data-i18n="tools-by">Tools by:</strong>
             <a href="https://www.youtube.com/@HackintoshAndBeyond" target="_blank"
@@ -4689,7 +4695,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             <a href="https://www.youtube.com/@HackintoshAndBeyond" target="_blank">YouTube Channel</a>
         </div>
         <p style="margin-top: 2rem; color: var(--text-secondary); font-size: 0.85rem;">
-            © 2024 Hackintosh Guide | <span data-i18n="made-with-love">Created with ❤️ for the community</span> |
+            © 2025 Hackintosh Guide | <span data-i18n="made-with-love">Created with ❤️ for the community</span> |
             Tools by Hnanoto
         </p>
     </footer>
@@ -4812,7 +4818,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'credits-title': 'Créditos Especiais',
                 'credits-dev': 'Desenvolvido por:',
                 'credits-channel': 'Canal:',
-                'credits-footer': 'Hackintosh and Beyond © 2024. Todos os direitos reservados.',
+                'credits-footer': 'Hackintosh and Beyond © 2025. Todos os direitos reservados.',
 
                 'multi-language-desc': 'Disponível em Português (BR), English (US) e Español. O idioma é detectado automaticamente ou pode ser alterado no seletor acima.',
                 'latest-versions': 'Versões Mais Recentes',
@@ -4842,7 +4848,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 // Footer
                 'complete-updated': 'Guia Completo e Atualizado',
-                'based-on': 'Baseado no Dortania OpenCore Install Guide | Atualizado para OpenCore 1.0.5+',
+                'based-on': 'Baseado no Dortania OpenCore Install Guide | Atualizado para OpenCore 1.0.6+',
                 'tools-by': 'Ferramentas por:',
                 'made-with-love': 'Criado com ❤️ para a comunidade',
 
@@ -4959,7 +4965,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'sec-smbios-title': 'Escolhendo o SMBIOS Correto',
                 'sec-smbios-desc': 'SMBIOS define qual Mac seu Hackintosh vai emular',
-                'alert-smbios': 'Atualização 2024: Para macOS Sequoia 15.x e Tahoe 26.x, MacPro7,1 é a escolha recomendada para desktop com GPU dedicada AMD.',
+                'alert-smbios': 'Atualização 2025: Para macOS Sequoia 15.x e Tahoe 26.x, MacPro7,1 é a escolha recomendada para desktop com GPU dedicada AMD.',
 
                 'smbios-rules-title': 'Regras Importantes para SMBIOS',
                 'smbios-rule-1': 'MacPro7,1: do NOT need agdpmod=pikera com NootRX.kext',
@@ -4972,7 +4978,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'install-step-1-title': '1. Download do OpenCore',
                 'install-step-1-desc': 'Baixe a versão mais recente do OpenCore:',
-                'install-step-1-rec': 'Versão recomendada: 1.0.5 ou superior',
+                'install-step-1-rec': 'Versão recomendada: 1.0.6 ou superior',
                 'install-step-2-title': '2. Estrutura da EFI',
                 'install-step-2-desc': 'Crie a seguinte estrutura de pastas:',
                 'install-step-3-title': '3. Drivers UEFI',
@@ -5070,7 +5076,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 // Footer
                 'complete-updated': 'Guia Completo e Atualizado',
-                'based-on': 'Baseado no Dortania OpenCore Install Guide | Atualizado para OpenCore 1.0.5+',
+                'based-on': 'Baseado no Dortania OpenCore Install Guide | Atualizado para OpenCore 1.0.6+',
                 'tools-by': 'Ferramentas por:',
                 'made-with-love': 'Criado com ❤️ para a comunidade',
 
@@ -5187,7 +5193,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'sec-smbios-title': 'Escolhendo o SMBIOS Correto',
                 'sec-smbios-desc': 'SMBIOS define qual Mac seu Hackintosh vai emular',
-                'alert-smbios': 'Atualização 2024: Para macOS Sequoia 15.x e Tahoe 26.x, MacPro7,1 é a escolha recomendada para desktop com GPU dedicada AMD.',
+                'alert-smbios': 'Atualização 2025: Para macOS Sequoia 15.x e Tahoe 26.x, MacPro7,1 é a escolha recomendada para desktop com GPU dedicada AMD.',
 
                 'smbios-rules-title': 'Regras Importantes para SMBIOS',
                 'smbios-rule-1': 'MacPro7,1: do NOT need agdpmod=pikera com NootRX.kext',
@@ -5200,7 +5206,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'install-step-1-title': '1. Download do OpenCore',
                 'install-step-1-desc': 'Baixe a versão mais recente do OpenCore:',
-                'install-step-1-rec': 'Versão recomendada: 1.0.5 ou superior',
+                'install-step-1-rec': 'Versão recomendada: 1.0.6 ou superior',
                 'install-step-2-title': '2. Estrutura da EFI',
                 'install-step-2-desc': 'Crie a seguinte estrutura de pastas:',
                 'install-step-3-title': '3. Drivers UEFI',
@@ -5743,7 +5749,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'join-now': 'Join Now',
 
                 'complete-updated': 'Complete and Updated Guide',
-                'based-on': 'Based on Dortania OpenCore Install Guide | Updated for OpenCore 1.0.5+',
+                'based-on': 'Based on Dortania OpenCore Install Guide | Updated for OpenCore 1.0.6+',
                 'tools-by': 'Tools by:',
                 'made-with-love': 'Made with ❤️ for the community',
 
@@ -5857,7 +5863,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'sec-smbios-title': 'Choosing the Correct SMBIOS',
                 'sec-smbios-desc': 'SMBIOS defines which Mac your Hackintosh will emulate',
-                'alert-smbios': '2024 Update: For macOS Sequoia 15.x and Tahoe 26.x, MacPro7,1 is the recommended choice for desktops with dedicated AMD GPUs.',
+                'alert-smbios': '2025 Update: For macOS Sequoia 15.x and Tahoe 26.x, MacPro7,1 is the recommended choice for desktops with dedicated AMD GPUs.',
 
                 'smbios-rules-title': 'Important SMBIOS Rules',
                 'smbios-rule-1': 'MacPro7,1: Does NOT need agdpmod=pikera with NootRX.kext',
@@ -5878,7 +5884,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'install-step-1-title': '1. OpenCore Download',
                 'install-step-1-desc': 'Download the latest OpenCore version:',
-                'install-step-1-rec': 'Recommended version: 1.0.5 or higher',
+                'install-step-1-rec': 'Recommended version: 1.0.6 or higher',
                 'install-step-2-title': '2. EFI Structure',
                 'install-step-2-desc': 'Create the following folder structure:',
                 'install-step-3-title': '3. UEFI Drivers',
@@ -6201,7 +6207,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'credits-title': 'Créditos Especiais',
                 'credits-dev': 'Developed by:',
                 'credits-channel': 'Channel:',
-                'credits-footer': 'Hackintosh and Beyond © 2024. All rights reserved.',
+                'credits-footer': 'Hackintosh and Beyond © 2025. All rights reserved.',
 
                 'btn-copy': 'Copy',
                 'btn-copied': 'Copied!',
@@ -6586,7 +6592,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'join-now': 'Unirse Ahora',
 
                 'complete-updated': 'Guía Completa y Actualizada',
-                'based-on': 'Basado en Dortania OpenCore Install Guide | Actualizado para OpenCore 1.0.5+',
+                'based-on': 'Basado en Dortania OpenCore Install Guide | Actualizado para OpenCore 1.0.6+',
                 'tools-by': 'Herramientas por:',
                 'made-with-love': 'Hecho con ❤️ para la comunidad',
 
@@ -6705,7 +6711,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'sec-smbios-title': 'Eligiendo el SMBIOS Correcto',
                 'sec-smbios-desc': 'SMBIOS define qué Mac emulará su Hackintosh',
-                'alert-smbios': 'Actualización 2024: Para macOS Sequoia 15.x y Tahoe 26.x, MacPro7,1 es la elección recomendada para escritorio con GPU AMD dedicada.',
+                'alert-smbios': 'Actualización 2025: Para macOS Sequoia 15.x y Tahoe 26.x, MacPro7,1 es la elección recomendada para escritorio con GPU AMD dedicada.',
 
                 'smbios-rules-title': 'Reglas Importantes para SMBIOS',
                 'smbios-rule-1': 'MacPro7,1: NO necesita agdpmod=pikera con NootRX.kext',
@@ -6726,7 +6732,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                 'install-step-1-title': '1. Descargar OpenCore',
                 'install-step-1-desc': 'Descargue la última versión de OpenCore:',
-                'install-step-1-rec': 'Versión recomendada: 1.0.5 o superior',
+                'install-step-1-rec': 'Versión recomendada: 1.0.6 o superior',
                 'install-step-2-title': '2. Estructura EFI',
                 'install-step-2-desc': 'Cree la siguiente estructura de carpetas:',
                 'install-step-3-title': '3. Controladores UEFI',
@@ -7208,206 +7214,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         // ========================================
         // HARDWARE SNIFFER ANALYZER LOGIC (DEPRECATED - REPLACED BY NEW SECTION)
-        // ========================================
-        /* COMMENTED OUT TO AVOID CONFLICTS
-        const hwDropZone = document.getElementById('drop-zone');
-        const fileInput = document.getElementById('file-input');
-        const analysisResult = document.getElementById('analysis-result');
-        let latestAnalysis = null; // Global variable to store analysis results
-
-        // Drag & Drop Events
-        hwDropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            hwDropZone.style.borderColor = 'var(--primary)';
-            hwDropZone.style.background = 'rgba(0, 199, 253, 0.1)';
-        });
-
-        hwDropZone.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            hwDropZone.style.borderColor = 'rgba(255,255,255,0.2)';
-            hwDropZone.style.background = 'transparent';
-        });
-
-        hwDropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            hwDropZone.style.borderColor = 'rgba(255,255,255,0.2)';
-            hwDropZone.style.background = 'transparent';
-            const files = e.dataTransfer.files;
-            if (files.length > 0) handleFile(files[0]);
-        });
-
-        hwDropZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => {
-            if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
-        });
-
-        // Detect file type and accept JSON or HTML
-        fileInput.accept = ".json,.htm,.html";
-
-        function handleFile(file) {
-            const fileName = file.name.toLowerCase();
-            const isJson = fileName.endsWith('.json');
-            const isHtml = fileName.endsWith('.htm') || fileName.endsWith('.html');
-
-            if (!isJson && !isHtml) {
-                alert("Please drop a valid file (Report.json or AIDA64 Report.htm)");
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    if (isJson) {
-                        const json = JSON.parse(e.target.result);
-                        analyzeJSON(json);
-                    } else if (isHtml) {
-                        parseAIDA64(e.target.result);
-                    }
-                } catch (err) {
-                    alert("Error parsing file: " + err.message);
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function parseAIDA64(htmlContent) {
-            // Create a virtual DOM to parse the HTML string
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(htmlContent, 'text/html');
-
-            // Helper to find value by possible property names (multilingual support)
-            // AIDA64 tables usually have row: [Property] [Value]
-            const findValue = (keywords) => {
-                const tds = Array.from(doc.querySelectorAll('td'));
-                for (let i = 0; i < tds.length; i++) {
-                    const text = tds[i].textContent.trim();
-                    // Check if this TD matches one of our keywords
-                    if (keywords.some(k => text.includes(k) && text.length < 50)) {
-                        // The value is usually in the NEXT td
-                        if (tds[i + 1]) return tds[i + 1].textContent.trim();
-                    }
-                }
-                return null;
-            };
-
-            // Extract Data using keywords (EN/PT/ES)
-            const cpu = findValue(['CPU Type', 'Tipo de processador', 'Tipo de CPU']) || "Unknown CPU";
-            const mobo = findValue(['Motherboard Name', 'Nome da Placa Mãe']) || "Unknown Motherboard";
-            const gpu = findValue(['3D Accelerator', 'Adaptador gráfico', 'Video Adapter']) || "Unknown GPU";
-            const audio = findValue(['Audio Adapter', 'Adaptador de som', 'Adaptador de áudio']) || "Unknown Audio";
-            // Ethernet is harder in AIDA64 summary, usually under Network
-            const eth = findValue(['Network Adapter', 'Adaptador de Rede']) || "Unknown Ethernet";
-
-            // Construct a data object compatible with our existing analyzer
-            // We mock the JSON structure so analyzeJSON can do the rest
-            const mockData = {
-                CPU: { Name: cpu, Codename: "" },
-                Motherboard: { Name: mobo },
-                GPU: [{ Name: gpu }],
-                Audio: [{ Name: audio }],
-                Network: { Ethernet: [{ Name: eth }] }
-            };
-
-            analyzeJSON(mockData);
-        }
-
-        function analyzeJSON(data) {
-            analysisResult.style.display = 'block';
-            const recList = document.getElementById('rec-list');
-            recList.innerHTML = ''; // Clear previous
-
-            // 1. EXTRACT DATA - ULTRA SAFE MODE
-            const safeStr = (val, def = "") => (val !== undefined && val !== null) ? String(val) : def;
-
-            const cpuName = safeStr(data.CPU?.Name, "Unknown CPU");
-            const cpuCodename = safeStr(data.CPU?.Codename, "");
-            const moboName = safeStr(data.Motherboard?.Name, "Unknown Motherboard");
-
-            // GPU: Handle array or object
-            let gpuList = [];
-            if (Array.isArray(data.GPU)) {
-                gpuList = data.GPU;
-            } else if (data.GPU) {
-                // Could be object with keys as names or single object
-                if (data.GPU.Name) gpuList = [data.GPU];
-                else gpuList = Object.entries(data.GPU).map(([k, v]) => ({ Name: k, ...v }));
-            }
-            const gpuName = (gpuList.length > 0) ? safeStr(gpuList[0].Name, "Unknown GPU") : "Unknown GPU";
-
-            // Ethernet & Network (Handle Object structure where Key = Name)
-            let ethName = "Unknown";
-            let netItems = [];
-            if (data.Network) {
-                if (Array.isArray(data.Network)) {
-                    netItems = data.Network;
-                } else if (data.Network.Ethernet) {
-                    // Check if Ethernet is Array or Object
-                    if (Array.isArray(data.Network.Ethernet)) netItems = data.Network.Ethernet;
-                    else netItems = Object.entries(data.Network.Ethernet).map(([k, v]) => ({ Name: k, ...v }));
-                } else {
-                    // Network is likely { "Realtek...": { ... }, "WiFi...": { ... } }
-                    netItems = Object.entries(data.Network).map(([k, v]) => ({ Name: k, ...v }));
-                }
-            }
-
-            // Find first PCI/Ethernet device
-            const ethDevice = netItems.find(n => safeStr(n.Name).toLowerCase().includes("ethernet") || safeStr(n.Name).toLowerCase().includes("controller")) || netItems[0];
-            if (ethDevice) ethName = safeStr(ethDevice.Name, "Generic Ethernet");
-
-            // Audio (Handle "Sound" key and Object structure)
-            let audioName = "Unknown/USB";
-            let audioItems = [];
-            const rawAudio = data.Audio || data.Sound;
-
-            if (rawAudio) {
-                if (Array.isArray(rawAudio)) {
-                    audioItems = rawAudio;
-                } else if (rawAudio.Codec) {
-                    audioItems = [{ Name: rawAudio.Codec }];
-                } else {
-                    // Object where Key = Device Name
-                    audioItems = Object.entries(rawAudio).map(([k, v]) => ({ Name: k, ...v }));
-                }
-            }
-
-            // Prioritize PCI Audio over USB
-            const pciAudio = audioItems.find(a => (a["Bus Type"] && a["Bus Type"] === "PCI") || (!safeStr(a.Name).includes("Webcam") && !safeStr(a.Name).includes("USB")));
-            if (pciAudio) audioName = safeStr(pciAudio.Name);
-            else if (audioItems.length > 0) audioName = safeStr(audioItems[0].Name);
-
-            // 2. DISPLAY DATA
-            document.getElementById('res-cpu-val').innerText = cpuName + (cpuCodename ? ` (${cpuCodename})` : '');
-            document.getElementById('res-mobo-val').innerText = moboName;
-            document.getElementById('res-gpu-val').innerText = gpuName;
-            document.getElementById('res-audio-val').innerText = audioName;
-            document.getElementById('res-eth-val').innerText = ethName;
-
-            // Store analysis for generateRecipe
-            latestAnalysis = {
-                cpu: cpuName,
-                gpu: gpuName,
-                mobo: moboName,
-                eth: ethName,
-                audio: audioName,
-                codename: cpuCodename,
-                netText: ethName // Store the raw network text for WiFi heuristic
-            };
-
-            generateRecipe(); // Call generateRecipe without arguments, it will use latestAnalysis
-
-            // Generate standard text recommendations as well (Legacy support for the box below)
-            const legacyRecList = document.getElementById('rec-list');
-            legacyRecList.innerHTML = '';
-            const addRec = (text, icon = "check-circle", color = "var(--success)") => {
-                const li = document.createElement('li');
-                li.innerHTML = `<i class="fas fa-${icon}" style="color: ${color}; margin-right: 5px;"></i> ${text}`;
-                li.style.marginBottom = "5px";
-                legacyRecList.appendChild(li);
-            };
-            // Call logic reuse
-            // ... (We rely on logic inside generateRecipe mostly now, but keep simple notes)
-        }
-        */ // END OF DEPRECATED CODE
+        // ===================================              /* COMMENTED OUT TO AVOID CONF              const hwDropZone = document.getElementById('drop-zo              const fileInput = document.getElementById('file-inp              const analysisResult = document.getElementById('analysis-resu              let latestAnalysis = null; // Global variable to store analysis res              // Drag & Drop E              hwDropZone.addEventListener('dragover', (e)                  e.preventDefau                  hwDropZone.style.borderColor = 'var(--prima                  hwDropZone.style.background = 'rgba(0, 199, 253, 0                           hwDropZone.addEventListener('dragleave', (e)                  e.preventDefau                  hwDropZone.style.borderColor = 'rgba(255,255,255,0                  hwDropZone.style.background = 'transpar                           hwDropZone.addEventListener('drop', (e)                  e.preventDefau                  hwDropZone.style.borderColor = 'rgba(255,255,255,0                  hwDropZone.style.background = 'transpar                  const files = e.dataTransfer.f                  if (files.length > 0) handleFile(files                           hwDropZone.addEventListener('click', () => fileInput.clic              fileInput.addEventListener('change', (e)                  if (fileInput.files.length > 0) handleFile(fileInput.files                           // Detect file type and accept JSON or              fileInput.accept = ".json,.htm,.ht              function handleFile(fi                  const fileName = file.name.toLowerCa                  const isJson = fileName.endsWith('.js                  const isHtml = fileName.endsWith('.htm') || fileName.endsWith('.htm                  if (!isJson && !isHt                      alert("Please drop a valid file (Report.json or AIDA64 Report.ht                      re                                 const reader = new FileRead                  reader.onload = (e)                                                if (isJs                              const json = JSON.parse(e.target.res                              analyzeJSON(j                          } else if (isHt                              parseAIDA64(e.target.res                                            } catch (e                          alert("Error parsing file: " + err.mess                                                   reader.readAsText(f                         function parseAIDA64(htmlConte                  // Create a virtual DOM to parse the HTML s                  const parser = new DOMPars                  const doc = parser.parseFromString(htmlContent, 'text/htm                  // Helper to find value by possible property names (multilingual sup                  // AIDA64 tables usually have row: [Property] [V                  const findValue = (keywords)                      const tds = Array.from(doc.querySelectorAll('t                      for (let i = 0; i < tds.length; i                          const text = tds[i].textContent.tr                          // Check if this TD matches one of our key                          if (keywords.some(k => text.includes(k) && text.length < 5                              // The value is usually in the NE                              if (tds[i + 1]) return tds[i + 1].textContent.tr                                                              return                                   // Extract Data using keywords (EN/P                  const cpu = findValue(['CPU Type', 'Tipo de processador', 'Tipo de CPU']) || "Unknown                   const mobo = findValue(['Motherboard Name', 'Nome da Placa Mãe']) || "Unknown Motherbo                  const gpu = findValue(['3D Accelerator', 'Adaptador gráfico', 'Video Adapter']) || "Unknown                   const audio = findValue(['Audio Adapter', 'Adaptador de som', 'Adaptador de áudio']) || "Unknown Au                  // Ethernet is harder in AIDA64 summary, usually under Ne                  const eth = findValue(['Network Adapter', 'Adaptador de Rede']) || "Unknown Ethern                  // Construct a data object compatible with our existing ana                  // We mock the JSON structure so analyzeJSON can do the                  const mockDat                      CPU: { Name: cpu, Codename:                       Motherboard: { Name: mo                      GPU: [{ Name: gp                      Audio: [{ Name: audi                      Network: { Ethernet: [{ Name: eth                                  analyzeJSON(mockD                         function analyzeJSON(da                  analysisResult.style.display = 'bl                  const recList = document.getElementById('rec-li                  recList.innerHTML = ''; // Clear prev                  // 1. EXTRACT DATA - ULTRA SAFE                  const safeStr = (val, def = "") => (val !== undefined && val !== null) ? String(val) :                   const cpuName = safeStr(data.CPU?.Name, "Unknown C                  const cpuCodename = safeStr(data.CPU?.Codename,                  const moboName = safeStr(data.Motherboard?.Name, "Unknown Motherboar                  // GPU: Handle array or o                  let gpuList                   if (Array.isArray(data.GP                      gpuList = data                  } else if (data.G                      // Could be object with keys as names or single o                      if (data.GPU.Name) gpuList = [data.                      else gpuList = Object.entries(data.GPU).map(([k, v]) => ({ Name: k, ...v                                const gpuName = (gpuList.length > 0) ? safeStr(gpuList[0].Name, "Unknown GPU") : "Unknown G                  // Ethernet & Network (Handle Object structure where Key =                   let ethName = "Unkn                  let netItems                   if (data.Netwo                      if (Array.isArray(data.Networ                          netItems = data.Net                      } else if (data.Network.Ethern                          // Check if Ethernet is Array or O                          if (Array.isArray(data.Network.Ethernet)) netItems = data.Network.Ethe                          else netItems = Object.entries(data.Network.Ethernet).map(([k, v]) => ({ Name: k, ...v                      } e                          // Network is likely { "Realtek...": { ... }, "WiFi...": { ..                          netItems = Object.entries(data.Network).map(([k, v]) => ({ Name: k, ...v                                                   // Find first PCI/Ethernet d                  const ethDevice = netItems.find(n => safeStr(n.Name).toLowerCase().includes("ethernet") || safeStr(n.Name).toLowerCase().includes("controller")) || netItem                  if (ethDevice) ethName = safeStr(ethDevice.Name, "Generic Etherne                  // Audio (Handle "Sound" key and Object struc                  let audioName = "Unknown/                  let audioItems                   const rawAudio = data.Audio || data.So                  if (rawAud                      if (Array.isArray(rawAudi                          audioItems = rawA                      } else if (rawAudio.Cod                          audioItems = [{ Name: rawAudio.Code                      } e                          // Object where Key = Device                          audioItems = Object.entries(rawAudio).map(([k, v]) => ({ Name: k, ...v                                                   // Prioritize PCI Audio ove                  const pciAudio = audioItems.find(a => (a["Bus Type"] && a["Bus Type"] === "PCI") || (!safeStr(a.Name).includes("Webcam") && !safeStr(a.Name).includes("USB                  if (pciAudio) audioName = safeStr(pciAudio.N                  else if (audioItems.length > 0) audioName = safeStr(audioItems[0].Na                  // 2. DISPLAY                  document.getElementById('res-cpu-val').innerText = cpuName + (cpuCodename ? ` (${cpuCodename})` :                  document.getElementById('res-mobo-val').innerText = mobo                  document.getElementById('res-gpu-val').innerText = gpu                  document.getElementById('res-audio-val').innerText = audio                  document.getElementById('res-eth-val').innerText = ethN                  // Store analysis for generateR                  latestAnalysi                      cpu: cpu                      gpu: gpu                      mobo: mobo                      eth: eth                      audio: audio                      codename: cpuCode                      netText: ethName // Store the raw network text for WiFi heur                                  generateRecipe(); // Call generateRecipe without arguments, it will use latestAnal                  // Generate standard text recommendations as well (Legacy support for the box b                  const legacyRecList = document.getElementById('rec-li                  legacyRecList.innerHTML                   const addRec = (text, icon = "check-circle", color = "var(--success)")                      const li = document.createElement('                      li.innerHTML = `<i class="fas fa-${icon}" style="color: ${color}; margin-right: 5px;"></i> ${te                      li.style.marginBottom = "                      legacyRecList.appendChild                                 // Call logic                   // ... (We rely on logic inside generateRecipe mostly now, but keep simple n                        */ // END OF DEPRECATED CODE
 
         let oldCurrentConfig = {
             smbios: "MacPro7,1",
@@ -8633,12 +8440,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
             // Auto-refresh every 30 minutes
             setInterval(fetchLatestVersions, 30 * 60 * 1000);
-        });
     </script>
     <script>
-        /**
-         * ADVANCED CONFIG GENERATOR (OpCore Simplify Logic Port)
-         */
+        /* ADVANCED CONFIG GENERATOR (OpCore Simplify Logic                */
         const DATASETS = {
             IntelChipsets: {
                 Modern: ["Z370", "H370", "B360", "H310", "Z390", "Z490", "H470", "B460", "H410", "Z590", "B560", "H510", "Z690", "H670", "B660", "H610", "Z790"],
@@ -8811,15 +8615,11 @@ PciRoot(0x0)/Pci(0x2,0x0)
             setTimeout(() => {
                 document.body.removeChild(a);
             }, 1000);
-        };
+     ;
     </script>
 
     <script>
-        /**
-         * ========================================
-         * HARDWARE ANALYSIS - OpCore Simplify Logic
-         * ========================================
-         */
+        /* ===================================               * HARDWARE ANALYSIS - OpCore Simplify                * ===================================               */
 
         let selectedMacOSVersion = null;
         let hardwareData = null;
@@ -9213,7 +9013,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
             // Aqui a lógica de download já existe no código anterior
             // Apenas garantindo que currentConfig está populado corretamente
             console.log('Gerando config.plist com:', currentConfig);
-        }
+    }
     </script>
 </body>
 
