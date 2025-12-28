@@ -11,6 +11,7 @@ class ConfigGenerator {
 
         // macOS versions database com suporte de SMBIOS
         this.macOSVersions = [
+            { name: "macOS Tahoe 26.x (2025)", darwin: "26.0.0", recommended: false, minYear: 2019 },
             { name: "macOS Sequoia 15.x", darwin: "24.0.0", recommended: true, minYear: 2017 },
             { name: "macOS Sonoma 14.x", darwin: "23.0.0", recommended: true, minYear: 2017 },
             { name: "macOS Ventura 13.x", darwin: "22.0.0", recommended: false, minYear: 2017 },
