@@ -3933,6 +3933,278 @@ PciRoot(0x0)/Pci(0x2,0x0)
                         carregamento)</span></li>
             </ol>
         </div>
+
+        <!-- Boot Issues Específicos -->
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-power-off"></i></div>
+            <h3 data-i18n="trouble-boot-issues-title">🚫 Problemas de Boot Específicos</h3>
+
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong data-i18n="trouble-boot-stuck-title">Travado em [EB|#LOG:EXITBS:START]:</strong>
+                    <ul style="margin-top: 0.5rem;">
+                        <li data-i18n="trouble-boot-stuck-1">Problema com Booter Quirks. Tente habilitar
+                            <code>DevirtualiseMmio</code></li>
+                        <li data-i18n="trouble-boot-stuck-2">Verifique <code>RebuildAppleMemoryMap</code> e
+                            <code>SyncRuntimePermissions</code></li>
+                        <li data-i18n="trouble-boot-stuck-3">Para Z390+: Desabilite <code>SetupVirtualMap</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="fas fa-clock"></i>
+                <div>
+                    <strong data-i18n="trouble-boot-waiting-title">Travado em "Waiting for Root Device":</strong>
+                    <ul style="margin-top: 0.5rem;">
+                        <li data-i18n="trouble-boot-waiting-usb"><strong>Problema USB:</strong> Tente portas USB 2.0
+                            diferentes, use <code>USBInjectAll.kext</code> temporariamente</li>
+                        <li data-i18n="trouble-boot-waiting-sata"><strong>Problema SATA:</strong> Verifique se SATA está
+                            em modo AHCI (não RAID/IDE)</li>
+                        <li data-i18n="trouble-boot-waiting-nvme"><strong>NVMe problemático:</strong> Adicione
+                            NVMeFix.kext (PM981/PM991)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                <code># Boot-args úteis para debug:
+-v                  # Modo verbose (mostra log de boot)
+debug=0x100         # Desabilita watchdog (evita reboot em panic)
+keepsyms=1          # Mantém símbolos em kernel panic
+alcid=1             # Layout ID do áudio (varia por placa)
+agdpmod=pikera      # Para GPUs Navi (RX 5000/6000/7000)
+-wegnoegpu          # Desabilita GPU dedicada (laptops)</code>
+            </div>
+        </div>
+
+        <!-- Kernel Panics Específicos -->
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-skull-crossbones"></i></div>
+            <h3 data-i18n="trouble-kp-specific-title">💀 Kernel Panics Específicos</h3>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-i18n="trouble-kp-error">Erro</th>
+                            <th data-i18n="trouble-kp-cause">Causa</th>
+                            <th data-i18n="trouble-kp-solution">Solução</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>AppleIntelMCEReporter</code></td>
+                            <td data-i18n="trouble-kp-mce-cause">Dual-socket ou HEDT</td>
+                            <td data-i18n="trouble-kp-mce-fix">Adicione AppleMCEReporterDisabler.kext</td>
+                        </tr>
+                        <tr>
+                            <td><code>AppleIntelCPUPowerManagement</code></td>
+                            <td data-i18n="trouble-kp-cpupm-cause">SSDT-PLUG faltando</td>
+                            <td data-i18n="trouble-kp-cpupm-fix">Gere SSDT-PLUG com SSDTTime</td>
+                        </tr>
+                        <tr>
+                            <td><code>IOPCIFamily</code> (X99)</td>
+                            <td data-i18n="trouble-kp-pci-cause">Above 4G Decoding</td>
+                            <td data-i18n="trouble-kp-pci-fix">Habilite Above 4G na BIOS + ResizeAppleGpuBars</td>
+                        </tr>
+                        <tr>
+                            <td><code>cckprng_int_gen</code></td>
+                            <td data-i18n="trouble-kp-cck-cause">SSE4.2 faltando</td>
+                            <td data-i18n="trouble-kp-cck-fix">CPU muito antiga (pré-Nehalem)</td>
+                        </tr>
+                        <tr>
+                            <td><code>AppleIntelI210Ethernet</code></td>
+                            <td data-i18n="trouble-kp-i210-cause">Intel I225-V/I210</td>
+                            <td data-i18n="trouble-kp-i210-fix">Adicione device properties específicas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- GPU Issues -->
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-desktop"></i></div>
+            <h3 data-i18n="trouble-gpu-issues-title">🖥️ Problemas de GPU</h3>
+
+            <div class="alert alert-danger">
+                <i class="fas fa-tv"></i>
+                <div>
+                    <strong data-i18n="trouble-gpu-black-title">Tela Preta após IOConsoleUsers:</strong>
+                    <ul style="margin-top: 0.5rem;">
+                        <li data-i18n="trouble-gpu-black-navi"><strong>GPUs Navi (RX 5000/6000/7000):</strong> Adicione
+                            <code>agdpmod=pikera</code> (se não usar NootRX)</li>
+                        <li data-i18n="trouble-gpu-black-igpu"><strong>iGPU Intel:</strong> Verifique DeviceProperties
+                            (AAPL,ig-platform-id)</li>
+                        <li data-i18n="trouble-gpu-black-nvidia"><strong>NVIDIA:</strong> Não suportada em Monterey+
+                            (use <code>-wegnoegpu</code>)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="fas fa-laptop"></i>
+                <div>
+                    <strong data-i18n="trouble-gpu-laptop-title">Tela Embaralhada em Laptops:</strong><br>
+                    <span data-i18n="trouble-gpu-laptop-desc">Adicione <code>-igfxmlr</code> boot-arg (WhateverGreen)
+                        para forçar resolução máxima do painel.</span>
+                </div>
+            </div>
+
+            <h4 data-i18n="trouble-gpu-framebuffer-title">Framebuffer Patches Comuns:</h4>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                <code># DeviceProperties para iGPU Intel (exemplo Coffee Lake)
+PciRoot(0x0)/Pci(0x2,0x0)
+    AAPL,ig-platform-id    07009B3E  # Headless (sem monitor na iGPU)
+    device-id              9B3E0000  # Fake ID se necessário
+    framebuffer-patch-enable  01000000
+    framebuffer-stolenmem  00003001  # 48MB
+
+# Para laptops com painel interno:
+    AAPL,ig-platform-id    00009B3E  # Com saída de vídeo</code>
+            </div>
+        </div>
+
+        <!-- USB Issues -->
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-usb"></i></div>
+            <h3 data-i18n="trouble-usb-issues-title">🔌 Problemas de USB</h3>
+
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong data-i18n="trouble-usb-limit-title">Limite de 15 Portas:</strong><br>
+                    <span data-i18n="trouble-usb-limit-desc">macOS tem limite de 15 portas USB por controlador. Use
+                        USBMap ou USBToolBox para mapear corretamente.</span>
+                </div>
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong data-i18n="trouble-usb-xhci-title">XhciPortLimit:</strong>
+                    <ul style="margin-top: 0.5rem;">
+                        <li data-i18n="trouble-usb-xhci-1"><strong>macOS 11.3+:</strong> XhciPortLimit NÃO funciona
+                            mais!</li>
+                        <li data-i18n="trouble-usb-xhci-2">Use <code>USBInjectAll.kext</code> + mapeamento manual</li>
+                        <li data-i18n="trouble-usb-xhci-3">Ou use <code>USBToolBox.kext</code> (recomendado)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4 data-i18n="trouble-usb-steps-title">Passo a Passo para Mapear USB:</h4>
+            <ol>
+                <li data-i18n="trouble-usb-step-1">Baixe <a href="https://github.com/USBToolBox/tool" target="_blank"
+                        style="color: var(--primary); text-decoration: underline;">USBToolBox</a> (Windows) ou <a
+                        href="https://github.com/corpnewt/USBMap" target="_blank"
+                        style="color: var(--primary); text-decoration: underline;">USBMap</a> (macOS)</li>
+                <li data-i18n="trouble-usb-step-2">Identifique todas as portas USB testando com pendrive</li>
+                <li data-i18n="trouble-usb-step-3">Selecione as 15 portas mais importantes (USB 2.0 + USB 3.0)</li>
+                <li data-i18n="trouble-usb-step-4">Gere USBMap.kext ou UTBMap.kext</li>
+                <li data-i18n="trouble-usb-step-5">Remova USBInjectAll.kext e desabilite XhciPortLimit</li>
+            </ol>
+        </div>
+
+        <!-- Post-Install Issues -->
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-check-circle"></i></div>
+            <h3 data-i18n="trouble-post-install-title">✅ Problemas Pós-Instalação</h3>
+
+            <h4 data-i18n="trouble-post-sleep-title">Sleep/Wake Issues:</h4>
+            <ul>
+                <li data-i18n="trouble-post-sleep-1"><strong>Não entra em sleep:</strong> Verifique
+                    <code>pmset -g assertions</code> para ver o que está impedindo</li>
+                <li data-i18n="trouble-post-sleep-2"><strong>Wake imediato:</strong> Desabilite Wake on LAN na BIOS, use
+                    <code>pmset -a darkwakes 0</code></li>
+                <li data-i18n="trouble-post-sleep-3"><strong>USB wake:</strong> Adicione SSDT-GPRW ou SSDT-PTSWAK</li>
+                <li data-i18n="trouble-post-sleep-4"><strong>Bluetooth wake:</strong> Desabilite em Preferências do
+                    Sistema</li>
+            </ul>
+
+            <h4 data-i18n="trouble-post-iservices-title">iServices (iMessage/FaceTime):</h4>
+            <div class="alert alert-success">
+                <i class="fas fa-apple"></i>
+                <div>
+                    <strong data-i18n="trouble-post-iservices-check-title">Verifique:</strong>
+                    <ul style="margin-top: 0.5rem;">
+                        <li data-i18n="trouble-post-iservices-1">Serial Number válido mas NÃO em uso (verifique em <a
+                                href="https://checkcoverage.apple.com" target="_blank"
+                                style="color: var(--success); text-decoration: underline;">checkcoverage.apple.com</a>)
+                        </li>
+                        <li data-i18n="trouble-post-iservices-2">En0 (Ethernet) como interface primária</li>
+                        <li data-i18n="trouble-post-iservices-3">ROM = endereço MAC da placa de rede</li>
+                        <li data-i18n="trouble-post-iservices-4">MLB válido e correspondente ao Serial</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h4 data-i18n="trouble-post-audio-title">Áudio não funciona:</h4>
+            <ol>
+                <li data-i18n="trouble-post-audio-1">Verifique se AppleALC.kext está carregado
+                    (<code>kextstat | grep AppleALC</code>)</li>
+                <li data-i18n="trouble-post-audio-2">Teste diferentes layout IDs (alcid=1, alcid=2, etc.)</li>
+                <li data-i18n="trouble-post-audio-3">Verifique se HPET está corrigido (SSDT-HPET)</li>
+                <li data-i18n="trouble-post-audio-4">Consulte <a
+                        href="https://github.com/acidanthera/AppleALC/wiki/Supported-codecs" target="_blank"
+                        style="color: var(--primary); text-decoration: underline;">codecs suportados</a></li>
+            </ol>
+        </div>
+
+        <!-- Debug Tools -->
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-tools"></i></div>
+            <h3 data-i18n="trouble-debug-tools-title">🛠️ Ferramentas de Debug</h3>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-i18n="trouble-debug-tool">Ferramenta</th>
+                            <th data-i18n="trouble-debug-purpose">Função</th>
+                            <th data-i18n="trouble-debug-command">Comando/Uso</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Hackintool</strong></td>
+                            <td data-i18n="trouble-debug-hackintool">All-in-one para debug</td>
+                            <td><a href="https://github.com/headkaze/Hackintool" target="_blank"
+                                    style="color: var(--primary)">GitHub</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>IORegistryExplorer</strong></td>
+                            <td data-i18n="trouble-debug-ioreg">Ver devices e properties</td>
+                            <td><a href="https://github.com/khronokernel/IORegistryClone" target="_blank"
+                                    style="color: var(--primary)">GitHub</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>gfxutil</strong></td>
+                            <td data-i18n="trouble-debug-gfxutil">Encontrar DevicePath de GPUs</td>
+                            <td><code>./gfxutil -f display</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>kextstat</strong></td>
+                            <td data-i18n="trouble-debug-kextstat">Listar kexts carregados</td>
+                            <td><code>kextstat | grep -v apple</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>pmset</strong></td>
+                            <td data-i18n="trouble-debug-pmset">Gerenciamento de energia</td>
+                            <td><code>pmset -g</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>log show</strong></td>
+                            <td data-i18n="trouble-debug-log">Ver logs do sistema</td>
+                            <td><code>log show --last boot</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
 
     <section id="glossario">
