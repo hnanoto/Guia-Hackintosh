@@ -326,6 +326,63 @@ const iGPUDatabase = {
             "AAPL,ig-platform-id": "00001659"
         }
     },
+    "5926": {
+        generation: "Kaby Lake",
+        laptop: {
+            "AAPL,ig-platform-id": "00001659"
+        }
+    },
+    "5927": {
+        generation: "Kaby Lake",
+        laptop: {
+            "AAPL,ig-platform-id": "00001659"
+        }
+    },
+
+    // ========================================================================
+    // Kaby Lake Refresh (8th Gen) - UHD 620
+    // Device IDs: 5917, 591C, 5921, 5923
+    // ========================================================================
+    "5917": {
+        generation: "Kaby Lake Refresh",
+        laptop: {
+            "AAPL,ig-platform-id": "00001659",
+            "device-id": "16590000",
+            "framebuffer-patch-enable": "01000000",
+            "framebuffer-stolenmem": "00003001",
+            "framebuffer-fbmem": "00009000"
+        }
+    },
+    "591C": {
+        generation: "Kaby Lake Refresh",
+        laptop: {
+            "AAPL,ig-platform-id": "00001659",
+            "device-id": "16590000",
+            "framebuffer-patch-enable": "01000000",
+            "framebuffer-stolenmem": "00003001",
+            "framebuffer-fbmem": "00009000"
+        }
+    },
+    "5921": {
+        generation: "Kaby Lake Refresh",
+        laptop: {
+            "AAPL,ig-platform-id": "00001659",
+            "device-id": "16590000",
+            "framebuffer-patch-enable": "01000000",
+            "framebuffer-stolenmem": "00003001",
+            "framebuffer-fbmem": "00009000"
+        }
+    },
+    "5923": {
+        generation: "Kaby Lake Refresh",
+        laptop: {
+            "AAPL,ig-platform-id": "00001659",
+            "device-id": "16590000",
+            "framebuffer-patch-enable": "01000000",
+            "framebuffer-stolenmem": "00003001",
+            "framebuffer-fbmem": "00009000"
+        }
+    },
 
     // ========================================================================
     // Coffee Lake (8th/9th Gen) - UHD 630

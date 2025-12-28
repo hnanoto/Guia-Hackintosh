@@ -36,9 +36,18 @@ class ConfigGenerator {
 
             // MacBook Pro
             "MacBookPro16,1": { type: "laptop", minDarwin: "19.0.0", maxDarwin: "99.0.0", year: 2019, cpu: "9th Gen", gpu: "AMD" },
+            "MacBookPro16,2": { type: "laptop", minDarwin: "19.0.0", maxDarwin: "99.0.0", year: 2020, cpu: "10th Gen", gpu: "Intel" },
+            "MacBookPro16,3": { type: "laptop", minDarwin: "19.0.0", maxDarwin: "99.0.0", year: 2020, cpu: "10th Gen", gpu: "Intel" },
             "MacBookPro15,1": { type: "laptop", minDarwin: "17.0.0", maxDarwin: "99.0.0", year: 2018, cpu: "8th Gen", gpu: "AMD" },
+            "MacBookPro15,2": { type: "laptop", minDarwin: "17.0.0", maxDarwin: "99.0.0", year: 2018, cpu: "8th Gen", gpu: "Intel" },
+            "MacBookPro15,3": { type: "laptop", minDarwin: "18.0.0", maxDarwin: "99.0.0", year: 2019, cpu: "9th Gen", gpu: "AMD" },
+            "MacBookPro15,4": { type: "laptop", minDarwin: "18.0.0", maxDarwin: "99.0.0", year: 2019, cpu: "8th Gen", gpu: "Intel" },
             "MacBookPro14,1": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2017, cpu: "7th Gen", gpu: "Intel" },
-            "MacBookPro13,1": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2016, cpu: "6th Gen", gpu: "Intel" }
+            "MacBookPro14,2": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2017, cpu: "7th Gen", gpu: "Intel" },
+            "MacBookPro14,3": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2017, cpu: "7th Gen", gpu: "AMD" },
+            "MacBookPro13,1": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2016, cpu: "6th Gen", gpu: "Intel" },
+            "MacBookPro13,2": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2016, cpu: "6th Gen", gpu: "Intel" },
+            "MacBookPro13,3": { type: "laptop", minDarwin: "16.0.0", maxDarwin: "99.0.0", year: 2016, cpu: "6th Gen", gpu: "AMD" }
         };
     }
 
@@ -442,14 +451,36 @@ class ConfigGenerator {
         if (platform === "Laptop") {
             const codename = cpu.Codename || "";
 
-            if (codename.includes("Coffee") || codename.includes("Comet")) {
-                return this.getBestSMBIOS("MacBookPro16,1", darwinVersion);
+            // Verificar se tem dGPU AMD
+            const hasAMDdGPU = gpu && gpu.Manufacturer === "AMD" && gpu["Device Type"] === "Discrete GPU";
+
+            if (codename.includes("Comet") || codename.includes("Ice Lake")) {
+                // 10th Gen
+                if (hasAMDdGPU) {
+                    return this.getBestSMBIOS("MacBookPro16,1", darwinVersion); // 16" com AMD
+                }
+                return this.getBestSMBIOS("MacBookPro16,2", darwinVersion); // 13" com Intel
+            }
+            if (codename.includes("Coffee")) {
+                // 8th/9th Gen
+                if (hasAMDdGPU) {
+                    return this.getBestSMBIOS("MacBookPro15,1", darwinVersion); // 15" com AMD
+                }
+                return this.getBestSMBIOS("MacBookPro15,2", darwinVersion); // 13" com Intel
             }
             if (codename.includes("Kaby")) {
-                return this.getBestSMBIOS("MacBookPro14,1", darwinVersion);
+                // 7th Gen (incluindo Kaby Lake Refresh/UHD 620)
+                if (hasAMDdGPU) {
+                    return this.getBestSMBIOS("MacBookPro14,3", darwinVersion); // 15" com AMD
+                }
+                return this.getBestSMBIOS("MacBookPro14,1", darwinVersion); // 13" com Intel
             }
             if (codename.includes("Skylake")) {
-                return this.getBestSMBIOS("MacBookPro13,1", darwinVersion);
+                // 6th Gen
+                if (hasAMDdGPU) {
+                    return this.getBestSMBIOS("MacBookPro13,3", darwinVersion); // 15" com AMD
+                }
+                return this.getBestSMBIOS("MacBookPro13,1", darwinVersion); // 13" com Intel
             }
         }
 
