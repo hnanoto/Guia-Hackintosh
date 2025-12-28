@@ -90,77 +90,129 @@ class ConfigGenerator {
     // PARSER AIDA64 MELHORADO - Leitura robusta de HTML bagunçado
     // ========================================================================
 
+
     parseAIDA64Improved(htmlContent) {
         console.log("Parsing AIDA64 HTML...");
 
-        // Criar um objeto de dados limpo
+        // Extrair CPU Name (procurar por "(CPUID) Nome da CPU" ou "13th Gen Intel")
+        let cpuName = this.extractAIDA64Value(htmlContent, [
+            "(CPUID) Nome da CPU",
+            "CPU Type",
+            "Processor Type"
+        ]);
+
+        // Se não encontrou, procurar diretamente por "13th Gen Intel" ou "i5-13600KF"
+        if (!cpuName || cpuName === "Unknown CPU") {
+            const cpuMatch = htmlContent.match(/13th Gen Intel.*?i\d-\d+[A-Z]{0,2}/i) ||
+                htmlContent.match(/\d+th Gen Intel.*?Core.*?i\d-\d+[A-Z]{0,2}/i) ||
+                htmlContent.match(/Intel Core i\d-\d+[A-Z]{0,2}/i) ||
+                htmlContent.match(/AMD Ryzen \d \d+[A-Z]{0,2}/i);
+            if (cpuMatch) {
+                cpuName = cpuMatch[0].replace(/<[^>]+>/g, '').trim();
+            } else {
+                cpuName = "Unknown CPU";
+            }
+        }
+
+        // Extrair Motherboard (procurar por "Nome da Placa Mãe" ou "Z690 GAMING X")
+        let moboName = this.extractAIDA64Value(htmlContent, [
+            "Nome do Sistema - DMI",
+            "Nome da Placa Mãe",
+            "Motherboard Name",
+            "Tipo de Computador"
+        ]);
+
+        // Se não encontrou, procurar diretamente por "Z690" ou "GIGABYTE"
+        if (!moboName || moboName === "Unknown") {
+            const moboMatch = htmlContent.match(/Z\d{3}\s+GAMING\s+X\s+DDR\d/i) ||
+                htmlContent.match(/GIGABYTE.*?Z\d{3}/i) ||
+                htmlContent.match(/Technology Co\., Ltd\.\s+([A-Z0-9\s]+DDR\d)/i);
+            if (moboMatch) {
+                moboName = moboMatch[0].replace(/Technology Co\., Ltd\.\s+/i, '').replace(/<[^>]+>/g, '').trim();
+            } else {
+                moboName = "Unknown";
+            }
+        }
+
+        // Extrair Chipset (procurar por "Intel Alder Point-S Z690" ou "Intel Raptor Lake-S")
+        let chipset = this.extractAIDA64Value(htmlContent, [
+            "Chipset da Placa-Mãe",
+            "Chipset",
+            "System Chipset"
+        ]);
+
+        // Se não encontrou, procurar diretamente por "Z690" ou chipset patterns
+        if (!chipset || chipset === "Unknown") {
+            const chipsetMatch = htmlContent.match(/Intel\s+(Alder|Raptor)\s+Point-S\s+Z\d{3}/i) ||
+                htmlContent.match(/Z\d{3}/i) ||
+                htmlContent.match(/B\d{3}/i) ||
+                htmlContent.match(/X\d{3}/i);
+            if (chipsetMatch) {
+                chipset = chipsetMatch[0].replace(/<[^>]+>/g, '').trim();
+                // Extrair apenas o código do chipset (ex: "Z690")
+                const chipsetCode = chipset.match(/[ZBX]\d{3}/i);
+                if (chipsetCode) {
+                    chipset = chipsetCode[0];
+                }
+            } else {
+                chipset = "Unknown";
+            }
+        }
+
+        // Extrair GPU (procurar por "AMD Radeon RX 6700 XT")
+        let gpuName = this.extractAIDA64Value(htmlContent, [
+            "Adaptador gráfico",
+            "Video Adapter",
+            "Graphics Card",
+            "Placa de Vídeo"
+        ]);
+
+        // Se não encontrou, procurar diretamente por padrões de GPU
+        if (!gpuName || gpuName === "Unknown GPU") {
+            const gpuMatch = htmlContent.match(/AMD Radeon RX \d{4}\s*[A-Z]{0,2}/i) ||
+                htmlContent.match(/NVIDIA GeForce [A-Z]{2,3}\s*\d{3,4}\s*[A-Z]{0,2}/i) ||
+                htmlContent.match(/Intel.*?UHD Graphics \d{3}/i) ||
+                htmlContent.match(/Intel.*?HD Graphics \d{3}/i);
+            if (gpuMatch) {
+                gpuName = gpuMatch[0].replace(/<[^>]+>/g, '').trim();
+            } else {
+                gpuName = "Unknown GPU";
+            }
+        }
+
+        // Criar objeto de dados
         const data = {
             CPU: {
-                "Processor Name": this.extractAIDA64Value(htmlContent, [
-                    "Tipo de processador",
-                    "Processor Type",
-                    "CPU Type"
-                ]) || "Unknown CPU",
-                "Manufacturer": "Intel",
-                "Codename": "Unknown",
-                "Core Count": "4"
+                "Processor Name": cpuName,
+                "Manufacturer": cpuName.includes("AMD") ? "AMD" : "Intel",
+                "Codename": this.detectCPUCodenameFromName(cpuName),
+                "Core Count": this.extractCoreCount(htmlContent, cpuName)
             },
             Motherboard: {
-                "Name": this.extractAIDA64Value(htmlContent, [
-                    "Nome da Placa Mãe",
-                    "Motherboard Name",
-                    "Motherboard"
-                ]) || "Unknown",
+                "Name": moboName,
                 "Platform": "Desktop",
-                "Chipset": this.extractAIDA64Value(htmlContent, [
-                    "Chipset",
-                    "System Chipset",
-                    "Chipset da Placa-Mãe"
-                ]) || "Unknown"
+                "Chipset": chipset
             },
             GPU: {},
             BIOS: {
-                "Firmware Type": this.extractAIDA64Value(htmlContent, [
-                    "Tipo de BIOS",
-                    "BIOS Type"
-                ]) || "UEFI"
+                "Firmware Type": "UEFI"
             },
             Monitor: {},
             Network: {},
             Sound: {}
         };
 
-        // Detectar CPU
-        const cpuName = data.CPU["Processor Name"];
-        if (cpuName.includes("AMD")) {
-            data.CPU.Manufacturer = "AMD";
-        } else {
-            data.CPU.Manufacturer = "Intel";
-        }
-        data.CPU.Codename = this.detectCPUCodenameFromName(cpuName);
-
-        // Detectar GPU
-        const gpuName = this.extractAIDA64Value(htmlContent, [
-            "Adaptador gráfico",
-            "Video Adapter",
-            "Graphics Card",
-            "Placa de Vídeo"
-        ]) || "Unknown GPU";
-
+        // Adicionar GPU
         data.GPU[gpuName] = {
-            "Device Type": gpuName.includes("Intel") ? "Integrated GPU" : "Discrete GPU",
+            "Device Type": gpuName.includes("Intel") && (gpuName.includes("UHD") || gpuName.includes("HD")) ? "Integrated GPU" : "Discrete GPU",
             "Manufacturer": this.detectGPUManufacturer(gpuName),
             "Codename": this.detectGPUCodename(gpuName)
         };
 
-        // Detectar Audio
-        const audioDevice = this.extractAIDA64Value(htmlContent, [
-            "Realtek",
-            "Audio Device",
-            "Sound Card"
-        ]);
-
-        if (audioDevice && audioDevice.includes("ALC")) {
+        // Detectar Audio (procurar por "Realtek ALC1220")
+        const audioMatch = htmlContent.match(/Realtek.*?ALC\d{4}/i);
+        if (audioMatch) {
+            const audioDevice = audioMatch[0];
             const codecMatch = audioDevice.match(/ALC(\d+)/);
             if (codecMatch) {
                 data.Sound[audioDevice] = {
@@ -170,8 +222,30 @@ class ConfigGenerator {
             }
         }
 
+        console.log("AIDA64 Parsed Data:", data);
         return this.validateAndCleanReport(data);
     }
+
+    extractCoreCount(htmlContent, cpuName) {
+        // Procurar por padrão "6C+8c" ou "14 cores"
+        const coreMatch = htmlContent.match(/(\d+)C\+(\d+)c/i) ||
+            htmlContent.match(/(\d+)\s*cores/i);
+        if (coreMatch) {
+            if (coreMatch[2]) {
+                // Formato "6C+8c" = 6 P-cores + 8 E-cores = 14 total
+                return String(parseInt(coreMatch[1]) + parseInt(coreMatch[2]));
+            }
+            return coreMatch[1];
+        }
+
+        // Fallback baseado no nome da CPU
+        if (cpuName.includes("13600")) return "14";
+        if (cpuName.includes("13700")) return "16";
+        if (cpuName.includes("13900")) return "24";
+
+        return "4";
+    }
+
 
     extractAIDA64Value(html, labels) {
         for (const label of labels) {
