@@ -1006,8 +1006,8 @@
                     <h3 data-i18n="card-gpu-title">Compatible GPUs</h3>
                     <p data-i18n="card-gpu-desc">Supported Graphics Cards:</p>
                     <ul>
-                        <li><i class="fas fa-check-circle"></i> <span data-i18n="gpu-li-1">AMD RX 6000/7000 series (RDNA
-                                2/3)</span></li>
+                        <li><i class="fas fa-check-circle"></i> <span data-i18n="gpu-li-1">AMD RX 6000 series (RDNA
+                                2)</span></li>
                         <li><i class="fas fa-check-circle"></i> <span data-i18n="gpu-li-2">AMD RX 5000 series (RDNA
                                 1)</span></li>
                         <li><i class="fas fa-check-circle"></i> <span data-i18n="gpu-li-3">AMD Vega/Polaris</span></li>
@@ -1142,10 +1142,10 @@
                         </tr>
                         <tr>
                             <td><strong>NootRX.kext</strong></td>
-                            <td data-i18n="kext-desc-nootrx">Exclusive support for AMD RX 6000/7000 (Navi 2x/3x).
-                                **INCOMPATIBLE with WEG**.</td>
+                            <td data-i18n="kext-desc-nootrx">Exclusive support for AMD RX 6000 (Navi 2x). **INCOMPATIBLE
+                                with WEG**.</td>
                             <td><a href="https://github.com/ChefKissInc/NootRX" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
+                                    style="color: var(--primary)">GitHub (NootRX)</a></td>
                         </tr>
                         <tr>
                             <td><strong>NootedRed.kext</strong></td>
@@ -1330,7 +1330,7 @@
                             <td><span data-i18n="smbios-hw-amd-ded">Desktop + Dedicated AMD GPU</span></td>
                             <td><strong>MacPro7,1</strong></td>
                             <td>Sequoia 15.x ✅<br>Tahoe 26.x ✅</td>
-                            <td><span data-i18n="smbios-obs-amd-ded">Best for RX 6000/7000</span></td>
+                            <td><span data-i18n="smbios-obs-amd-ded">Best for RX 6000</span></td>
                         </tr>
                         <tr>
                             <td><span data-i18n="smbios-hw-amd-alt">Desktop + AMD GPU (Alternative)</span></td>
@@ -1535,7 +1535,7 @@
                                 <td><strong>AMD (Polaris/Vega/Navi)</strong></td>
                                 <td><i class="fas fa-check-circle" style="color: var(--success)"></i> <span
                                         data-i18n="hw-limit-gpu-amd-status">Excellent</span></td>
-                                <td data-i18n="hw-limit-gpu-amd-notes">RX 400/500/5000/6000/7000 work well</td>
+                                <td data-i18n="hw-limit-gpu-amd-notes">RX 400/500/5000/6000 work well</td>
                             </tr>
                             <tr>
                                 <td><strong>NVIDIA (Kepler)</strong></td>
@@ -2540,7 +2540,7 @@
                         <li><i class="fas fa-link"></i> <a href="https://github.com/OpenIntelWireless" target="_blank"
                                 style="color: var(--primary)">OpenIntelWireless (Intel WiFi/BT)</a></li>
                         <li><i class="fas fa-link"></i> <a href="https://github.com/ChefKissInc/NootRX" target="_blank"
-                                style="color: var(--primary)">NootRX (AMD RX 6000/7000)</a></li>
+                                style="color: var(--primary)">NootRX (AMD RX 6000)</a></li>
                         <li><i class="fas fa-link"></i> <a href="https://github.com/Mieze" target="_blank"
                                 style="color: var(--primary)">Mieze (Ethernet drivers)</a></li>
                     </ul>
@@ -2613,7 +2613,7 @@
                 <div>
                     <strong data-i18n="trouble-bs-title">Black Screen after boot?</strong>
                     <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
-                        <li data-i18n="trouble-bs-1">Check if using NootRX.kext (for RX 6000/7000)</li>
+                        <li data-i18n="trouble-bs-1">Check if using NootRX.kext (for RX 6000)</li>
                         <li data-i18n="trouble-bs-2">Remove agdpmod=pikera if using MacPro7,1 + NootRX</li>
                         <li data-i18n="trouble-bs-3">Check if WhateverGreen and NootRX are not together</li>
                         <li data-i18n="trouble-bs-4">Confirm Above 4G Decoding is enabled in BIOS</li>
@@ -4186,7 +4186,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                         </tr>
                         <tr>
                             <td><code>agdpmod=pikera</code></td>
-                            <td data-i18n="arg-pikera">Required for AMD Navi GPUs (RX 5000/6000/7000). Fixes black
+                            <td data-i18n="arg-pikera">Required for AMD Navi GPUs (RX 5000/6000). Fixes black
                                 screen.</td>
                         </tr>
                         <tr>
@@ -4337,7 +4337,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 debug=0x100         # Disables watchdog (prevents panic reboot)
 keepsyms=1          # Keeps symbols in kernel panic
 alcid=1             # Audio Layout ID
-agdpmod=pikera      # For Navi GPUs (RX 5000/6000/7000)
+agdpmod=pikera      # For Navi GPUs (RX 5000/6000)
 -wegnoegpu          # Disables dedicated GPU (laptops)</code>
             </div>
         </div>
@@ -4397,7 +4397,7 @@ agdpmod=pikera      # For Navi GPUs (RX 5000/6000/7000)
                 <div>
                     <strong data-i18n="trouble-gpu-black-title">Black Screen after IOConsoleUsers:</strong>
                     <ul style="margin-top: 0.5rem;">
-                        <li data-i18n="trouble-gpu-black-navi"><strong>Navi GPUs (RX 5000/6000/7000):</strong> Add
+                        <li data-i18n="trouble-gpu-black-navi"><strong>Navi GPUs (RX 5000/6000):</strong> Add
                             <code>agdpmod=pikera</code> (if not using NootRX)
                         </li>
                         <li data-i18n="trouble-gpu-black-igpu"><strong>Intel iGPU:</strong> Check DeviceProperties
@@ -4845,7 +4845,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'cpu-li-4': 'AMD Ryzen (suporte limitado)',
                 'card-gpu-title': 'GPU Compatíveis',
                 'card-gpu-desc': 'Placas de vídeo suportadas:',
-                'gpu-li-1': 'AMD RX 6000/7000 series (RDNA 2/3)',
+                'gpu-li-1': 'AMD RX 6000 series (RDNA 2)',
                 'gpu-li-2': 'AMD RX 5000 series (RDNA 1)',
                 'gpu-li-3': 'AMD Vega/Polaris',
                 'gpu-li-4': 'Intel iGPU (HD/UHD 600+)',
@@ -4950,7 +4950,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'cpu-li-4': 'AMD Ryzen (suporte limitado)',
                 'card-gpu-title': 'GPU Compatíveis',
                 'card-gpu-desc': 'Placas de vídeo suportadas:',
-                'gpu-li-1': 'AMD RX 6000/7000 series (RDNA 2/3)',
+                'gpu-li-1': 'AMD RX 6000 series (RDNA 2)',
                 'gpu-li-2': 'AMD RX 5000 series (RDNA 1)',
                 'gpu-li-3': 'AMD Vega/Polaris',
                 'gpu-li-4': 'Intel iGPU (HD/UHD 600+)',
@@ -4973,7 +4973,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'sec-kexts-title': 'Kexts Essenciais',
                 'sec-kexts-desc': 'Extensões do kernel necessárias para funcionalidade completa',
                 'alert-kexts': 'Important: Sempre baixe os kexts mais recentes dos repositórios oficiais do GitHub.',
-                'alert-nootrx': 'NUNCA use NootRX.kext com WhateverGreen.kext! Eles são incompatíveis e causarão tela preta. Para RX 6000/7000, use APENAS NootRX.',
+                'alert-nootrx': 'NUNCA use NootRX.kext com WhateverGreen.kext! Eles são incompatíveis e causarão tela preta. Para RX 6000, use APENAS NootRX.',
 
                 'sec-hw-title': 'Configurações por Geração',
                 'sec-hw-desc': 'Guia rápido de config.plist para diferentes arquiteturas',
@@ -5117,7 +5117,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'kext-desc-smcbatt': 'Monitoramento de bateria.',
                 'kext-desc-amd-pm': 'Gerenciamento de energia para APU/CPU Ryzen.',
                 'kext-desc-weg': 'Patches essenciais para GPUs Intel, AMD e NVIDIA. Fix DRM, port limits, etc.',
-                'kext-desc-nootrx': 'Suporte exclusivo para AMD RX 6000/7000 (Navi 2x/3x). **INCOMPATÍVEL com WEG**.',
+                'kext-desc-nootrx': 'Suporte exclusivo para AMD RX 6000 (Navi 2x). **INCOMPATÍVEL com WEG**.',
                 'kext-desc-nooted': 'Suporte para APUs AMD Ryzen (Vega iGPU).',
                 'kext-desc-alc': 'Patches de áudio nativo para codecs Realtek, CX, etc.',
                 'kext-desc-mausi': 'Drivers para Ethernet Intel I217/I218/I219.',
@@ -5178,7 +5178,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'cpu-li-4': 'AMD Ryzen (suporte limitado)',
                 'card-gpu-title': 'GPU Compatíveis',
                 'card-gpu-desc': 'Placas de vídeo suportadas:',
-                'gpu-li-1': 'AMD RX 6000/7000 series (RDNA 2/3)',
+                'gpu-li-1': 'AMD RX 6000 series (RDNA 2)',
                 'gpu-li-2': 'AMD RX 5000 series (RDNA 1)',
                 'gpu-li-3': 'AMD Vega/Polaris',
                 'gpu-li-4': 'Intel iGPU (HD/UHD 600+)',
@@ -5201,7 +5201,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'sec-kexts-title': 'Kexts Essenciais',
                 'sec-kexts-desc': 'Extensões do kernel necessárias para funcionalidade completa',
                 'alert-kexts': 'Important: Sempre baixe os kexts mais recentes dos repositórios oficiais do GitHub.',
-                'alert-nootrx': 'NUNCA use NootRX.kext com WhateverGreen.kext! Eles são incompatíveis e causarão tela preta. Para RX 6000/7000, use APENAS NootRX.',
+                'alert-nootrx': 'NUNCA use NootRX.kext com WhateverGreen.kext! Eles são incompatíveis e causarão tela preta. Para RX 6000, use APENAS NootRX.',
 
                 'sec-hw-title': 'Configurações por Geração',
                 'sec-hw-desc': 'Guia rápido de config.plist para diferentes arquiteturas',
@@ -6138,7 +6138,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'hw-limit-gpu-status': 'Status',
                 'hw-limit-gpu-notes': 'Notes',
                 'hw-limit-gpu-amd-status': 'Excellent',
-                'hw-limit-gpu-amd-notes': 'RX 400/500/5000/6000/7000 work well',
+                'hw-limit-gpu-amd-notes': 'RX 400/500/5000/6000 work well',
                 'hw-limit-gpu-nvidia-kepler-status': 'Limited',
                 'hw-limit-gpu-nvidia-kepler-notes': 'GTX 600/700 work up to Big Sur',
                 'hw-limit-gpu-nvidia-modern-status': 'Not Supported',
