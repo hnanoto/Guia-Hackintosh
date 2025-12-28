@@ -3,5 +3,6 @@
 !.gitignore
 !*.plist
 !*.js
+!*.md
 !Report*.json
 !Report*.htm
