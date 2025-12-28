@@ -1633,30 +1633,310 @@
                                 Guide</a></li>
                         <li><a href="https://dortania.github.io/GPU-Buyers-Guide/" target="_blank"
                                 style="color: var(--primary); text-decoration: underline;">GPU Buyers Guide</a></li>
+                        <li><a href="https://dortania.github.io/Wireless-Buyers-Guide/" target="_blank"
+                                style="color: var(--primary); text-decoration: underline;">Wireless Buyers Guide</a>
+                        </li>
                     </ul>
                 </div>
+            </div>
+        </section>
+
+        <!-- Instalação Passo a Passo -->
+        <section id="hardware-configs">
+            <div class="section-header">
+                <h2 data-i18n="sec-hw-title">Configurações por Geração</h2>
+                <p data-i18n="sec-hw-desc">Guia completo de config.plist (Clique para expandir)</p>
+            </div>
+
+            <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+                <!-- AMD Card -->
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-microchip" style="color: #EF4444;"></i></div>
+                    <h3 data-i18n="hw-amd-title">AMD Ryzen (Zen)</h3>
+                    <p data-i18n="hw-amd-desc">Ryzen 1000-7000 & Threadripper</p>
+
+                    <!-- ACPI -->
+                    <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            ACPI</summary>
+                        <div style="padding: 10px;">
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>SSDT-EC-USBX-DESKTOP.aml</li>
+                                <li>SSDT-CPUR.aml (B550/A520)</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- Kernel -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Kernel</summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Emulate</h5>
+                            <div
+                                style="font-size: 0.85rem; font-family: monospace; color: var(--success); margin-bottom: 5px;">
+                                DummyPowerManagement: True
+                            </div>
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
+                            <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
+                                <li>ProvideCurrentCpuInfo: <span data-i18n="val-true"
+                                        style="color:var(--success); font-weight:bold">True</span></li>
+                                <li>PanicNoKextDump: <span data-i18n="val-true"
+                                        style="color:var(--success); font-weight:bold">True</span></li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top:5px;">Patch
+                            </h5>
+                            <div style="font-size: 0.8rem;">AMD Kernel Patches (Obrigatório)</div>
+                        </div>
+                    </details>
+
+                    <!-- Booter -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Booter</summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
+                            <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
+                                <li>SetupVirtualMap: <span data-i18n="val-true"
+                                        style="color:var(--success); font-weight:bold">True</span></li>
+                                <li>EnableWriteUnprotector: <span data-i18n="val-false"
+                                        style="color:var(--danger); font-weight:bold">False</span></li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- NVRAM & Misc -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            NVRAM & Misc</summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
+                            <code
+                                style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 npci=0x2000 alcid=1</code>
+                            <div style="margin-top:0.5rem; font-size:0.85rem;">
+                                <strong>SecureBootModel:</strong> Disabled<br>
+                                <strong>PickerMode:</strong> External
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
+                <!-- Intel 10th Card -->
+                <div class="card">
+                    <div class="card-icon"><i class="fas fa-microchip" style="color: #0071C5;"></i>
+                    </div>
+                    <h3 data-i18n="hw-intel-10-title">Intel 8ª-10ª Gen</h3>
+                    <p data-i18n="hw-intel-10-desc">Comet Lake (Nativo)</p>
+
+                    <!-- ACPI -->
+                    <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            ACPI
+                        </summary>
+                        <div style="padding: 10px;">
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>SSDT-PLUG.aml</li>
+                                <li>SSDT-EC-USBX.aml</li>
+                                <li>SSDT-AWAC.aml</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- DeviceProperties -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            DeviceProperties</summary>
+                        <div style="padding: 10px; font-size: 0.85rem;">
+                            <strong>PciRoot(0x0)/Pci(0x2,0x0)</strong>
+                            <br>
+                            AAPL,ig-platform-id: <code style="color:var(--warning)">07009B3E</code>
+                        </div>
+                    </details>
+
+                    <!-- Booter/Kernel -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Booter & Kernel</summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Booter Quirks</h5>
+                            <ul style="font-size: 0.85rem; list-style: none; padding: 0; margin-bottom: 5px;">
+                                <li>DevirtualiseMmio: <span data-i18n="val-true"
+                                        style="color:var(--success); font-weight:bold">True</span></li>
+                                <li>ProtectUefiServices: <span data-i18n="val-false"
+                                        style="color:var(--danger); font-weight:bold">False</span></li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Kernel Quirks</h5>
+                            <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
+                                <li>PanicNoKextDump: <span data-i18n="val-true"
+                                        style="color:var(--success); font-weight:bold">True</span></li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- NVRAM & Misc -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            NVRAM & Misc</summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
+                            <code
+                                style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 alcid=1</code>
+                            <div style="margin-top:0.5rem; font-size:0.85rem;">
+                                <strong>SecureBootModel:</strong> Disabled<br>
+                                <strong>PickerMode:</strong> External
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
+            </div>
+
+            <!-- Hardware Sniffer Analysis (New Feature) -->
+            <div class="card" id="analyzer-card"
+                style="border: 1px dashed var(--primary); background: rgba(0, 199, 253, 0.05);">
+                <div class="card-icon"><i class="fas fa-microscope" style="color: var(--primary);"></i></div>
+                <h3 data-i18n="sniff-title">Hardware Sniffer Analysis</h3>
+                <p data-i18n="sniff-desc">Drag and drop your 'Report.json' or AIDA64 'Report.htm' here.</p>
+
+                <div id="drop-zone"
+                    style="border: 2px dashed rgba(255,255,255,0.2); border-radius: 10px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem;">
+                    <i class="fas fa-file-upload"
+                        style="font-size: 2rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
+                    <p style="margin: 0; color: var(--text-secondary);" data-i18n="sniff-drop-text">Drop Report.json
+                        or
+                        Report.htm here</p>
+                </div>
+                <input type="file" id="file-input" accept=".json,.htm,.html" style="display: none;">
+
+                <!-- Analysis Result -->
+                <div id="analysis-result" style="display: none; margin-top: 1.5rem;">
+                    <h4
+                        style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 10px;">
+                        <i class="fas fa-clipboard-check" style="color: var(--success);"></i> <span
+                            data-i18n="sniff-results">Results</span>
+                    </h4>
+
+                    <div class="table-container">
+                        <table style="width: 100%; font-size: 0.85rem;">
+                            <tbody>
+                                <tr id="res-cpu-row">
+                                    <td style="width: 30%; color: var(--text-secondary);">CPU:</td>
+                                    <td id="res-cpu-val" style="font-weight: bold;">-</td>
+                                </tr>
+                                <tr id="res-mobo-row">
+                                    <td style="color: var(--text-secondary);">Mobo:</td>
+                                    <td id="res-mobo-val">-</td>
+                                </tr>
+                                <tr id="res-gpu-row">
+                                    <td style="color: var(--text-secondary);">GPU:</td>
+                                    <td id="res-gpu-val">-</td>
+                                </tr>
+                                <tr id="res-audio-row">
+                                    <td style="color: var(--text-secondary);">Audio:</td>
+                                    <td id="res-audio-val">-</td>
+                                </tr>
+                                <tr id="res-eth-row">
+                                    <td style="color: var(--text-secondary);">Ethernet:</td>
+                                    <td id="res-eth-val">-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Generated Recipe Section -->
+                    <div id="efi-recipe"
+                        style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid var(--primary);">
+                        <h5
+                            style="margin-top: 0; color: var(--primary); display:flex; justify-content:space-between; align-items:center;">
+                            <span><i class="fas fa-scroll"></i> <span data-i18n="recipe-title">EFI
+                                    Recipe</span></span>
+                            <span id="target-smbios"
+                                style="background: var(--primary); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">MacPro7,1</span>
+                        </h5>
+
+                        <!-- macOS Version Selector (Moved Here) -->
+                        <div style="margin-bottom: 10px;">
+                            <label for="macos-version"
+                                style="font-weight:bold; color:var(--text); display:block; margin-bottom:5px; font-size:0.85rem;"
+                                data-i18n="target-macos">Target macOS Version:</label>
+                            <select id="macos-version"
+                                style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); font-family:inherit; font-size:0.9rem;"
+                                onchange="generateRecipe()">
+                                <option value="Tahoe">macOS Tahoe (26.x) - Beta</option>
+                                <option value="Sequoia">macOS Sequoia (15.x)</option>
+                                <option value="Sonoma">macOS Sonoma (14.x)</option>
+                                <option value="Ventura">macOS Ventura (13.x)</option>
+                                <option value="Monterey">macOS Monterey (12.x)</option>
+                                <option value="BigSur">macOS Big Sur (11.x)</option>
+                                <option value="Catalina">macOS Catalina (10.15) or older</option>
+                            </select>
+                        </div>
+
+                        <div style="font-size: 0.85rem; margin-bottom: 10px;">
+                            <strong data-i18n="recipe-kexts">Recommended Kexts:</strong>
+                            <div id="recipe-kext-list" style="margin-top: 5px; color: var(--text-secondary);">
+                                <!-- Kexts injected here -->
+                            </div>
+                        </div>
+
+                        <div style="font-size: 0.85rem; margin-bottom: 15px;">
+                            <strong data-i18n="recipe-bootargs">Boot-args:</strong>
+                            <code id="recipe-boot-args"
+                                style="display:block; margin-top:5px; padding:5px; background:rgba(0,0,0,0.5); border-radius:4px;">-v keepsyms=1 debug=0x100</code>
+                        </div>
+
+                        <button onclick="downloadConfig()" class="btn"
+                            style="width:100%; text-align:center; background:var(--gradient-primary); color:white; border:none;">
+                            <i class="fas fa-file-code"></i> <span data-i18n="btn-gen-config">Download Optimized
+                                Config.plist</span>
+                        </button>
+                    </div>
+
+                    <div id="recommendations-box"
+                        style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <h5 style="margin-top: 0; color: var(--warning);"><i class="fas fa-lightbulb"></i> <span
+                                data-i18n="sniff-rec-title">Recommendations</span></h5>
+                        <ul id="rec-list" style="font-size: 0.85rem; padding-left: 1.2rem; margin-bottom: 0;">
+                            <!-- Actions will be injected here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intel 12th+ Card -->
+            <div class="card">
+                <div class="card-icon"><i class="fas fa-microchip" style="color: #00C7FD;"></i></div>
+                <h3 data-i18n="hw-intel-12-title">Intel 12ª-14ª Gen</h3>
+                <p data-i18n="hw-intel-12-desc">Alder/Raptor (Spoof)</p>
+
+                <!-- ACPI -->
+                <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        ACPI
+                    </summary>
+                    <div style="padding: 10px;">
+                        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                            <li>SSDT-PLUG-ALT.aml (Important!)</li>
+                            <li>SSDT-EC-USBX.aml</li>
+                        </ul>
+                    </div>
                 </details>
 
-                <!-- Kernel -->
+                <!-- Kernel Spoof -->
                 <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
                     <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                        Kernel</summary>
-                    <div style="padding: 10px;">
-                        <h5 style="color: var(--primary); font-size: 0.9em;">Emulate</h5>
-                        <div
-                            style="font-size: 0.85rem; font-family: monospace; color: var(--success); margin-bottom: 5px;">
-                            DummyPowerManagement: True
-                        </div>
-                        <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
-                        <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                            <li>ProvideCurrentCpuInfo: <span data-i18n="val-true"
-                                    style="color:var(--success); font-weight:bold">True</span></li>
-                            <li>PanicNoKextDump: <span data-i18n="val-true"
-                                    style="color:var(--success); font-weight:bold">True</span></li>
-                        </ul>
-                        <h5 style="color: var(--primary); font-size: 0.9em; margin-top:5px;">Patch
-                        </h5>
-                        <div style="font-size: 0.8rem;">AMD Kernel Patches (Obrigatório)</div>
+                        Kernel Emulate</summary>
+                    <div style="padding: 10px; font-size: 0.8rem; font-family: monospace;">
+                        <span style="color:var(--warning)">Cpuid1Data:</span> EB060800 00000000...<br>
+                        <span style="color:var(--warning)">Cpuid1Mask:</span> FFFFFFFF 00000000...
                     </div>
                 </details>
 
@@ -1667,10 +1947,46 @@
                     <div style="padding: 10px;">
                         <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
                         <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                            <li>SetupVirtualMap: <span data-i18n="val-true"
+                            <li>DevirtualiseMmio: <span data-i18n="val-true"
                                     style="color:var(--success); font-weight:bold">True</span></li>
                             <li>EnableWriteUnprotector: <span data-i18n="val-false"
                                     style="color:var(--danger); font-weight:bold">False</span></li>
+                            <li>RebuildAppleMemoryMap: <span data-i18n="val-true"
+                                    style="color:var(--success); font-weight:bold">True</span></li>
+                            <li>SetupVirtualMap: <span data-i18n="val-true"
+                                    style="color:var(--success); font-weight:bold">True</span></li>
+                            <li>SyncRuntimePermissions: <span data-i18n="val-true"
+                                    style="color:var(--success); font-weight:bold">True</span></li>
+                        </ul>
+                    </div>
+                </details>
+
+                <!-- Kernel -->
+                <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        Kernel</summary>
+                    <div style="padding: 10px;">
+                        <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
+                        <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
+                            <li>PanicNoKextDump: <span data-i18n="val-true"
+                                    style="color:var(--success); font-weight:bold">True</span></li>
+                            <li>ProvideCurrentCpuInfo: <span data-i18n="val-true"
+                                    style="color:var(--success); font-weight:bold">True</span></li>
+                            <li>PowerTimeoutKernelPanic: <span data-i18n="val-true"
+                                    style="color:var(--success); font-weight:bold">True</span></li>
+                        </ul>
+                    </div>
+                </details>
+
+                <!-- UEFI -->
+                <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        UEFI
+                        -> Quirks</summary>
+                    <div style="padding: 10px;">
+                        <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
+                            <li>ResizeAppleGpuBars: <span data-i18n="val-minus-one"
+                                    style="color:var(--warning); font-weight:bold">-1</span></li>
                         </ul>
                     </div>
                 </details>
@@ -1682,7 +1998,7 @@
                     <div style="padding: 10px;">
                         <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
                         <code
-                            style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 npci=0x2000 alcid=1</code>
+                            style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 agdpmod=pikera</code>
                         <div style="margin-top:0.5rem; font-size:0.85rem;">
                             <strong>SecureBootModel:</strong> Disabled<br>
                             <strong>PickerMode:</strong> External
@@ -1691,12 +2007,11 @@
                 </details>
             </div>
 
-            <!-- Intel 10th Card -->
+            <!-- Laptops Card -->
             <div class="card">
-                <div class="card-icon"><i class="fas fa-microchip" style="color: #0071C5;"></i>
-                </div>
-                <h3 data-i18n="hw-intel-10-title">Intel 8ª-10ª Gen</h3>
-                <p data-i18n="hw-intel-10-desc">Comet Lake (Nativo)</p>
+                <div class="card-icon"><i class="fas fa-laptop" style="color: #A855F7;"></i></div>
+                <h3 data-i18n="hw-laptop-title">Intel Laptops</h3>
+                <p data-i18n="hw-laptop-desc">3rd Gen - 10th Gen (iGPU)</p>
 
                 <!-- ACPI -->
                 <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
@@ -1705,377 +2020,103 @@
                     </summary>
                     <div style="padding: 10px;">
                         <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                            <li>SSDT-PLUG.aml</li>
-                            <li>SSDT-EC-USBX.aml</li>
-                            <li>SSDT-AWAC.aml</li>
+                            <li>SSDT-PLUG.aml / SSDT-PLUG-DRTNIA.aml</li>
+                            <li>SSDT-EC-USBX-LAPTOP.aml</li>
+                            <li><span data-i18n="lap-acpi-note">SSDT-PNLF.aml (Backlight)</span></li>
+                            <li><span data-i18n="lap-acpi-xosi">SSDT-XOSI.aml (Trackpad)</span></li>
                         </ul>
                     </div>
                 </details>
 
-                <!-- DeviceProperties -->
+                <!-- Graphics DeviceProperties (The main request) -->
                 <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
                     <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                        DeviceProperties</summary>
-                    <div style="padding: 10px; font-size: 0.85rem;">
-                        <strong>PciRoot(0x0)/Pci(0x2,0x0)</strong>
-                        <br>
-                        AAPL,ig-platform-id: <code style="color:var(--warning)">07009B3E</code>
-                    </div>
-                </details>
-
-                <!-- Booter/Kernel -->
-                <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                        Booter & Kernel</summary>
+                        <span data-i18n="lap-gfx-title">Graphics (HD/UHD)</span>
+                    </summary>
                     <div style="padding: 10px;">
-                        <h5 style="color: var(--primary); font-size: 0.9em;">Booter Quirks</h5>
-                        <ul style="font-size: 0.85rem; list-style: none; padding: 0; margin-bottom: 5px;">
-                            <li>DevirtualiseMmio: <span data-i18n="val-true"
-                                    style="color:var(--success); font-weight:bold">True</span></li>
-                            <li>ProtectUefiServices: <span data-i18n="val-false"
-                                    style="color:var(--danger); font-weight:bold">False</span></li>
-                        </ul>
-                        <h5 style="color: var(--primary); font-size: 0.9em;">Kernel Quirks</h5>
-                        <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                            <li>PanicNoKextDump: <span data-i18n="val-true"
-                                    style="color:var(--success); font-weight:bold">True</span></li>
-                        </ul>
+                        <p style="font-size:0.8rem; margin-bottom:10px;">
+                            <span data-i18n="lap-gfx-desc">Copy ID:</span>
+                            <a href="https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md"
+                                target="_blank"
+                                style="color:var(--primary); text-decoration: underline; margin-left:10px;">
+                                <span data-i18n="link-see-list">See List</span> <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </p>
+
+                        <!-- Ivy Bridge -->
+                        <div class="code-block" style="margin-bottom:10px;">
+                            <span data-i18n="lap-gfx-ivy" style="color:var(--text-secondary); font-size:0.8rem;">Ivy
+                                Bridge</span>
+                            <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
+                            <code>AAPL,ig-platform-id: 04006601</code>
+                        </div>
+                        <!-- Haswell -->
+                        <div class="code-block" style="margin-bottom:10px;">
+                            <span data-i18n="lap-gfx-haswell"
+                                style="color:var(--text-secondary); font-size:0.8rem;">Haswell</span>
+                            <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
+                            <code>AAPL,ig-platform-id: 0600260A</code>
+                        </div>
+                        <!-- Skylake -->
+                        <div class="code-block" style="margin-bottom:10px;">
+                            <span data-i18n="lap-gfx-skylake"
+                                style="color:var(--text-secondary); font-size:0.8rem;">Skylake</span>
+                            <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
+                            <code>AAPL,ig-platform-id: 00001B19</code>
+                        </div>
+                        <!-- Kaby Lake -->
+                        <div class="code-block" style="margin-bottom:10px;">
+                            <span data-i18n="lap-gfx-kaby" style="color:var(--text-secondary); font-size:0.8rem;">Kaby
+                                Lake</span>
+                            <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
+                            <code>AAPL,ig-platform-id: 00001659</code>
+                        </div>
+                        <!-- Coffee/Comet Lake -->
+                        <div class="code-block" style="margin-bottom:10px;">
+                            <span data-i18n="lap-gfx-coffee"
+                                style="color:var(--text-secondary); font-size:0.8rem;">Coffee/Comet</span>
+                            <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
+                            <code>AAPL,ig-platform-id: 00009B3E</code>
+                        </div>
+                        <!-- Ice Lake -->
+                        <div class="code-block">
+                            <span data-i18n="lap-gfx-ice" style="color:var(--text-secondary); font-size:0.8rem;">Ice
+                                Lake</span>
+                            <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
+                            <code>AAPL,ig-platform-id: 0000528A</code>
+                        </div>
+
+                        <div class="alert alert-info" style="margin-top:10px; padding: 8px; font-size: 0.8rem;">
+                            <strong data-i18n="gfx-desktop-note-title">Desktop Users:</strong>
+                            <span data-i18n="gfx-desktop-note-desc">If using dGPU (AMD/NVIDIA), use a 'Headless'
+                                frame (empty framebuffer) for iGPU QuickSync.</span>
+                        </div>
+
+                        <p style="font-size:0.8rem; color:var(--danger); margin-top:5px; font-weight:bold;"
+                            data-i18n="lap-gfx-warning">* 11th Gen+ NOT supported!</p>
                     </div>
                 </details>
 
-                <!-- NVRAM & Misc -->
+                <!-- Audio & Quirks -->
                 <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
                     <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                        NVRAM & Misc</summary>
+                        <span data-i18n="lap-audio-title">Audio & Quirks</span>
+                    </summary>
                     <div style="padding: 10px;">
-                        <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
-                        <code
-                            style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 alcid=1</code>
-                        <div style="margin-top:0.5rem; font-size:0.85rem;">
-                            <strong>SecureBootModel:</strong> Disabled<br>
-                            <strong>PickerMode:</strong> External
+                        <h5 style="color: var(--primary); font-size: 0.9em;" data-i18n="lbl-nvram">NVRAM</h5>
+                        <div style="font-size:0.85rem; margin-bottom:10px;">
+                            <span data-i18n="lap-audio-layout">Common Layouts:</span> <span
+                                style="color:var(--success)">3, 11,
+                                13, 21, 28, 29</span><br>
+                            Boot-arg: <code>alcid=13</code>
+                        </div>
+                        <h5 style="color: var(--primary); font-size: 0.9em;">UEFI -> Quirks</h5>
+                        <div style="font-size:0.85rem;">
+                            <span data-i18n="lap-quirk-usb">ReleaseUsbOwnership: True</span>
                         </div>
                     </div>
                 </details>
             </div>
-
-    </div>
-
-    <!-- Hardware Sniffer Analysis (New Feature) -->
-    <div class="card" id="analyzer-card"
-        style="border: 1px dashed var(--primary); background: rgba(0, 199, 253, 0.05);">
-        <div class="card-icon"><i class="fas fa-microscope" style="color: var(--primary);"></i></div>
-        <h3 data-i18n="sniff-title">Hardware Sniffer Analysis</h3>
-        <p data-i18n="sniff-desc">Drag and drop your 'Report.json' or AIDA64 'Report.htm' here.</p>
-
-        <div id="drop-zone"
-            style="border: 2px dashed rgba(255,255,255,0.2); border-radius: 10px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem;">
-            <i class="fas fa-file-upload"
-                style="font-size: 2rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
-            <p style="margin: 0; color: var(--text-secondary);" data-i18n="sniff-drop-text">Drop Report.json
-                or
-                Report.htm here</p>
-        </div>
-        <input type="file" id="file-input" accept=".json,.htm,.html" style="display: none;">
-
-        <!-- Analysis Result -->
-        <div id="analysis-result" style="display: none; margin-top: 1.5rem;">
-            <h4 style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; margin-bottom: 10px;">
-                <i class="fas fa-clipboard-check" style="color: var(--success);"></i> <span
-                    data-i18n="sniff-results">Results</span>
-            </h4>
-
-            <div class="table-container">
-                <table style="width: 100%; font-size: 0.85rem;">
-                    <tbody>
-                        <tr id="res-cpu-row">
-                            <td style="width: 30%; color: var(--text-secondary);">CPU:</td>
-                            <td id="res-cpu-val" style="font-weight: bold;">-</td>
-                        </tr>
-                        <tr id="res-mobo-row">
-                            <td style="color: var(--text-secondary);">Mobo:</td>
-                            <td id="res-mobo-val">-</td>
-                        </tr>
-                        <tr id="res-gpu-row">
-                            <td style="color: var(--text-secondary);">GPU:</td>
-                            <td id="res-gpu-val">-</td>
-                        </tr>
-                        <tr id="res-audio-row">
-                            <td style="color: var(--text-secondary);">Audio:</td>
-                            <td id="res-audio-val">-</td>
-                        </tr>
-                        <tr id="res-eth-row">
-                            <td style="color: var(--text-secondary);">Ethernet:</td>
-                            <td id="res-eth-val">-</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Generated Recipe Section -->
-            <div id="efi-recipe"
-                style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid var(--primary);">
-                <h5
-                    style="margin-top: 0; color: var(--primary); display:flex; justify-content:space-between; align-items:center;">
-                    <span><i class="fas fa-scroll"></i> <span data-i18n="recipe-title">EFI
-                            Recipe</span></span>
-                    <span id="target-smbios"
-                        style="background: var(--primary); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">MacPro7,1</span>
-                </h5>
-
-                <!-- macOS Version Selector (Moved Here) -->
-                <div style="margin-bottom: 10px;">
-                    <label for="macos-version"
-                        style="font-weight:bold; color:var(--text); display:block; margin-bottom:5px; font-size:0.85rem;"
-                        data-i18n="target-macos">Target macOS Version:</label>
-                    <select id="macos-version"
-                        style="width:100%; padding:8px; border-radius:5px; border:1px solid var(--border); background:var(--bg-secondary); color:var(--text); font-family:inherit; font-size:0.9rem;"
-                        onchange="generateRecipe()">
-                        <option value="Tahoe">macOS Tahoe (26.x) - Beta</option>
-                        <option value="Sequoia">macOS Sequoia (15.x)</option>
-                        <option value="Sonoma">macOS Sonoma (14.x)</option>
-                        <option value="Ventura">macOS Ventura (13.x)</option>
-                        <option value="Monterey">macOS Monterey (12.x)</option>
-                        <option value="BigSur">macOS Big Sur (11.x)</option>
-                        <option value="Catalina">macOS Catalina (10.15) or older</option>
-                    </select>
-                </div>
-
-                <div style="font-size: 0.85rem; margin-bottom: 10px;">
-                    <strong data-i18n="recipe-kexts">Recommended Kexts:</strong>
-                    <div id="recipe-kext-list" style="margin-top: 5px; color: var(--text-secondary);">
-                        <!-- Kexts injected here -->
-                    </div>
-                </div>
-
-                <div style="font-size: 0.85rem; margin-bottom: 15px;">
-                    <strong data-i18n="recipe-bootargs">Boot-args:</strong>
-                    <code id="recipe-boot-args"
-                        style="display:block; margin-top:5px; padding:5px; background:rgba(0,0,0,0.5); border-radius:4px;">-v keepsyms=1 debug=0x100</code>
-                </div>
-
-                <button onclick="downloadConfig()" class="btn"
-                    style="width:100%; text-align:center; background:var(--gradient-primary); color:white; border:none;">
-                    <i class="fas fa-file-code"></i> <span data-i18n="btn-gen-config">Download Optimized
-                        Config.plist</span>
-                </button>
-            </div>
-
-            <div id="recommendations-box"
-                style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-top: 15px;">
-                <h5 style="margin-top: 0; color: var(--warning);"><i class="fas fa-lightbulb"></i> <span
-                        data-i18n="sniff-rec-title">Recommendations</span></h5>
-                <ul id="rec-list" style="font-size: 0.85rem; padding-left: 1.2rem; margin-bottom: 0;">
-                    <!-- Actions will be injected here -->
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Intel 12th+ Card -->
-    <div class="card">
-        <div class="card-icon"><i class="fas fa-microchip" style="color: #00C7FD;"></i></div>
-        <h3 data-i18n="hw-intel-12-title">Intel 12ª-14ª Gen</h3>
-        <p data-i18n="hw-intel-12-desc">Alder/Raptor (Spoof)</p>
-
-        <!-- ACPI -->
-        <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-            <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                ACPI
-            </summary>
-            <div style="padding: 10px;">
-                <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                    <li>SSDT-PLUG-ALT.aml (Important!)</li>
-                    <li>SSDT-EC-USBX.aml</li>
-                </ul>
-            </div>
-        </details>
-
-        <!-- Kernel Spoof -->
-        <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-            <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                Kernel Emulate</summary>
-            <div style="padding: 10px; font-size: 0.8rem; font-family: monospace;">
-                <span style="color:var(--warning)">Cpuid1Data:</span> EB060800 00000000...<br>
-                <span style="color:var(--warning)">Cpuid1Mask:</span> FFFFFFFF 00000000...
-            </div>
-        </details>
-
-        <!-- Booter -->
-        <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-            <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                Booter</summary>
-            <div style="padding: 10px;">
-                <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
-                <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                    <li>DevirtualiseMmio: <span data-i18n="val-true"
-                            style="color:var(--success); font-weight:bold">True</span></li>
-                    <li>EnableWriteUnprotector: <span data-i18n="val-false"
-                            style="color:var(--danger); font-weight:bold">False</span></li>
-                    <li>RebuildAppleMemoryMap: <span data-i18n="val-true"
-                            style="color:var(--success); font-weight:bold">True</span></li>
-                    <li>SetupVirtualMap: <span data-i18n="val-true"
-                            style="color:var(--success); font-weight:bold">True</span></li>
-                    <li>SyncRuntimePermissions: <span data-i18n="val-true"
-                            style="color:var(--success); font-weight:bold">True</span></li>
-                </ul>
-            </div>
-        </details>
-
-        <!-- Kernel -->
-        <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-            <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                Kernel</summary>
-            <div style="padding: 10px;">
-                <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
-                <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                    <li>PanicNoKextDump: <span data-i18n="val-true"
-                            style="color:var(--success); font-weight:bold">True</span></li>
-                    <li>ProvideCurrentCpuInfo: <span data-i18n="val-true"
-                            style="color:var(--success); font-weight:bold">True</span></li>
-                    <li>PowerTimeoutKernelPanic: <span data-i18n="val-true"
-                            style="color:var(--success); font-weight:bold">True</span></li>
-                </ul>
-            </div>
-        </details>
-
-        <!-- UEFI -->
-        <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-            <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                UEFI
-                -> Quirks</summary>
-            <div style="padding: 10px;">
-                <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                    <li>ResizeAppleGpuBars: <span data-i18n="val-minus-one"
-                            style="color:var(--warning); font-weight:bold">-1</span></li>
-                </ul>
-            </div>
-        </details>
-
-        <!-- NVRAM & Misc -->
-        <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-            <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                NVRAM & Misc</summary>
-            <div style="padding: 10px;">
-                <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
-                <code
-                    style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 agdpmod=pikera</code>
-                <div style="margin-top:0.5rem; font-size:0.85rem;">
-                    <strong>SecureBootModel:</strong> Disabled<br>
-                    <strong>PickerMode:</strong> External
-                </div>
-            </div>
-        </details>
-    </div>
-
-    <!-- Laptops Card -->
-    <div class="card">
-        <div class="card-icon"><i class="fas fa-laptop" style="color: #A855F7;"></i></div>
-        <h3 data-i18n="hw-laptop-title">Intel Laptops</h3>
-        <p data-i18n="hw-laptop-desc">3rd Gen - 10th Gen (iGPU)</p>
-
-        <!-- ACPI -->
-        <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-            <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                ACPI
-            </summary>
-            <div style="padding: 10px;">
-                <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                    <li>SSDT-PLUG.aml / SSDT-PLUG-DRTNIA.aml</li>
-                    <li>SSDT-EC-USBX-LAPTOP.aml</li>
-                    <li><span data-i18n="lap-acpi-note">SSDT-PNLF.aml (Backlight)</span></li>
-                    <li><span data-i18n="lap-acpi-xosi">SSDT-XOSI.aml (Trackpad)</span></li>
-                </ul>
-            </div>
-        </details>
-
-        <!-- Graphics DeviceProperties (The main request) -->
-        <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-            <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                <span data-i18n="lap-gfx-title">Graphics (HD/UHD)</span>
-            </summary>
-            <div style="padding: 10px;">
-                <p style="font-size:0.8rem; margin-bottom:10px;">
-                    <span data-i18n="lap-gfx-desc">Copy ID:</span>
-                    <a href="https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md"
-                        target="_blank" style="color:var(--primary); text-decoration: underline; margin-left:10px;">
-                        <span data-i18n="link-see-list">See List</span> <i class="fas fa-external-link-alt"></i>
-                    </a>
-                </p>
-
-                <!-- Ivy Bridge -->
-                <div class="code-block" style="margin-bottom:10px;">
-                    <span data-i18n="lap-gfx-ivy" style="color:var(--text-secondary); font-size:0.8rem;">Ivy
-                        Bridge</span>
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                    <code>AAPL,ig-platform-id: 04006601</code>
-                </div>
-                <!-- Haswell -->
-                <div class="code-block" style="margin-bottom:10px;">
-                    <span data-i18n="lap-gfx-haswell"
-                        style="color:var(--text-secondary); font-size:0.8rem;">Haswell</span>
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                    <code>AAPL,ig-platform-id: 0600260A</code>
-                </div>
-                <!-- Skylake -->
-                <div class="code-block" style="margin-bottom:10px;">
-                    <span data-i18n="lap-gfx-skylake"
-                        style="color:var(--text-secondary); font-size:0.8rem;">Skylake</span>
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                    <code>AAPL,ig-platform-id: 00001B19</code>
-                </div>
-                <!-- Kaby Lake -->
-                <div class="code-block" style="margin-bottom:10px;">
-                    <span data-i18n="lap-gfx-kaby" style="color:var(--text-secondary); font-size:0.8rem;">Kaby
-                        Lake</span>
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                    <code>AAPL,ig-platform-id: 00001659</code>
-                </div>
-                <!-- Coffee/Comet Lake -->
-                <div class="code-block" style="margin-bottom:10px;">
-                    <span data-i18n="lap-gfx-coffee"
-                        style="color:var(--text-secondary); font-size:0.8rem;">Coffee/Comet</span>
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                    <code>AAPL,ig-platform-id: 00009B3E</code>
-                </div>
-                <!-- Ice Lake -->
-                <div class="code-block">
-                    <span data-i18n="lap-gfx-ice" style="color:var(--text-secondary); font-size:0.8rem;">Ice
-                        Lake</span>
-                    <button class="copy-btn" onclick="copyCode(this)" data-i18n="btn-copy">Copy</button>
-                    <code>AAPL,ig-platform-id: 0000528A</code>
-                </div>
-
-                <div class="alert alert-info" style="margin-top:10px; padding: 8px; font-size: 0.8rem;">
-                    <strong data-i18n="gfx-desktop-note-title">Desktop Users:</strong>
-                    <span data-i18n="gfx-desktop-note-desc">If using dGPU (AMD/NVIDIA), use a 'Headless'
-                        frame (empty framebuffer) for iGPU QuickSync.</span>
-                </div>
-
-                <p style="font-size:0.8rem; color:var(--danger); margin-top:5px; font-weight:bold;"
-                    data-i18n="lap-gfx-warning">* 11th Gen+ NOT supported!</p>
-            </div>
-        </details>
-
-        <!-- Audio & Quirks -->
-        <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-            <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                <span data-i18n="lap-audio-title">Audio & Quirks</span>
-            </summary>
-            <div style="padding: 10px;">
-                <h5 style="color: var(--primary); font-size: 0.9em;" data-i18n="lbl-nvram">NVRAM</h5>
-                <div style="font-size:0.85rem; margin-bottom:10px;">
-                    <span data-i18n="lap-audio-layout">Common Layouts:</span> <span style="color:var(--success)">3, 11,
-                        13, 21, 28, 29</span><br>
-                    Boot-arg: <code>alcid=13</code>
-                </div>
-                <h5 style="color: var(--primary); font-size: 0.9em;">UEFI -> Quirks</h5>
-                <div style="font-size:0.85rem;">
-                    <span data-i18n="lap-quirk-usb">ReleaseUsbOwnership: True</span>
-                </div>
-            </div>
-        </details>
-    </div>
     </div>
     </section>
     <section id="instalacao">
