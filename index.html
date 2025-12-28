@@ -2984,7 +2984,7 @@
                             <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
                                 <span data-i18n="comm-donate-desc">Help keep tools free</span>
                             </p>
-                            <a href="mailto:hackintoshandbeyond@gmail.com?subject=Doação%20Hackintosh%20and%20Beyond"
+                            <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=hackintoshandbeyond@gmail.com&item_name=Apoio%20ao%20Projeto%20Hackintosh%20and%20Beyond&currency_code=BRL"
                                 target="_blank" class="btn btn-secondary"
                                 style="background: #0070BA; border-color: #0070BA; width: 100%;">
                                 <i class="fas fa-heart"></i> <span data-i18n="comm-donate-btn">Donate via PayPal</span>
@@ -3008,7 +3008,10 @@
                             <div>
                                 <i class="fab fa-youtube" style="color: #FF0000; font-size: 1.5rem;"></i>
                                 <p style="margin-top: 0.5rem; font-size: 0.9rem;">
-                                    <strong>YouTube:</strong><br><a href="https://www.youtube.com/@HackintoshAndBeyond" target="_blank" style="color: var(--primary); text-decoration: underline;">Hackintosh and Beyond</a>
+                                    <strong>YouTube:</strong><br><a href="https://www.youtube.com/@HackintoshAndBeyond"
+                                        target="_blank"
+                                        style="color: var(--primary); text-decoration: underline;">Hackintosh and
+                                        Beyond</a>
                                 </p>
                             </div>
                             <div>
@@ -3719,7 +3722,9 @@ sudo systemsetup -setusingnetworktime on</code>
             <i class="fas fa-info-circle"></i>
             <div>
                 <strong data-i18n="acpi-what">What is ACPI?</strong><br>
-                <span data-i18n="acpi-what-desc">ACPI (Advanced Configuration and Power Interface) is a specification that defines hardware tables for the OS. SSDTs are secondary tables that add or modify functionality.</span>
+                <span data-i18n="acpi-what-desc">ACPI (Advanced Configuration and Power Interface) is a specification
+                    that defines hardware tables for the OS. SSDTs are secondary tables that add or modify
+                    functionality.</span>
             </div>
         </div>
 
@@ -3730,15 +3735,20 @@ sudo systemsetup -setusingnetworktime on</code>
 
             <h4 data-i18n="acpi-ec-what">What it does:</h4>
             <ul>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-ec-1">Creates a fake Embedded Controller (EC)</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-ec-2">Injects USB power properties</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-ec-3">Required for booting Catalina+</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-ec-1">Creates a fake Embedded Controller
+                        (EC)</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-ec-2">Injects USB power properties</span>
+                </li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-ec-3">Required for booting
+                        Catalina+</span></li>
             </ul>
 
             <h4 data-i18n="acpi-ec-when">When to use:</h4>
             <ul>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-ec-when-1">Desktop: ALWAYS (mandatory)</span></li>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-ec-when-2">Laptop: Use SSDT-EC-LAPTOP</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-ec-when-1">Desktop: ALWAYS
+                        (mandatory)</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-ec-when-2">Laptop: Use
+                        SSDT-EC-LAPTOP</span></li>
             </ul>
         </div>
 
@@ -3749,16 +3759,22 @@ sudo systemsetup -setusingnetworktime on</code>
 
             <h4 data-i18n="acpi-plug-what">What it does:</h4>
             <ul>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-plug-1">Enables XCPM (XNU CPU Power Management)</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-plug-2">Allows native CPU power management</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-plug-3">Improves performance and power saving</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-plug-1">Enables XCPM (XNU CPU Power
+                        Management)</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-plug-2">Allows native CPU power
+                        management</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-plug-3">Improves performance and power
+                        saving</span></li>
             </ul>
 
             <h4 data-i18n="acpi-plug-when">When to use:</h4>
             <ul>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-plug-when-1">Intel Haswell (4th gen) or newer</span></li>
-                <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span data-i18n="acpi-plug-when-2">DO NOT use on AMD (use DummyPowerManagement)</span></li>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-plug-when-3">For Alder/Raptor Lake: use SSDT-PLUG-ALT</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-plug-when-1">Intel Haswell (4th gen) or
+                        newer</span></li>
+                <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span
+                        data-i18n="acpi-plug-when-2">DO NOT use on AMD (use DummyPowerManagement)</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-plug-when-3">For Alder/Raptor Lake: use
+                        SSDT-PLUG-ALT</span></li>
             </ul>
         </div>
 
@@ -3769,16 +3785,22 @@ sudo systemsetup -setusingnetworktime on</code>
 
             <h4 data-i18n="acpi-awac-what">What it does:</h4>
             <ul>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-awac-1">Forces legacy RTC (Real Time Clock) usage</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-awac-2">Disables AWAC (new firmware clock)</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-awac-3">Prevents kernel panic on boot</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-awac-1">Forces legacy RTC (Real Time
+                        Clock) usage</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-awac-2">Disables AWAC (new firmware
+                        clock)</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-awac-3">Prevents kernel panic on
+                        boot</span></li>
             </ul>
 
             <h4 data-i18n="acpi-awac-when">When to use:</h4>
             <ul>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-awac-when-1">Intel 300 series (Z390, B360, H370)</span></li>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-awac-when-2">Intel 400/500/600 series</span></li>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-awac-when-3">If you have RTC-related kernel panic</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-awac-when-1">Intel 300 series (Z390, B360,
+                        H370)</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-awac-when-2">Intel 400/500/600
+                        series</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-awac-when-3">If you have RTC-related kernel
+                        panic</span></li>
             </ul>
         </div>
 
@@ -3789,18 +3811,23 @@ sudo systemsetup -setusingnetworktime on</code>
 
             <h4 data-i18n="acpi-pmc-what">What it does:</h4>
             <ul>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-1">Adds PMCR device to ACPI</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-2">Fixes native NVRAM on 300 series</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-3">Improves sleep compatibility</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-1">Adds PMCR device to ACPI</span>
+                </li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-2">Fixes native NVRAM on 300
+                        series</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pmc-3">Improves sleep compatibility</span>
+                </li>
             </ul>
 
             <h4 data-i18n="acpi-pmc-when">When to use:</h4>
             <ul>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-pmc-when-1">Intel 300 series (Z390, B360, H370)</span></li>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-pmc-when-2">If NVRAM doesn't work natively</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-pmc-when-1">Intel 300 series (Z390, B360,
+                        H370)</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-pmc-when-2">If NVRAM doesn't work
+                        natively</span></li>
             </ul>
         </div>
-        
+
         <!-- SSDT-RHUB -->
         <div class="card">
             <div class="card-icon"><i class="fas fa-usb"></i></div>
@@ -3808,15 +3835,20 @@ sudo systemsetup -setusingnetworktime on</code>
 
             <h4 data-i18n="acpi-rhub-what">What it does:</h4>
             <ul>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-rhub-1">Resets USB controller (RHUB)</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-rhub-2">Fixes USB issues on 400/500 series boards</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-rhub-3">Required for some AMD boards</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-rhub-1">Resets USB controller
+                        (RHUB)</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-rhub-2">Fixes USB issues on 400/500 series
+                        boards</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-rhub-3">Required for some AMD
+                        boards</span></li>
             </ul>
 
             <h4 data-i18n="acpi-rhub-when">When to use:</h4>
             <ul>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-rhub-when-1">Intel 400/500/600-series (Comet Lake+)</span></li>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-rhub-when-2">AMD X570, B550, A520</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-rhub-when-1">Intel 400/500/600-series
+                        (Comet Lake+)</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-rhub-when-2">AMD X570, B550, A520</span>
+                </li>
             </ul>
         </div>
 
@@ -3827,15 +3859,20 @@ sudo systemsetup -setusingnetworktime on</code>
 
             <h4 data-i18n="acpi-pnlf-what">What it does:</h4>
             <ul>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pnlf-1">Enables LCD brightness control</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pnlf-2">Creates PNLF device for backlight</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pnlf-3">Allows adjustment via Fn keys</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pnlf-1">Enables LCD brightness
+                        control</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pnlf-2">Creates PNLF device for
+                        backlight</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-pnlf-3">Allows adjustment via Fn
+                        keys</span></li>
             </ul>
 
             <h4 data-i18n="acpi-pnlf-when">When to use:</h4>
             <ul>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-pnlf-when-1">ALL laptops with Intel iGPU</span></li>
-                <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span data-i18n="acpi-pnlf-when-2">NOT required on desktops</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-pnlf-when-1">ALL laptops with Intel
+                        iGPU</span></li>
+                <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span
+                        data-i18n="acpi-pnlf-when-2">NOT required on desktops</span></li>
             </ul>
         </div>
 
@@ -3847,14 +3884,18 @@ sudo systemsetup -setusingnetworktime on</code>
             <h4 data-i18n="acpi-gpi0-what">What it does:</h4>
             <ul>
                 <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-gpi0-1">Enables I2C trackpad</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-gpi0-2">Creates GPIO stub for VoodooI2C</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-gpi0-3">Improves multi-touch gestures</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-gpi0-2">Creates GPIO stub for
+                        VoodooI2C</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-gpi0-3">Improves multi-touch
+                        gestures</span></li>
             </ul>
 
             <h4 data-i18n="acpi-gpi0-when">When to use:</h4>
             <ul>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-gpi0-when-1">Laptops with I2C trackpad</span></li>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-gpi0-when-2">Alternative to SSDT-XOSI (cleaner)</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-gpi0-when-1">Laptops with I2C
+                        trackpad</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-gpi0-when-2">Alternative to SSDT-XOSI
+                        (cleaner)</span></li>
             </ul>
         </div>
 
@@ -3865,18 +3906,22 @@ sudo systemsetup -setusingnetworktime on</code>
 
             <h4 data-i18n="acpi-cpur-what">What it does:</h4>
             <ul>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-cpur-1">Fixes CPU detection on B550/A520 boards</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-cpur-1">Fixes CPU detection on B550/A520
+                        boards</span></li>
                 <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-cpur-2">Declares all CPU cores</span></li>
-                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-cpur-3">Required for booting on some boards</span></li>
+                <li><i class="fas fa-check-circle"></i> <span data-i18n="acpi-cpur-3">Required for booting on some
+                        boards</span></li>
             </ul>
 
             <h4 data-i18n="acpi-cpur-when">When to use:</h4>
             <ul>
-                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-cpur-when-1">AMD B550 and A520 ONLY</span></li>
-                <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span data-i18n="acpi-cpur-when-2">DO NOT use on X570, B450, X470, etc.</span></li>
+                <li><i class="fas fa-arrow-right"></i> <span data-i18n="acpi-cpur-when-1">AMD B550 and A520 ONLY</span>
+                </li>
+                <li><i class="fas fa-times-circle" style="color: var(--danger)"></i> <span
+                        data-i18n="acpi-cpur-when-2">DO NOT use on X570, B450, X470, etc.</span></li>
             </ul>
         </div>
-        
+
         <!-- How to Compile -->
         <div class="card">
             <div class="card-icon"><i class="fas fa-code"></i></div>
@@ -3909,7 +3954,8 @@ python3 SSDTTime.command
                 <i class="fas fa-info-circle"></i>
                 <div>
                     <strong data-i18n="acpi-platform-tip">Tip:</strong>
-                    <span data-i18n="acpi-platform-tip-desc">Use SSDTTime to automatically generate the necessary SSDTs for your hardware!</span>
+                    <span data-i18n="acpi-platform-tip-desc">Use SSDTTime to automatically generate the necessary SSDTs
+                        for your hardware!</span>
                 </div>
             </div>
 
@@ -3956,7 +4002,8 @@ python3 SSDTTime.command
                 <i class="fas fa-exclamation-triangle"></i>
                 <div>
                     <strong data-i18n="acpi-laptop-warning">Attention:</strong>
-                    <span data-i18n="acpi-laptop-warning-desc">Laptops need ALL desktop SSDTs + SSDT-PNLF + SSDT-GPI0 (if I2C trackpad)</span>
+                    <span data-i18n="acpi-laptop-warning-desc">Laptops need ALL desktop SSDTs + SSDT-PNLF + SSDT-GPI0
+                        (if I2C trackpad)</span>
                 </div>
             </div>
 
@@ -4055,7 +4102,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 <i class="fas fa-exclamation-triangle"></i>
                 <div>
                     <strong data-i18n="config-gpu-warning">Warning:</strong>
-                    <span data-i18n="config-gpu-warning-note">Dedicated AMD GPUs usually don't need DeviceProperties, only boot-args or SSDTs!</span>
+                    <span data-i18n="config-gpu-warning-note">Dedicated AMD GPUs usually don't need DeviceProperties,
+                        only boot-args or SSDTs!</span>
                 </div>
             </div>
         </div>
@@ -4067,10 +4115,14 @@ PciRoot(0x0)/Pci(0x2,0x0)
             <p data-i18n="config-kernel-desc">Patches applied directly to the macOS kernel.</p>
 
             <ul>
-                <li><strong>AppleXcpmCfgLock:</strong> <span data-i18n="quirk-cfg">Required if CFG-Lock is enabled in BIOS</span></li>
-                <li><strong>DisableIoMapper:</strong> <span data-i18n="quirk-iomapper">Required if VT-d is enabled in BIOS</span></li>
-                <li><strong>PanicNoKextDump:</strong> <span data-i18n="quirk-panic">Prevents instant reboot on Kernel Panic (essential for debug)</span></li>
-                <li><strong>XhciPortLimit:</strong> <span data-i18n="quirk-xhci">Disable after mapping USBs (macOS 11.3+)</span></li>
+                <li><strong>AppleXcpmCfgLock:</strong> <span data-i18n="quirk-cfg">Required if CFG-Lock is enabled in
+                        BIOS</span></li>
+                <li><strong>DisableIoMapper:</strong> <span data-i18n="quirk-iomapper">Required if VT-d is enabled in
+                        BIOS</span></li>
+                <li><strong>PanicNoKextDump:</strong> <span data-i18n="quirk-panic">Prevents instant reboot on Kernel
+                        Panic (essential for debug)</span></li>
+                <li><strong>XhciPortLimit:</strong> <span data-i18n="quirk-xhci">Disable after mapping USBs (macOS
+                        11.3+)</span></li>
             </ul>
         </div>
 
@@ -4082,15 +4134,20 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
             <h4 style="margin-top: 15px; color: var(--primary);">Security</h4>
             <ul>
-                <li><strong>SecureBootModel:</strong> <span data-i18n="quirk-secureboot">Default (x86legacy if Monterey+ on old PCs). 'Disabled' to install old versions.</span></li>
-                <li><strong>Vault:</strong> <span data-i18n="quirk-vault">Optional (disabled). 'Secure' requires signing all files.</span></li>
-                <li><strong>ScanPolicy:</strong> <span data-i18n="quirk-scanpolicy">0 (detect all). Change if you want to hide NTFS/Linux partitions.</span></li>
+                <li><strong>SecureBootModel:</strong> <span data-i18n="quirk-secureboot">Default (x86legacy if Monterey+
+                        on old PCs). 'Disabled' to install old versions.</span></li>
+                <li><strong>Vault:</strong> <span data-i18n="quirk-vault">Optional (disabled). 'Secure' requires signing
+                        all files.</span></li>
+                <li><strong>ScanPolicy:</strong> <span data-i18n="quirk-scanpolicy">0 (detect all). Change if you want
+                        to hide NTFS/Linux partitions.</span></li>
             </ul>
 
             <h4 style="margin-top: 15px; color: var(--primary);">Boot</h4>
             <ul>
-                <li><strong>Timeout:</strong> <span data-i18n="quirk-timeout">Time in seconds before auto boot (e.g. 5).</span></li>
-                <li><strong>ShowPicker:</strong> <span data-i18n="quirk-picker">True (show menu). False for direct boot.</span></li>
+                <li><strong>Timeout:</strong> <span data-i18n="quirk-timeout">Time in seconds before auto boot (e.g.
+                        5).</span></li>
+                <li><strong>ShowPicker:</strong> <span data-i18n="quirk-picker">True (show menu). False for direct
+                        boot.</span></li>
             </ul>
         </div>
 
@@ -4119,15 +4176,18 @@ PciRoot(0x0)/Pci(0x2,0x0)
                         </tr>
                         <tr>
                             <td><code>keepsyms=1</code></td>
-                            <td data-i18n="arg-keepsyms">Shows debug symbols in Kernel Panic (helps identify cause).</td>
+                            <td data-i18n="arg-keepsyms">Shows debug symbols in Kernel Panic (helps identify cause).
+                            </td>
                         </tr>
                         <tr>
                             <td><code>alcid=1</code></td>
-                            <td data-i18n="arg-alcid">Default Layout ID for AppleALC. Change number according to your codec.</td>
+                            <td data-i18n="arg-alcid">Default Layout ID for AppleALC. Change number according to your
+                                codec.</td>
                         </tr>
                         <tr>
                             <td><code>agdpmod=pikera</code></td>
-                            <td data-i18n="arg-pikera">Required for AMD Navi GPUs (RX 5000/6000/7000). Fixes black screen.</td>
+                            <td data-i18n="arg-pikera">Required for AMD Navi GPUs (RX 5000/6000/7000). Fixes black
+                                screen.</td>
                         </tr>
                         <tr>
                             <td><code>amfi=0x80</code></td>
@@ -4145,15 +4205,20 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
             <h4 style="margin-top: 15px; color: var(--primary);">💻 Laptops (Intel)</h4>
             <ul>
-                <li><strong>DeviceProperties:</strong> <span data-i18n="rec-lap-dp">Essential to configure Framebuffer Patching for iGPU (black screen/glitches).</span></li>
-                <li><strong>NVRAM:</strong> <span data-i18n="rec-lap-nvram">Add <code>-igfxblr</code> if backlight issues on boot.</span></li>
-                <li><strong>Kernel:</strong> <span data-i18n="rec-lap-kernel">Enable <code>PanicNoKextDump</code>. Laptops are more prone to panics.</span></li>
+                <li><strong>DeviceProperties:</strong> <span data-i18n="rec-lap-dp">Essential to configure Framebuffer
+                        Patching for iGPU (black screen/glitches).</span></li>
+                <li><strong>NVRAM:</strong> <span data-i18n="rec-lap-nvram">Add <code>-igfxblr</code> if backlight
+                        issues on boot.</span></li>
+                <li><strong>Kernel:</strong> <span data-i18n="rec-lap-kernel">Enable <code>PanicNoKextDump</code>.
+                        Laptops are more prone to panics.</span></li>
             </ul>
 
             <h4 style="margin-top: 15px; color: var(--primary);">🖥️ Desktops (AMD)</h4>
             <ul>
-                <li><strong>Kernel:</strong> <span data-i18n="rec-amd-kernel">Apply AMD Ryzen Kernel Patches (mandatory).</span></li>
-                <li><strong>Boot-args:</strong> <span data-i18n="rec-amd-args"><code>npci=0x2000</code> or <code>npci=0x3000</code> usually required to avoid stuck on boot.</span></li>
+                <li><strong>Kernel:</strong> <span data-i18n="rec-amd-kernel">Apply AMD Ryzen Kernel Patches
+                        (mandatory).</span></li>
+                <li><strong>Boot-args:</strong> <span data-i18n="rec-amd-args"><code>npci=0x2000</code> or
+                        <code>npci=0x3000</code> usually required to avoid stuck on boot.</span></li>
             </ul>
         </div>
     </section>
@@ -4183,7 +4248,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
             <ul class="advanced-list">
                 <li>
                     <strong>[EB|#LOG:EXITBS:START]</strong>
-                    <p data-i18n="trouble-err-eb">Booter Quirks error. Check <code>RebuildAppleMemoryMap</code>, <code>SetupVirtualMap</code> or <code>EnableWriteUnprotector</code>.</p>
+                    <p data-i18n="trouble-err-eb">Booter Quirks error. Check <code>RebuildAppleMemoryMap</code>,
+                        <code>SetupVirtualMap</code> or <code>EnableWriteUnprotector</code>.</p>
                 </li>
                 <li>
                     <strong>AppleNVMe Assert failed</strong>
@@ -4202,9 +4268,14 @@ PciRoot(0x0)/Pci(0x2,0x0)
             <h3 data-i18n="trouble-gpu-title">Graphics Issues (GPU)</h3>
 
             <ul>
-                <li><strong>Black Screen (Boot):</strong> <span data-i18n="trouble-gpu-black">Add <code>agdpmod=pikera</code> (ONLY if not using NootRX). Check if WhateverGreen is loaded.</span></li>
-                <li><strong>No Acceleration (Opaque Dock):</strong> <span data-i18n="trouble-gpu-accel">GPU unsupported or kexts not loaded. AMD requires Lilu+WhateverGreen (or NootRX). Intel requires correct DeviceProperties.</span></li>
-                <li><strong>Pink/Green Screen:</strong> <span data-i18n="trouble-gpu-color">Force RGB mode in monitor settings or use EDID patch.</span></li>
+                <li><strong>Black Screen (Boot):</strong> <span data-i18n="trouble-gpu-black">Add
+                        <code>agdpmod=pikera</code> (ONLY if not using NootRX). Check if WhateverGreen is loaded.</span>
+                </li>
+                <li><strong>No Acceleration (Opaque Dock):</strong> <span data-i18n="trouble-gpu-accel">GPU unsupported
+                        or kexts not loaded. AMD requires Lilu+WhateverGreen (or NootRX). Intel requires correct
+                        DeviceProperties.</span></li>
+                <li><strong>Pink/Green Screen:</strong> <span data-i18n="trouble-gpu-color">Force RGB mode in monitor
+                        settings or use EDID patch.</span></li>
             </ul>
         </div>
 
@@ -4217,7 +4288,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
             <ol>
                 <li><span data-i18n="trouble-audio-1">Check if HPET is fixed (SSDTTime FixHPET)</span></li>
                 <li><span data-i18n="trouble-audio-2">Confirm audio controller appears in Hackintool</span></li>
-                <li><span data-i18n="trouble-audio-3">Try boot-arg <code>alcdelay=1000</code> (delays loading)</span></li>
+                <li><span data-i18n="trouble-audio-3">Try boot-arg <code>alcdelay=1000</code> (delays loading)</span>
+                </li>
             </ol>
         </div>
 
@@ -4231,8 +4303,10 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 <div>
                     <strong data-i18n="trouble-boot-stuck-title">Stuck at [EB|#LOG:EXITBS:START]:</strong>
                     <ul style="margin-top: 0.5rem;">
-                        <li data-i18n="trouble-boot-stuck-1">Problem with Booter Quirks. Try enabling <code>DevirtualiseMmio</code></li>
-                        <li data-i18n="trouble-boot-stuck-2">Check <code>RebuildAppleMemoryMap</code> and <code>SyncRuntimePermissions</code></li>
+                        <li data-i18n="trouble-boot-stuck-1">Problem with Booter Quirks. Try enabling
+                            <code>DevirtualiseMmio</code></li>
+                        <li data-i18n="trouble-boot-stuck-2">Check <code>RebuildAppleMemoryMap</code> and
+                            <code>SyncRuntimePermissions</code></li>
                         <li data-i18n="trouble-boot-stuck-3">For Z390+: Disable <code>SetupVirtualMap</code></li>
                     </ul>
                 </div>
@@ -4243,9 +4317,12 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 <div>
                     <strong data-i18n="trouble-boot-waiting-title">Stuck at "Waiting for Root Device":</strong>
                     <ul style="margin-top: 0.5rem;">
-                        <li data-i18n="trouble-boot-waiting-usb"><strong>USB Issue:</strong> Try different USB 2.0 ports, use <code>USBInjectAll.kext</code> temporarily</li>
-                        <li data-i18n="trouble-boot-waiting-sata"><strong>SATA Issue:</strong> Check if SATA is in AHCI mode (not RAID/IDE)</li>
-                        <li data-i18n="trouble-boot-waiting-nvme"><strong>Problematic NVMe:</strong> Add NVMeFix.kext (PM981/PM991)</li>
+                        <li data-i18n="trouble-boot-waiting-usb"><strong>USB Issue:</strong> Try different USB 2.0
+                            ports, use <code>USBInjectAll.kext</code> temporarily</li>
+                        <li data-i18n="trouble-boot-waiting-sata"><strong>SATA Issue:</strong> Check if SATA is in AHCI
+                            mode (not RAID/IDE)</li>
+                        <li data-i18n="trouble-boot-waiting-nvme"><strong>Problematic NVMe:</strong> Add NVMeFix.kext
+                            (PM981/PM991)</li>
                     </ul>
                 </div>
             </div>
@@ -4317,9 +4394,12 @@ agdpmod=pikera      # For Navi GPUs (RX 5000/6000/7000)
                 <div>
                     <strong data-i18n="trouble-gpu-black-title">Black Screen after IOConsoleUsers:</strong>
                     <ul style="margin-top: 0.5rem;">
-                        <li data-i18n="trouble-gpu-black-navi"><strong>Navi GPUs (RX 5000/6000/7000):</strong> Add <code>agdpmod=pikera</code> (if not using NootRX)</li>
-                        <li data-i18n="trouble-gpu-black-igpu"><strong>Intel iGPU:</strong> Check DeviceProperties (AAPL,ig-platform-id)</li>
-                        <li data-i18n="trouble-gpu-black-nvidia"><strong>NVIDIA:</strong> Not supported in Monterey+ (use <code>-wegnoegpu</code>)</li>
+                        <li data-i18n="trouble-gpu-black-navi"><strong>Navi GPUs (RX 5000/6000/7000):</strong> Add
+                            <code>agdpmod=pikera</code> (if not using NootRX)</li>
+                        <li data-i18n="trouble-gpu-black-igpu"><strong>Intel iGPU:</strong> Check DeviceProperties
+                            (AAPL,ig-platform-id)</li>
+                        <li data-i18n="trouble-gpu-black-nvidia"><strong>NVIDIA:</strong> Not supported in Monterey+
+                            (use <code>-wegnoegpu</code>)</li>
                     </ul>
                 </div>
             </div>
@@ -4328,7 +4408,8 @@ agdpmod=pikera      # For Navi GPUs (RX 5000/6000/7000)
                 <i class="fas fa-laptop"></i>
                 <div>
                     <strong data-i18n="trouble-gpu-laptop-title">Scrambled Screen on Laptops:</strong><br>
-                    <span data-i18n="trouble-gpu-laptop-desc">Add <code>-igfxmlr</code> boot-arg (WhateverGreen) to force max panel resolution.</span>
+                    <span data-i18n="trouble-gpu-laptop-desc">Add <code>-igfxmlr</code> boot-arg (WhateverGreen) to
+                        force max panel resolution.</span>
                 </div>
             </div>
 
@@ -4356,7 +4437,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 <i class="fas fa-info-circle"></i>
                 <div>
                     <strong data-i18n="trouble-usb-limit-title">15 Port Limit:</strong><br>
-                    <span data-i18n="trouble-usb-limit-desc">macOS has a limit of 15 USB ports per controller. Use USBMap or USBToolBox to map correctly.</span>
+                    <span data-i18n="trouble-usb-limit-desc">macOS has a limit of 15 USB ports per controller. Use
+                        USBMap or USBToolBox to map correctly.</span>
                 </div>
             </div>
 
@@ -4365,7 +4447,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 <div>
                     <strong data-i18n="trouble-usb-xhci-title">XhciPortLimit:</strong>
                     <ul style="margin-top: 0.5rem;">
-                        <li data-i18n="trouble-usb-xhci-1"><strong>macOS 11.3+:</strong> XhciPortLimit does NOT work anymore!</li>
+                        <li data-i18n="trouble-usb-xhci-1"><strong>macOS 11.3+:</strong> XhciPortLimit does NOT work
+                            anymore!</li>
                         <li data-i18n="trouble-usb-xhci-2">Use <code>USBInjectAll.kext</code> + manual mapping</li>
                         <li data-i18n="trouble-usb-xhci-3">Or use <code>USBToolBox.kext</code> (recommended)</li>
                     </ul>
@@ -4374,7 +4457,10 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
             <h4 data-i18n="trouble-usb-steps-title">USB Mapping Steps:</h4>
             <ol>
-                <li data-i18n="trouble-usb-step-1">Download <a href="https://github.com/USBToolBox/tool" target="_blank" style="color: var(--primary); text-decoration: underline;">USBToolBox</a> (Windows) or <a href="https://github.com/corpnewt/USBMap" target="_blank" style="color: var(--primary); text-decoration: underline;">USBMap</a> (macOS)</li>
+                <li data-i18n="trouble-usb-step-1">Download <a href="https://github.com/USBToolBox/tool" target="_blank"
+                        style="color: var(--primary); text-decoration: underline;">USBToolBox</a> (Windows) or <a
+                        href="https://github.com/corpnewt/USBMap" target="_blank"
+                        style="color: var(--primary); text-decoration: underline;">USBMap</a> (macOS)</li>
                 <li data-i18n="trouble-usb-step-2">Identify all USB ports by testing with a pendrive</li>
                 <li data-i18n="trouble-usb-step-3">Select the 15 most important ports (USB 2.0 + USB 3.0)</li>
                 <li data-i18n="trouble-usb-step-4">Generate USBMap.kext or UTBMap.kext</li>
@@ -4389,8 +4475,10 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
             <h4 data-i18n="trouble-post-sleep-title">Sleep/Wake Issues:</h4>
             <ul>
-                <li data-i18n="trouble-post-sleep-1"><strong>Does not sleep:</strong> Check <code>pmset -g assertions</code> to see what prevents it</li>
-                <li data-i18n="trouble-post-sleep-2"><strong>Immediate Wake:</strong> Disable Wake on LAN in BIOS, use <code>pmset -a darkwakes 0</code></li>
+                <li data-i18n="trouble-post-sleep-1"><strong>Does not sleep:</strong> Check
+                    <code>pmset -g assertions</code> to see what prevents it</li>
+                <li data-i18n="trouble-post-sleep-2"><strong>Immediate Wake:</strong> Disable Wake on LAN in BIOS, use
+                    <code>pmset -a darkwakes 0</code></li>
                 <li data-i18n="trouble-post-sleep-3"><strong>USB wake:</strong> Add SSDT-GPRW or SSDT-PTSWAK</li>
                 <li data-i18n="trouble-post-sleep-4"><strong>Bluetooth wake:</strong> Disable in System Preferences</li>
             </ul>
@@ -4401,7 +4489,10 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 <div>
                     <strong data-i18n="trouble-post-iservices-check-title">Check:</strong>
                     <ul style="margin-top: 0.5rem;">
-                        <li data-i18n="trouble-post-iservices-1">Valid Serial Number but NOT in use (check at <a href="https://checkcoverage.apple.com" target="_blank" style="color: var(--success); text-decoration: underline;">checkcoverage.apple.com</a>)</li>
+                        <li data-i18n="trouble-post-iservices-1">Valid Serial Number but NOT in use (check at <a
+                                href="https://checkcoverage.apple.com" target="_blank"
+                                style="color: var(--success); text-decoration: underline;">checkcoverage.apple.com</a>)
+                        </li>
                         <li data-i18n="trouble-post-iservices-2">En0 (Ethernet) as primary interface</li>
                         <li data-i18n="trouble-post-iservices-3">ROM = Ethernet card MAC address</li>
                         <li data-i18n="trouble-post-iservices-4">Valid MLB matching the Serial</li>
@@ -4411,10 +4502,13 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
             <h4 data-i18n="trouble-post-audio-title">Audio doesn't work:</h4>
             <ol>
-                <li data-i18n="trouble-post-audio-1">Check if AppleALC.kext is loaded (<code>kextstat | grep AppleALC</code>)</li>
+                <li data-i18n="trouble-post-audio-1">Check if AppleALC.kext is loaded
+                    (<code>kextstat | grep AppleALC</code>)</li>
                 <li data-i18n="trouble-post-audio-2">Test different layout IDs (alcid=1, alcid=2, etc.)</li>
                 <li data-i18n="trouble-post-audio-3">Check if HPET is fixed (SSDT-HPET)</li>
-                <li data-i18n="trouble-post-audio-4">Consult <a href="https://github.com/acidanthera/AppleALC/wiki/Supported-codecs" target="_blank" style="color: var(--primary); text-decoration: underline;">supported codecs</a></li>
+                <li data-i18n="trouble-post-audio-4">Consult <a
+                        href="https://github.com/acidanthera/AppleALC/wiki/Supported-codecs" target="_blank"
+                        style="color: var(--primary); text-decoration: underline;">supported codecs</a></li>
             </ol>
         </div>
 
@@ -4436,12 +4530,14 @@ PciRoot(0x0)/Pci(0x2,0x0)
                         <tr>
                             <td><strong>Hackintool</strong></td>
                             <td data-i18n="trouble-debug-hackintool">All-in-one for debug</td>
-                            <td><a href="https://github.com/headkaze/Hackintool" target="_blank" style="color: var(--primary)">GitHub</a></td>
+                            <td><a href="https://github.com/headkaze/Hackintool" target="_blank"
+                                    style="color: var(--primary)">GitHub</a></td>
                         </tr>
                         <tr>
                             <td><strong>IORegistryExplorer</strong></td>
                             <td data-i18n="trouble-debug-ioreg">View devices and properties</td>
-                            <td><a href="https://github.com/khronokernel/IORegistryClone" target="_blank" style="color: var(--primary)">GitHub</a></td>
+                            <td><a href="https://github.com/khronokernel/IORegistryClone" target="_blank"
+                                    style="color: var(--primary)">GitHub</a></td>
                         </tr>
                         <tr>
                             <td><strong>gfxutil</strong></td>
@@ -4469,7 +4565,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
         </div>
     </section>
 
-            <section id="glossary">
+    <section id="glossary">
         <div class="section-header">
             <h2 data-i18n="glossary-title">Glossary of Terms</h2>
             <p data-i18n="glossary-desc">Definitions of Hackintosh technical terms</p>
@@ -4477,39 +4573,48 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         <div class="card">
             <h3>A</h3>
-            <div style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;" data-i18n="glossary-acpi">ACPI</h4>
-                <p data-i18n="glossary-acpi-def">Advanced Configuration and Power Interface - Standard interface for power management and hardware configuration</p>
+                <p data-i18n="glossary-acpi-def">Advanced Configuration and Power Interface - Standard interface for
+                    power management and hardware configuration</p>
             </div>
         </div>
 
         <div class="card">
             <h3>B</h3>
-            <div style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Bootloader</h4>
-                <p data-i18n="glossary-bootloader-def">Software responsible for loading the operating system (e.g. OpenCore)</p>
+                <p data-i18n="glossary-bootloader-def">Software responsible for loading the operating system (e.g.
+                    OpenCore)</p>
             </div>
         </div>
 
         <div class="card">
             <h3>K</h3>
-            <div style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Kext</h4>
-                <p data-i18n="glossary-kext-def">Kernel Extension - Drivers for macOS (similar to .sys/.inf on Windows)</p>
+                <p data-i18n="glossary-kext-def">Kernel Extension - Drivers for macOS (similar to .sys/.inf on Windows)
+                </p>
             </div>
         </div>
 
         <div class="card">
             <h3>N</h3>
-            <div style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;" data-i18n="glossary-nvram">NVRAM</h4>
-                <p data-i18n="glossary-nvram-def">Non-Volatile Random Access Memory - Memory that stores system settings even after power off</p>
+                <p data-i18n="glossary-nvram-def">Non-Volatile Random Access Memory - Memory that stores system settings
+                    even after power off</p>
             </div>
         </div>
 
         <div class="card">
             <h3>O</h3>
-            <div style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;">OpenCore</h4>
                 <p data-i18n="glossary-oc-def">Modern and secure bootloader for Hackintosh, successor to Clover</p>
             </div>
@@ -4517,7 +4622,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         <div class="card">
             <h3>Q</h3>
-            <div style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;" data-i18n="glossary-quirk">Quirk</h4>
                 <p data-i18n="glossary-quirk-def">Specific fix or patch to resolve hardware incompatibilities</p>
             </div>
@@ -4525,27 +4631,34 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         <div class="card">
             <h3>S</h3>
-            <div style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;" data-i18n="glossary-smbios">SMBIOS</h4>
-                <p data-i18n="glossary-smbios-def">System Management BIOS - Defines which Mac model your Hackintosh will emulate</p>
+                <p data-i18n="glossary-smbios-def">System Management BIOS - Defines which Mac model your Hackintosh will
+                    emulate</p>
             </div>
-            <div style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;">SSDT</h4>
-                <p data-i18n="glossary-ssdt-def">Secondary System Description Table - Secondary ACPI tables that add or modify functionality</p>
+                <p data-i18n="glossary-ssdt-def">Secondary System Description Table - Secondary ACPI tables that add or
+                    modify functionality</p>
             </div>
         </div>
 
         <div class="card">
             <h3>U</h3>
-            <div style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;">UEFI</h4>
-                <p data-i18n="glossary-uefi-def">Unified Extensible Firmware Interface - Modern replacement for legacy BIOS</p>
+                <p data-i18n="glossary-uefi-def">Unified Extensible Firmware Interface - Modern replacement for legacy
+                    BIOS</p>
             </div>
         </div>
 
         <div class="card">
             <h3>V</h3>
-            <div style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
+            <div
+                style="background: rgba(255, 255, 255, 0.05); border-left: 4px solid var(--primary); padding: 1.5rem; margin: 1rem 0; border-radius: 10px;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Verbose Mode</h4>
                 <p data-i18n="glossary-verbose-def">Boot mode that shows detailed system logs (boot-arg: -v)</p>
             </div>
@@ -4555,12 +4668,15 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
     <!-- Footer -->
     <footer>
-        <p><strong data-i18n="title">Hackintosh Guide</strong> - <span data-i18n="complete-updated">Complete and Updated Guide</span></p>
+        <p><strong data-i18n="title">Hackintosh Guide</strong> - <span data-i18n="complete-updated">Complete and Updated
+                Guide</span></p>
         <p data-i18n="based-on">Based on Dortania OpenCore Install Guide | Updated for OpenCore 1.0.5+</p>
         <p style="margin-top: 1rem; font-size: 1rem; color: var(--text);">
             <i class="fab fa-youtube" style="color: #FF0000"></i> <strong data-i18n="tools-by">Tools by:</strong>
-            <a href="https://www.youtube.com/@HackintoshAndBeyond" target="_blank" style="color: #FF0000; text-decoration: underline;">Hackintosh and Beyond</a>
-            | <a href="https://github.com/hnanoto" target="_blank" style="color: var(--primary); text-decoration: underline;">Hnanoto</a>
+            <a href="https://www.youtube.com/@HackintoshAndBeyond" target="_blank"
+                style="color: #FF0000; text-decoration: underline;">Hackintosh and Beyond</a>
+            | <a href="https://github.com/hnanoto" target="_blank"
+                style="color: var(--primary); text-decoration: underline;">Hnanoto</a>
         </p>
         <p style="margin-top: 1rem; font-size: 0.9rem;">
             <i class="fas fa-sync-alt"></i> This guide is updated regularly with latest info from Hackintosh community
