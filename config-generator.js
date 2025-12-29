@@ -659,31 +659,37 @@ class ConfigGenerator {
     generateBooter(hw, macOS) {
         const chipset = hw.Motherboard.Chipset || "";
         const cpuCodename = hw.CPU.Codename || "";
+        const firmware = hw.BIOS["Firmware Type"];
+        const cpuMan = hw.CPU.Manufacturer;
+
+        // Logic matched with OpCore-Simplify
+        const isIntelNewer = chipset.match(/Z[4-7]90/) || chipset.match(/[BHQ][4-7][0-9]0/); // Intel 400+
+        const isAMDNewer = chipset.match(/X570|B550|A520|TRX40|B650|X670/); // AMD 500+
 
         return {
             "MmioWhitelist": this.generateMmioWhitelist(chipset),
             "Patch": [],
             "Quirks": {
                 "AllowRelocationBlock": false,
-                "AvoidRuntimeDefrag": hw.BIOS["Firmware Type"] === "UEFI",
+                "AvoidRuntimeDefrag": firmware === "UEFI", // OpCore: True if UEFI
                 "DevirtualiseMmio": this.needsDevirtualiseMmio(chipset, cpuCodename),
                 "DisableSingleUser": false,
                 "DisableVariableWrite": false,
                 "DiscardHibernateMap": false,
-                "EnableSafeModeSlide": hw.BIOS["Firmware Type"] === "UEFI",
+                "EnableSafeModeSlide": firmware === "UEFI",
                 "EnableWriteUnprotector": this.needsWriteUnprotector(hw),
                 "ForceBooterSignature": false,
                 "ForceExitBootServices": false,
                 "ProtectMemoryRegions": false,
                 "ProtectSecureBoot": false,
                 "ProtectUefiServices": this.needsProtectUefiServices(chipset),
-                "ProvideCustomSlide": hw.BIOS["Firmware Type"] === "UEFI",
+                "ProvideCustomSlide": firmware === "UEFI",
                 "ProvideMaxSlide": 0,
-                "RebuildAppleMemoryMap": !this.needsWriteUnprotector(hw),
-                "ResizeAppleGpuBars": -1,
-                "SetupVirtualMap": hw.CPU.Manufacturer !== "AMD" && !chipset.includes("Z490") && !chipset.includes("Z590"),
+                "RebuildAppleMemoryMap": !this.needsWriteUnprotector(hw), // Inverse of EnableWriteUnprotector
+                "ResizeAppleGpuBars": -1, // Conservative default
+                "SetupVirtualMap": firmware === "UEFI" && !isIntelNewer && !isAMDNewer,
                 "SignalAppleOS": false,
-                "SyncRuntimePermissions": hw.CPU.Manufacturer === "AMD" || this.needsProtectUefiServices(chipset)
+                "SyncRuntimePermissions": this.needsWriteUnprotector(hw) ? false : true // True for Matryoshka (AMD/New Intel)
             }
         };
     }
@@ -948,7 +954,11 @@ class ConfigGenerator {
 
     generateKernel(hw, macOS) {
         const cpuCodename = hw.CPU.Codename || "";
-        const cpuManufacturer = hw.CPU.Manufacturer;
+        const cpuMan = hw.CPU.Manufacturer;
+        const chipset = hw.Motherboard.Chipset || "";
+
+        // Determine if CPU is 12th Gen+ (Alder/Raptor/Arrow)
+        const isIntel12Plus = cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") || cpuCodename.includes("Meteor") || cpuCodename.includes("Arrow");
 
         return {
             "Add": [],
@@ -958,11 +968,11 @@ class ConfigGenerator {
             "Patch": [],
             "Quirks": {
                 "AppleCpuPmCfgLock": cpuCodename.includes("Ivy Bridge") || cpuCodename.includes("Sandy Bridge"),
-                "AppleXcpmCfgLock": cpuManufacturer === "Intel" && !cpuCodename.includes("Ivy Bridge") && !cpuCodename.includes("Sandy Bridge"),
-                "AppleXcpmExtraMsrs": false,
-                "AppleXcpmForceBoost": cpuCodename.includes("Ivy Bridge") || cpuCodename.includes("Sandy Bridge"),
-                "CustomSMBIOSGuid": false,
-                "DisableIoMapper": cpuManufacturer === "Intel",
+                "AppleXcpmCfgLock": cpuMan === "Intel" && !cpuCodename.includes("Ivy Bridge") && !cpuCodename.includes("Sandy Bridge"), // CFG Lock
+                "AppleXcpmExtraMsrs": false, // Generally false unless specifically needed for Pentiums/HEDT
+                "AppleXcpmForceBoost": false,
+                "CustomSMBIOSGuid": false, // Use false for maximum compatibility
+                "DisableIoMapper": cpuMan === "Intel" && !isIntel12Plus, // VT-d
                 "DisableLinkeditJettison": true,
                 "DisableRtcChecksum": this.needsDisableRtcChecksum(hw),
                 "ExtendBTFeatureFlags": false,
@@ -970,29 +980,26 @@ class ConfigGenerator {
                 "LapicKernelPanic": hw.Motherboard.Name && hw.Motherboard.Name.includes("HP"),
                 "PanicNoKextDump": true,
                 "PowerTimeoutKernelPanic": true,
-                "ProvideCurrentCpuInfo": cpuManufacturer === "AMD",
+                "ProvideCurrentCpuInfo": cpuMan === "AMD" || isIntel12Plus, // Critical for 12th+ and AMD
                 "SetApfsTrimTimeout": -1,
-                "XhciPortLimit": false
+                "XhciPortLimit": false // Broken in 11.3+, default false
             }
         };
     }
 
     generateKernelEmulate(hw, macOS) {
         const emulate = {
-            "Cpuid1Data": "",
-            "Cpuid1Mask": "",
+            "Cpuid1Data": { _isData: true, value: "" },
+            "Cpuid1Mask": { _isData: true, value: "" },
             "DummyPowerManagement": hw.CPU.Manufacturer === "AMD"
         };
 
         const cpuCodename = hw.CPU.Codename || "";
 
-        if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor")) {
-            emulate.Cpuid1Data = "55060A0000000000000000000000000000000000";
-            emulate.Cpuid1Mask = "FFFFFFFF00000000000000000000000000000000";
-        }
-        else if (cpuCodename.includes("Rocket")) {
-            emulate.Cpuid1Data = "55060A0000000000000000000000000000000000";
-            emulate.Cpuid1Mask = "FFFFFFFF00000000000000000000000000000000";
+        // Spoof Comet Lake (0x0506A5) for Alder Lake, Raptor Lake, Rocket Lake
+        if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") || cpuCodename.includes("Rocket")) {
+            emulate.Cpuid1Data = { _isData: true, value: "55060A0000000000000000000000000000000000" };
+            emulate.Cpuid1Mask = { _isData: true, value: "FFFFFFFF00000000000000000000000000000000" };
         }
 
         return emulate;
@@ -1105,6 +1112,16 @@ class ConfigGenerator {
 
     generateUEFI(hw, macOS) {
         const cpuCodename = hw.CPU.Codename || "";
+        const cpuMan = hw.CPU.Manufacturer;
+        const firmware = hw.BIOS["Firmware Type"];
+
+        // OpCore-Simplify: HfsPlusLegacy for older CPUs (Haswell and older), HfsPlus for newer
+        // Strictly: If in IntelGenerations[64:] -> Legacy. Hashwell is 91.
+        // Simplified check: Sandy, Ivy, Haswell, Broadwell -> Legacy. Skylake+ -> Normal.
+        // Actually RDRAND support is the key. Ivy Bridge+ has it. But OpCore simplifies further.
+        // Let's use standard Dortania recommendation: HfsPlus is fine for Ivy Bridge+. Legacy for Sandy/Old.
+        // But adapting OpCore logic:
+        const needsLegacyHfs = cpuCodename.includes("Sandy Bridge") || cpuCodename.includes("Ivy Bridge") || cpuCodename.includes("Haswell") || cpuCodename.includes("Broadwell") || firmware === "Legacy";
 
         return {
             "APFS": {
@@ -1116,64 +1133,80 @@ class ConfigGenerator {
                 "AudioSupport": false
             },
             "ConnectDrivers": true,
-            "Drivers": this.generateDrivers(hw, macOS),
+            "Drivers": this.generateDrivers(hw, macOS, needsLegacyHfs),
             "Input": {
-                "KeySupport": hw.BIOS["Firmware Type"] === "UEFI"
+                "KeySupport": firmware === "UEFI" || firmware === "Unknown", // Default to true if uncertain, vital for UEFI
+                "KeySupportMode": "Auto"
             },
             "Output": {
                 "ProvideConsoleGop": true,
-                "TextRenderer": "BuiltinGraphics"
+                "TextRenderer": "BuiltinGraphics",
+                "Resolution": "Max"
             },
             "Quirks": {
-                "EnableVectorAcceleration": !cpuCodename.includes("Sandy") && !cpuCodename.includes("Ivy"),
-                "IgnoreInvalidFlexRatio": cpuCodename.includes("Haswell") || cpuCodename.includes("Broadwell"),
-                "ReleaseUsbOwnership": true,
+                "EnableVectorAcceleration": !cpuCodename.includes("Sandy") && !cpuCodename.includes("Ivy"), // Disable on very old
+                "IgnoreInvalidFlexRatio": cpuCodename.includes("Broadwell") || cpuCodename.includes("Haswell") || cpuCodename.includes("Ivy") || cpuCodename.includes("Sandy"),
+                "ReleaseUsbOwnership": true, // Always true safe default
                 "RequestBootVarRouting": true,
                 "UnblockFsConnect": hw.Motherboard.Name && hw.Motherboard.Name.includes("HP")
             }
         };
     }
 
-    generateDrivers(hw, macOS) {
+    generateDrivers(hw, macOS, needsLegacyHfs) {
         const drivers = [];
-        const cpuCodename = hw.CPU.Codename || "";
 
-        if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor")) {
-            drivers.push("HfsPlusLegacy.efi");
+        // File System Driver
+        if (needsLegacyHfs) {
+            drivers.push({ Path: "HfsPlusLegacy.efi", Enabled: true, LoadEarly: false });
         } else {
-            drivers.push("HfsPlus.efi");
+            drivers.push({ Path: "HfsPlus.efi", Enabled: true, LoadEarly: false });
         }
 
-        drivers.push("OpenRuntime.efi");
-        drivers.push("ResetNvramEntry.efi");
+        // Core Drivers
+        drivers.push({ Path: "OpenRuntime.efi", Enabled: true, LoadEarly: false });
+        drivers.push({ Path: "ResetNvramEntry.efi", Enabled: true, LoadEarly: false });
 
-        if (hw.BIOS["Firmware Type"] === "UEFI") {
-            drivers.push("OpenCanopy.efi");
+        // GUI
+        if (hw.BIOS["Firmware Type"] !== "Legacy") {
+            drivers.push({ Path: "OpenCanopy.efi", Enabled: true, LoadEarly: false });
         }
 
         return drivers;
     }
 
     // Quirks detection
+    // Quirks detection
     needsDevirtualiseMmio(chipset, cpuCodename) {
-        if (chipset.match(/Z[3-7]90/)) return true;
-        if (chipset.includes("B650") || chipset.includes("X670")) return true;
-        if (cpuCodename.includes("Ice Lake")) return true;
+        // OpCore-Simplify list for DevirtualiseMmio
+        if (chipset.match(/Z[3-7]90/)) return true; // Z390, Z490, Z590, Z690, Z790
+        if (chipset.includes("B650") || chipset.includes("X670")) return true; // AMD AM5
+        if (chipset.includes("TRX40") || chipset.includes("X570")) return true; // AMD HEDT/HighEnd
+        if (cpuCodename.includes("Ice Lake") || cpuCodename.includes("Comet Lake")) return true;
         return false;
     }
 
     needsWriteUnprotector(hw) {
         const cpuManufacturer = hw.CPU.Manufacturer;
         const chipset = hw.Motherboard.Chipset || "";
+        const cpuCodename = hw.CPU.Codename || "";
 
-        if (cpuManufacturer === "AMD") return false;
-        if (chipset.match(/Z[4-7]90/)) return false;
+        // EnableWriteUnprotector is True for OLDER systems (Haswell/Broadwell/Skylake/Kabylake/CoffeeLake Z370)
+        // False for NEWER (Z390, Z490+, AMD) which use RebuildAppleMemoryMap
 
+        if (cpuManufacturer === "AMD") return false; // AMD uses RebuildAppleMemoryMap
+        if (chipset.match(/Z[4-7]90/)) return false; // Z490+ uses RebuildAppleMemoryMap
+        if (chipset.match(/B[4-7]60/)) return false; // B460+
+        if (chipset.includes("Z390")) return false; // Z390 uses RebuildAppleMemoryMap
+
+        // Note: Coffee Lake can vary (Z370 needs true, Z390 needs false). 
+        // We default to true for older, false for newer.
         return true;
     }
 
     needsProtectUefiServices(chipset) {
-        return chipset.match(/Z[4-7]90/) !== null;
+        // True for Z390, Z490+
+        return chipset.match(/Z[3-7]90/) !== null;
     }
 
     needsDisableRtcChecksum(hw) {
