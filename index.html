@@ -1849,10 +1849,15 @@
                             </div>
                         </div>
 
-                        <div style="margin-top: 2rem; text-align: center;">
+                        <div
+                            style="margin-top: 2rem; text-align: center; display: flex; justify-content: center; gap: 15px;">
                             <button id="generateBtn"
-                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 1rem 3rem; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); transition: all 0.3s;">
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 1rem 2rem; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); transition: all 0.3s;">
                                 <i class="fas fa-cog"></i> Generate config.plist
+                            </button>
+                            <button onclick="downloadJSONReport()"
+                                style="background: rgba(255,255,255,0.1); border: 2px solid rgba(102, 126, 234, 0.5); color: #333; padding: 1rem 2rem; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.3s;">
+                                <i class="fas fa-file-code"></i> Download JSON
                             </button>
                         </div>
                     </div>
@@ -8953,6 +8958,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
         function parseJSON(content) {
             try {
                 const data = JSON.parse(content);
+                // FIX: Ensure fullHardwareData is set for JSON uploads too
+                fullHardwareData = data;
+
                 hardwareData = {
                     cpu: data.CPU || data.Processor || "Desconhecido",
                     mobo: data.Motherboard || data.Board || "Desconhecido",
@@ -8966,15 +8974,49 @@ PciRoot(0x0)/Pci(0x2,0x0)
             }
         }
 
+        // Global var to store full hardware data from ConfigGenerator
+        let fullHardwareData = null;
+
         function parseAIDA64(content) {
-            hardwareData = {
-                cpu: extractAIDA64Field(content, ['Processor', 'Tipo de processador', 'Procesador']) || "Desconhecido",
-                mobo: extractAIDA64Field(content, ['Motherboard', 'Nome da Placa Mãe', 'Placa Base']) || "Desconhecido",
-                gpu: extractAIDA64Field(content, ['Video Adapter', 'Adaptador gráfico', 'Adaptador de vídeo']) || "Desconhecido",
-                audio: extractAIDA64Field(content, ['Audio Adapter', 'Adaptador de som', 'Adaptador de audio']) || "Desconhecido",
-                ethernet: extractAIDA64Field(content, ['Network Adapter', 'Adaptador de Rede', 'Adaptador de red']) || "Desconhecido"
-            };
-            analyzeHardware();
+            try {
+                // Use the new ConfigGenerator class
+                // Ensure ConfigGenerator is loaded
+                if (typeof ConfigGenerator === 'undefined') {
+                    alert('ConfigGenerator library not loaded!');
+                    return;
+                }
+
+                const gen = new ConfigGenerator();
+                // Parse using the improved method
+                fullHardwareData = gen.parseAIDA64Improved(content);
+
+                // Map to legacy structure for UI compatibility (so the UI updates correctly)
+                // Get primary GPU
+                const gpuNames = Object.keys(fullHardwareData.GPU || {});
+                const gpuStr = gpuNames.length > 0 ? gpuNames[0] : "Unknown";
+
+                // Get primary Audio
+                const audioNames = Object.keys(fullHardwareData.Sound || {});
+                const audioStr = audioNames.length > 0 ? audioNames[0] : "Unknown";
+
+                // Get Ethernet
+                const ethNames = Object.keys(fullHardwareData.Network || {});
+                const ethStr = ethNames.length > 0 ? ethNames.join(", ") : "None";
+
+                hardwareData = {
+                    cpu: fullHardwareData.CPU["Processor Name"] || "Unknown",
+                    mobo: fullHardwareData.Motherboard.Name || "Unknown",
+                    gpu: gpuStr,
+                    audio: audioStr,
+                    ethernet: ethStr
+                };
+
+                // Trigger existing UI update
+                analyzeHardware();
+            } catch (e) {
+                alert("Error parsing AIDA64 Report: " + e.message);
+                console.error(e);
+            }
         }
 
         function extractAIDA64Field(html, fieldNames) {
@@ -9008,6 +9050,23 @@ PciRoot(0x0)/Pci(0x2,0x0)
         }
 
         function detectSMBIOS(hw) {
+            // Use the robust ConfigGenerator logic for consistency
+            if (typeof ConfigGenerator !== 'undefined' && fullHardwareData) {
+                const gen = new ConfigGenerator();
+                // Determine selected macOS version (default to latest if not selected)
+                const select = document.getElementById('macos-version') || document.getElementById('target-macos-version');
+                let selectedVerObj = null;
+                if (select) {
+                    const val = select.value;
+                    selectedVerObj = gen.macOSVersions.find(v => v.name.includes(val)) ||
+                        gen.macOSVersions.find(v => v.name.includes(val.split(' ')[0]));
+                }
+                if (!selectedVerObj) selectedVerObj = gen.macOSVersions.find(v => v.recommended);
+
+                return gen.selectSMBIOS(fullHardwareData, selectedVerObj);
+            }
+
+            // Fallback (should rarely happen if flow is correct)
             const cpu = hw.cpu.toLowerCase();
             if (cpu.includes('amd')) return cpu.includes('ryzen 9') ? 'MacPro7,1' : 'iMacPro1,1';
             if (cpu.includes('i9') || cpu.includes('i7')) return 'iMac20,1';
@@ -9038,29 +9097,76 @@ PciRoot(0x0)/Pci(0x2,0x0)
             document.getElementById('efi-recipe').style.display = 'block';
         }
 
-        function downloadConfig() {
-            if (!hwAnalysisConfig.smbios) {
-                alert('Nenhuma configuração gerada!');
+        async function downloadConfig() {
+            if (!fullHardwareData) {
+                alert('Por favor, faça upload do relatório de hardware primeiro (Passo 2)!');
                 return;
             }
-            // Implementation of final download ...
-            const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>DeviceProperties</key>
-    <dict>
-        <key>Add</key>
-        <dict/>
-    </dict>
-</dict>
-</plist>`;
-            const blob = new Blob([xml], { type: 'text/xml' });
+
+            try {
+                const gen = new ConfigGenerator();
+
+                // Determine selected macOS version
+                // Try to find the select element by both possible IDs
+                const select = document.getElementById('macos-version') || document.getElementById('target-macos-version');
+                let selectedVerObj = null;
+
+                if (select) {
+                    const val = select.value;
+                    // Find matching version in generator's list
+                    selectedVerObj = gen.macOSVersions.find(v => v.name.includes(val)) ||
+                        gen.macOSVersions.find(v => v.name.includes(val.split(' ')[0]));
+                }
+
+                // Fallback if not found
+                if (!selectedVerObj) {
+                    selectedVerObj = gen.macOSVersions.find(v => v.recommended);
+                }
+
+                // Generate Config
+                await gen.generateConfig(fullHardwareData, selectedVerObj);
+
+                // Trigger Download
+                gen.downloadConfigPlist();
+
+            } catch (e) {
+                alert("Erro ao gerar config.plist: " + e.message);
+                console.error(e);
+            }
+        }
+
+        function downloadJSONReport() {
+            // FIX: Check ALL possible locations for the data
+            // 1. window.fullHardwareData (set by the new IIFE logic)
+            // 2. fullHardwareData (local variable, might be null but checking anyway)
+            // 3. hardwareData (legacy fallback)
+            const dataToDownload = window.fullHardwareData || fullHardwareData || hardwareData;
+
+            if (!dataToDownload) {
+                alert('Por favor, faça upload do relatório de hardware primeiro (Passo 2)!');
+                return;
+            }
+
+            // Generate Filename
+            let moboName = "Hackintosh";
+            if (dataToDownload.Motherboard && dataToDownload.Motherboard.Name) {
+                moboName = dataToDownload.Motherboard.Name;
+            } else if (dataToDownload.mobo) {
+                moboName = dataToDownload.mobo;
+            }
+
+            const safeName = moboName.replace(/[^a-zA-Z0-9]/g, '-');
+            const fileName = `Report_${safeName}.json`;
+
+            const jsonStr = JSON.stringify(dataToDownload, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'config.plist';
+            a.download = fileName;
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
 
@@ -9149,6 +9255,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
                     // Parse hardware report
                     currentHardwareData = await generator.parseHardwareReport(file);
+
+                    // EXPOSE TO GLOBAL SCOPE for downloadJSONReport
+                    window.fullHardwareData = currentHardwareData;
 
                     // Show macOS selection
                     showMacOSSelection();
@@ -9263,6 +9372,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
             function resetAnalyzer() {
                 currentHardwareData = null;
+                window.fullHardwareData = null;
                 selectedMacOS = null;
 
                 document.getElementById('step1-upload').style.display = 'block';

@@ -129,190 +129,159 @@ class ConfigGenerator {
 
 
     parseAIDA64Improved(htmlContent) {
-        console.log("Parsing AIDA64 HTML...");
+        console.log("Parsing AIDA64 HTML to match Hardware Sniffer structure...");
 
-        // Extrair CPU Name (Priorizar CPUID que é mais preciso)
+        // === 1. CPU Parsing ===
         let cpuName = this.extractAIDA64Value(htmlContent, [
-            "(CPUID) Nome da CPU",
-            "(CPUID) CPU Name",
-            "Nome da CPU",
-            "CPU Alias",
-            "CPU Type",
-            "Tipo de processador" // Deixar por último pois pode conter listas genéricas
+            "(CPUID) Nome da CPU", "(CPUID) CPU Name", "Nome da CPU", "CPU Alias", "CPU Type", "Tipo de processador"
         ]);
 
-        // Se o nome for genérico (ex: "Intel Core i3/i5/i7"), tentar extrair o modelo específico dentro dele
-        // Ex: "Intel Core i3/i5/i7 ... (Intel Core i7-8550U)"
         if (cpuName && (cpuName.includes("i3/i5/i7") || cpuName.includes("M/H"))) {
             const specificModel = cpuName.match(/\(Intel Core (i\d-\d+[A-Z]{0,2})\)/i);
-            if (specificModel) {
-                cpuName = specificModel[1]; // "i7-8550U"
-            }
+            if (specificModel) cpuName = specificModel[1];
         }
 
-        // Se ainda não encontrou ou é muito genérico, procurar diretamente por padrões
-        if (!cpuName || cpuName === "Unknown CPU" || cpuName.includes("Unknown")) {
+        if (!cpuName || cpuName.includes("Unknown")) {
             const cpuMatch = htmlContent.match(/Intel Core i\d-\d+[A-Z]{0,2}/i) ||
                 htmlContent.match(/13th Gen Intel.*?i\d-\d+[A-Z]{0,2}/i) ||
-                htmlContent.match(/\d+th Gen Intel.*?Core.*?i\d-\d+[A-Z]{0,2}/i) ||
                 htmlContent.match(/AMD Ryzen \d \d+[A-Z]{0,2}/i);
-            if (cpuMatch) {
-                cpuName = cpuMatch[0].replace(/<[^>]+>/g, '').trim();
-            }
+            if (cpuMatch) cpuName = cpuMatch[0].replace(/<[^>]+>/g, '').trim();
         }
 
-        // Extrair Motherboard (procurar por "Nome da Placa Mãe" ou "Z690 GAMING X")
+        // === 2. Motherboard Parsing ===
         let moboName = this.extractAIDA64Value(htmlContent, [
-            "Nome do Sistema - DMI",
-            "Nome da Placa Mãe",
-            "Motherboard Name",
-            "Tipo de Computador"
+            "Nome da Placa Mãe", "Motherboard Name", "Nome do Sistema - DMI"
         ]);
 
-        // Se não encontrou, procurar diretamente por "Z690" ou "GIGABYTE"
         if (!moboName || moboName === "Unknown") {
             const moboMatch = htmlContent.match(/Z\d{3}\s+GAMING\s+X\s+DDR\d/i) ||
-                htmlContent.match(/GIGABYTE.*?Z\d{3}/i) ||
-                htmlContent.match(/Technology Co\., Ltd\.\s+([A-Z0-9\s]+DDR\d)/i);
-            if (moboMatch) {
-                moboName = moboMatch[0].replace(/Technology Co\., Ltd\.\s+/i, '').replace(/<[^>]+>/g, '').trim();
-            } else {
-                moboName = "Unknown";
-            }
+                htmlContent.match(/GIGABYTE\s+Z\d{3}/i) ||
+                htmlContent.match(/ASUS\s+[A-Z0-9- ]+/i) ||
+                htmlContent.match(/MSI\s+[A-Z0-9- ]+/i);
+            if (moboMatch) moboName = moboMatch[0].replace(/<[^>]+>/g, '').trim();
+            else moboName = "Unknown Board";
         }
 
-        // Extrair Chipset (procurar por "Intel Alder Point-S Z690" ou "Intel Raptor Lake-S")
-        let chipset = this.extractAIDA64Value(htmlContent, [
-            "Chipset da Placa-Mãe",
-            "Chipset",
-            "System Chipset"
+        // === 3. Chipset Parsing ===
+        let chipset = this.extractAIDA64Value(htmlContent, ["Chipset da Placa-Mãe", "Chipset", "System Chipset"]);
+        if (!chipset) {
+            const chipsetMatch = htmlContent.match(/(Z690|Z590|Z490|B660|B560|H610|H510|X570|B550|A320)/i);
+            chipset = chipsetMatch ? chipsetMatch[0] : "Unknown";
+        }
+
+        // === 4. Platform Detection ===
+        let platform = "Desktop";
+        if (cpuName.match(/i\d-\d+[UHYM]|HQ|HK|G[147]/)) platform = "Laptop";
+        if (platform === "Desktop" && htmlContent.match(/Bateria|Battery/i) && htmlContent.match(/Nível de carga|Charge Level/i)) platform = "Laptop";
+
+        // === 5. GPU Parsing ===
+        let gpuList = this.extractAIDA64AllValues(htmlContent, [
+            "Adaptador gráfico", "Video Adapter", "Graphics Card", "Placa de Vídeo", "Acelerador 3D"
         ]);
 
-        // Se não encontrou, procurar diretamente por "Z690" ou chipset patterns
-        if (!chipset || chipset === "Unknown") {
-            const chipsetMatch = htmlContent.match(/Intel\s+(Alder|Raptor)\s+Point-S\s+Z\d{3}/i) ||
-                htmlContent.match(/Z\d{3}/i) ||
-                htmlContent.match(/B\d{3}/i) ||
-                htmlContent.match(/X\d{3}/i);
-            if (chipsetMatch) {
-                chipset = chipsetMatch[0].replace(/<[^>]+>/g, '').trim();
-                // Extrair apenas o código do chipset (ex: "Z690")
-                const chipsetCode = chipset.match(/[ZBX]\d{3}/i);
-                if (chipsetCode) {
-                    chipset = chipsetCode[0];
-                }
-            } else {
-                chipset = "Unknown";
+        // Fallback GPU detection
+        if (!gpuList || gpuList.length === 0) {
+            const gpuPatterns = [
+                /AMD Radeon RX \d{4}\s*[A-Z]{0,2}/gi,
+                /NVIDIA GeForce [A-Z]{2,3}\s*\d{3,4}/gi,
+                /Intel.*?UHD Graphics \d{3}/gi,
+                /Intel.*?Iris.*?Xe/gi
+            ];
+            for (const pat of gpuPatterns) {
+                const matches = htmlContent.match(pat);
+                if (matches) gpuList = [...gpuList, ...matches];
             }
         }
+        gpuList = [...new Set(gpuList)].map(g => g.trim());
 
-        // Extrair GPU (procurar por "AMD Radeon RX 6700 XT")
-        // Usar extractAIDA64AllValues para pegar TODAS (Hybrid Graphics)
-        let gpuName = "Unknown GPU";
+        // === 6. Network Parsing ===
+        const networkDevices = {};
+        // Scan for common controllers in text
+        const netKeywords = [
+            { name: "Realtek RTL8125", pattern: /RTL8125/i, id: "10EC-8125" },
+            { name: "Realtek RTL8111", pattern: /RTL8111|RTL8168/i, id: "10EC-8168" },
+            { name: "Intel I219-V", pattern: /I219-?V/i, id: "8086-15B8" },
+            { name: "Intel I225-V", pattern: /I225-?V/i, id: "8086-15F3" },
+            { name: "Intel Wi-Fi 6 AX200", pattern: /AX200/i, id: "8086-2723" },
+            { name: "Intel Wi-Fi 6E AX210", pattern: /AX210/i, id: "8086-2725" },
+            { name: "Broadcom Wi-Fi", pattern: /Broadcom.*?802\.11/i, id: "14E4-43A0" }
+        ];
 
-        // Bloco condicional removido para forçar uso da lógica de lista abaixo
-        if (true) {
-
-            let gpuList = this.extractAIDA64AllValues(htmlContent, [
-                "Adaptador gráfico",
-                "Video Adapter",
-                "Graphics Card",
-                "Placa de Vídeo",
-                "Acelerador 3D",
-                "3D Accelerator"
-            ]);
-
-            // Se a lista estiver vazia, tentar fallback regex global
-            if (!gpuList || gpuList.length === 0) {
-                const gpuPatterns = [
-                    /AMD Radeon RX \d{4}\s*[A-Z]{0,2}/gi,
-                    /NVIDIA GeForce [A-Z]{2,3}\s*\d{3,4}\s*[A-Z]{0,2}/gi,
-                    /Intel.*?UHD Graphics \d{3}/gi,
-                    /Intel.*?HD Graphics \d{3}/gi
-                ];
-
-                for (const pat of gpuPatterns) {
-                    const matches = htmlContent.match(pat);
-                    if (matches) {
-                        gpuList = [...gpuList, ...matches];
-                    }
-                }
+        let pciIndex = 0;
+        netKeywords.forEach(net => {
+            if (htmlContent.match(net.pattern)) {
+                networkDevices[net.name] = {
+                    "Bus Type": "PCI",
+                    "Device ID": net.id,
+                    "PCI Path": `PciRoot(0x0)/Pci(0x1C,0x${pciIndex++})/Pci(0x0,0x0)`, // Fake path for config gen
+                    "ACPI Path": `\\_SB.PC00.RP0${pciIndex}.PXSX`
+                };
             }
+        });
 
-            // Filtrar duplicatas e limpar nomes
-            gpuList = [...new Set(gpuList)].map(g => g.trim());
-
-            // Identificar a GPU principal (geralmente a primeira Intel em laptops ou a dGPU em desktops)
-            // Mas vamos guardar todas no objeto data.GPU
-            let gpuName = gpuList.length > 0 ? gpuList[0] : "Unknown GPU";
-
-            // Detectar Plataforma (Desktop vs Laptop)
-            let platform = "Desktop";
-
-            // 1. Checar sufixo da CPU (U, H, HQ, HK, Y, G1, G4, G7, M)
-            // Ex: i7-8550U, i7-7700HQ, i5-1135G7
-            if (cpuName.match(/i\d-\d+[UHYM]|HQ|HK|G[147]/)) {
-                platform = "Laptop";
-            }
-
-            // 2. Checar presença de bateria ou touchpad no relatório
-            if (platform === "Desktop") {
-                if (htmlContent.match(/Bateria|Battery|Gerenciamento de energia|Power Management/i)) {
-                    if (htmlContent.match(/Charge Level|Nível de carga|Capacidade|Capacity/i)) {
-                        platform = "Laptop";
-                    }
-                }
-                if (htmlContent.match(/Touchpad|Trackpad|Synaptics|ELAN|ALPS/i)) {
-                    platform = "Laptop";
-                }
-            }
-
-            // Criar objeto de dados
-            const data = {
-                CPU: {
-                    "Processor Name": cpuName,
-                    "Manufacturer": cpuName.includes("AMD") ? "AMD" : "Intel",
-                    "Codename": this.detectCPUCodenameFromName(cpuName),
-                    "Core Count": this.extractCoreCount(htmlContent, cpuName)
-                },
-                Motherboard: {
-                    "Name": moboName,
-                    "Platform": platform,
-                    "Chipset": chipset
-                },
-                GPU: {},
-                BIOS: {
-                    "Firmware Type": "UEFI"
-                },
-                Monitor: {},
-                Network: {},
-                Sound: {}
+        // === 7. Storage Parsing ===
+        const storageDevices = {};
+        const storageMatch = htmlContent.match(/(NVMe|SATA).*?Controller/gi) || [];
+        storageMatch.forEach((store, idx) => {
+            storageDevices[store] = {
+                "Bus Type": "PCI",
+                "Device ID": store.includes("NVMe") ? "144D-A808" : "8086-A282", // Example IDs
+                "PCI Path": store.includes("NVMe") ? "PciRoot(0x0)/Pci(0x1B,0x0)/Pci(0x0,0x0)" : "PciRoot(0x0)/Pci(0x17,0x0)"
             };
+        });
 
-            // Adicionar GPU
-            data.GPU[gpuName] = {
-                "Device Name": gpuName,
-                "Device Type": gpuName.includes("Intel") && (gpuName.includes("UHD") || gpuName.includes("HD")) ? "Integrated GPU" : "Discrete GPU",
-                "Manufacturer": this.detectGPUManufacturer(gpuName),
-                "Codename": this.detectGPUCodename(gpuName)
+        // === BUILD FINAL STRUCTURE ===
+        // Matches HardwareSniffer JSON Format as closely as possible
+        const data = {
+            "Motherboard": {
+                "Name": moboName,
+                "Chipset": chipset,
+                "Platform": platform
+            },
+            "BIOS": {
+                "Version": "Unknown", // Diff from AIDA usually
+                "Firmware Type": "UEFI"
+            },
+            "CPU": {
+                "Manufacturer": cpuName.includes("AMD") ? "AMD" : "Intel",
+                "Processor Name": cpuName,
+                "Codename": this.detectCPUCodenameFromName(cpuName),
+                "Core Count": this.extractCoreCount(htmlContent, cpuName),
+                "SIMD Features": "SSE4.1, SSE4.2, AVX2" // Placeholder
+            },
+            "GPU": {},
+            "Network": networkDevices,
+            "Sound": {},
+            "Storage Controllers": storageDevices,
+            "USB Controllers": {}, // Placeholder for now
+            "Monitor": {}
+        };
+
+        // Populate GPUs
+        gpuList.forEach(gName => {
+            const isIntegrated = gName.match(/Intel.*?HD|UHD|Iris|Xe/i);
+            data.GPU[gName] = {
+                "Manufacturer": this.detectGPUManufacturer(gName),
+                "Codename": this.detectGPUCodename(gName),
+                "Device Type": isIntegrated ? "Integrated GPU" : "Discrete GPU",
+                "Device ID": isIntegrated ? "8086-3E9B" : "1002-73DF", // Fallbacks if not found
+                "PCI Path": isIntegrated ? "PciRoot(0x0)/Pci(0x2,0x0)" : "PciRoot(0x0)/Pci(0x1,0x0)/Pci(0x0,0x0)"
             };
+        });
 
-            // Detectar Audio (procurar por "Realtek ALC1220")
-            const audioMatch = htmlContent.match(/Realtek.*?ALC\d{4}/i);
-            if (audioMatch) {
-                const audioDevice = audioMatch[0];
-                const codecMatch = audioDevice.match(/ALC(\d+)/);
-                if (codecMatch) {
-                    data.Sound[audioDevice] = {
-                        "Bus Type": "HDAUDIO",
-                        "Device ID": `10EC-${codecMatch[1]}`
-                    };
-                }
-            }
+        // Populate Sound
+        const audioMatches = htmlContent.match(/Realtek.*?ALC\d{3,4}/gi) || [];
+        [...new Set(audioMatches)].forEach(audio => {
+            const codec = audio.match(/ALC(\d+)/)[1];
+            data.Sound[audio] = {
+                "Bus Type": "HDAUDIO",
+                "Device ID": `10EC-${codec}`,
+                "Audio Endpoints": ["Speakers", "Microphone"]
+            };
+        });
 
-            console.log("AIDA64 Parsed Data:", data);
-            return this.validateAndCleanReport(data);
-        }
+        console.log("AIDA64 Parsed Data (HS Structure):", data);
+        return this.validateAndCleanReport(data);
     }
 
     extractCoreCount(htmlContent, cpuName) {
@@ -501,13 +470,22 @@ class ConfigGenerator {
 
     selectSMBIOS(hardwareData, macOSVersion) {
         const cpu = hardwareData.CPU;
-        const gpu = Object.values(hardwareData.GPU || {})[0];
+        const allGPUs = Object.values(hardwareData.GPU || {});
+
+        // Encontrar a melhor GPU (AMD Discrete tem prioridade)
+        const amdGPU = allGPUs.find(g => g.Manufacturer === "AMD" && g["Device Type"] === "Discrete GPU");
+        const gpu = amdGPU || allGPUs[0];
+
         const platform = hardwareData.Motherboard.Platform;
         const darwinVersion = macOSVersion ? macOSVersion.darwin : "24.0.0";
 
         console.log(`Selecting SMBIOS for ${cpu.Codename} on macOS ${darwinVersion}`);
 
-        // AMD Ryzen Desktop
+        // Verificar se CPU é Série F (sem iGPU)
+        const cpuName = cpu["Processor Name"] || "";
+        const isFSeries = cpuName.toUpperCase().endsWith("F") || cpuName.toUpperCase().endsWith("KF");
+
+        // AMD Ryzen Desktop sempre usa iMacPro/MacPro
         if (cpu.Manufacturer === "AMD") {
             if (platform === "Laptop") {
                 return this.getBestSMBIOS("MacBookPro16,1", darwinVersion);
@@ -515,12 +493,10 @@ class ConfigGenerator {
 
             // MacPro7,1 só funciona em Catalina+ (19.0.0+)
             if (this.parseDarwinVersion(darwinVersion) >= this.parseDarwinVersion("19.0.0")) {
-                if (gpu && gpu["Device Type"] === "Discrete GPU") {
+                if (amdGPU) {
                     return "MacPro7,1";
                 }
             }
-
-            // Fallback para iMacPro1,1 (High Sierra+)
             return "iMacPro1,1";
         }
 
@@ -528,8 +504,16 @@ class ConfigGenerator {
         if (platform === "Desktop") {
             const codename = cpu.Codename || "";
 
-            // AMD dGPU - MacPro7,1 se macOS suportar
-            if (gpu && gpu.Manufacturer === "AMD" && gpu["Device Type"] === "Discrete GPU") {
+            // Priorizar MacPro7,1 para Sistemas High-End (AMD dGPU)
+            if (amdGPU) {
+                // Se for KF/F series ou 12th+, preferir MacPro7,1
+                if (isFSeries || codename.includes("Alder") || codename.includes("Raptor") || codename.includes("Rocket")) {
+                    if (this.parseDarwinVersion(darwinVersion) >= this.parseDarwinVersion("19.0.0")) {
+                        return "MacPro7,1"; // MacPro7,1 (Catalina+)
+                    }
+                }
+
+                // Opção alternativa: iMacPro1,1 para maior compatibilidade ou MacPro7,1 para Monterey+
                 if (this.parseDarwinVersion(darwinVersion) >= this.parseDarwinVersion("21.0.0")) {
                     return "MacPro7,1"; // Monterey+
                 }
@@ -818,7 +802,7 @@ class ConfigGenerator {
             return {
                 pciPath: props["PCI Path"] || "PciRoot(0x0)/Pci(0x1F,0x3)",
                 properties: {
-                    "layout-id": layoutBytes
+                    "layout-id": { _isData: true, value: layoutBytes }
                 },
                 codecId: deviceId,
                 layoutId: layoutId
@@ -834,11 +818,11 @@ class ConfigGenerator {
 
     generateIGPUPropertiesV3(gpu, hw, macOS) {
         const deviceId = gpu["Device ID"];
-        if (!deviceId) return {};
+        // if (!deviceId) return {}; // REMOVED strict check to allow fallback
 
         // Detectar plataforma
         let platform = hw.Motherboard.Platform || "Desktop";
-        if (hw.Motherboard.Name && hw.Motherboard.Name.toUpperCase().includes("NUC")) {
+        if (hw.Motherboard.Name && typeof hw.Motherboard.Name === 'string' && hw.Motherboard.Name.toUpperCase().includes("NUC")) {
             platform = "NUC";
         }
 
@@ -852,8 +836,8 @@ class ConfigGenerator {
             }
         }
 
-        // Usar dataset se disponível
-        if (this.getIGPUProperties && typeof this.getIGPUProperties === 'function') {
+        // Usar dataset se disponível (apenas se tiver Device ID)
+        if (deviceId && this.getIGPUProperties && typeof this.getIGPUProperties === 'function') {
             const props = this.getIGPUProperties(deviceId, platform, hasMonitor);
             if (props) {
                 return props;
@@ -872,7 +856,12 @@ class ConfigGenerator {
         // Se for Coffee Lake mas GPU for 620, tratar como Kaby Lake
         const isKabyLakeR = (codename.includes("Coffee") && isUHD620);
 
-        if ((codename.includes("Coffee") || codename.includes("Comet")) && !isKabyLakeR) {
+        // Check regex patterns if codename matches or if GPU Name suggests it
+        const isCoffee = codename.includes("Coffee") || codename.includes("Comet") || gpuName.match(/UHD.*?630/i);
+        const isKaby = codename.includes("Kaby") || isKabyLakeR || gpuName.match(/HD.*?630/i) || gpuName.match(/UHD.*?620/i);
+        const isSkylake = codename.includes("Skylake") || gpuName.match(/HD.*?530/i);
+
+        if (isCoffee && !isKabyLakeR) {
             if (platform === "Desktop") {
                 if (hasMonitor) {
                     props["AAPL,ig-platform-id"] = "00009B3E";
@@ -890,7 +879,7 @@ class ConfigGenerator {
                 props["framebuffer-stolenmem"] = "00003001";
             }
         }
-        else if (codename.includes("Kaby") || isKabyLakeR) {
+        else if (isKaby) {
             if (platform === "Desktop") {
                 props["AAPL,ig-platform-id"] = "00001259";
                 props["framebuffer-stolenmem"] = "00003001";
@@ -901,7 +890,7 @@ class ConfigGenerator {
                 props["framebuffer-fbmem"] = "00009000";
             }
         }
-        else if (codename.includes("Skylake")) {
+        else if (isSkylake) {
             if (platform === "Desktop") {
                 props["AAPL,ig-platform-id"] = "00001219";
             } else {
@@ -909,6 +898,14 @@ class ConfigGenerator {
             }
             props["framebuffer-stolenmem"] = "00003001";
             props["framebuffer-fbmem"] = "00009000";
+        }
+
+        // Wrap properties in Data object
+        for (const key of Object.keys(props)) {
+            const val = props[key];
+            if (typeof val === 'string' && /^[0-9A-F]+$/.test(val)) {
+                props[key] = { _isData: true, value: val };
+            }
         }
 
         return props;
@@ -1237,6 +1234,12 @@ class ConfigGenerator {
         }
 
         if (typeof obj === 'object') {
+            // Check for Data wrapper
+            if (obj._isData) {
+                const base64 = this.hexToBase64(obj.value);
+                return `${indentStr}<data>${base64}</data>\n`;
+            }
+
             const keys = Object.keys(obj);
             if (keys.length === 0) return `${indentStr}<dict/>\n`;
             let xml = `${indentStr}<dict>\n`;
@@ -1258,6 +1261,22 @@ class ConfigGenerator {
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&apos;');
+    } // Corrected closing brace for escapeXML
+
+    hexToBase64(hex) {
+        if (!hex) return '';
+        // Remove 0x prefix and spaces
+        const cleanHex = hex.replace(/^0x/, '').replace(/\s/g, '');
+        const match = cleanHex.match(/.{1,2}/g);
+        if (!match) return '';
+
+        const bytes = new Uint8Array(match.map(byte => parseInt(byte, 16)));
+        let binary = '';
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
     }
 }
 
