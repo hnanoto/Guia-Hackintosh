@@ -216,7 +216,7 @@
         header {
             background: rgba(29, 29, 31, 0.95);
             backdrop-filter: blur(20px);
-            padding: 1.5rem 0;
+            padding: 1rem 0;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -231,10 +231,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 2rem;
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
@@ -243,12 +244,16 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             list-style: none;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: center;
         }
 
         .nav-links a {
@@ -257,6 +262,12 @@
             font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
         }
 
         .nav-links a::after {
@@ -272,6 +283,80 @@
 
         .nav-links a:hover::after {
             width: 100%;
+        }
+
+        /* Action Bar (Search + Toggles) */
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            color: white;
+            font-family: inherit;
+            width: 200px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary);
+            width: 250px;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+        }
+
+        /* Language Dropdown Adjustment */
+        .language-selector {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .language-wrapper {
+            position: relative;
+        }
+
+        .language-wrapper:hover .language-selector {
+            display: block;
         }
 
         /* Hero Section */
@@ -864,35 +949,46 @@
         <span data-i18n="loading">Loading updates...</span>
     </div>
 
-    <!-- Language Selector -->
-    <div class="language-selector">
-        <h4><i class="fas fa-globe"></i> <span data-i18n="language">Language</span></h4>
-        <div class="language-buttons">
-            <button class="lang-btn active" onclick="changeLanguage('en')">🇺🇸 EN</button>
-            <button class="lang-btn" onclick="changeLanguage('pt-BR')">🇧🇷 PT</button>
-            <button class="lang-btn" onclick="changeLanguage('es')">🇪🇸 ES</button>
-        </div>
-    </div>
-
     <!-- Header -->
     <header>
         <nav>
             <div class="logo">
                 <i class="fab fa-apple"></i>
-                Hackintosh Guide
+                <span data-i18n="logo-title">Hackintosh Guide</span>
             </div>
             <ul class="nav-links">
                 <li><a href="#home" data-i18n="nav-home">Home</a></li>
-                <li><a href="#requirements" data-i18n="nav-req">Requirements</a></li>
-                <li><a href="#smbios" data-i18n="nav-smbios">SMBIOS</a></li>
+                <li><a href="#requirements" data-i18n="nav-req">Requisitos</a></li>
                 <li><a href="#hardware-configs" data-i18n="sec-hw-title">Hardware</a></li>
-                <li><a href="#installation" data-i18n="nav-install">Installation</a></li>
-                <li><a href="#post-installation" data-i18n="post-install-title">Post-Install</a></li>
-                <li><a href="#acpi" data-i18n="lbl-acpi">ACPI</a></li>
-                <li><a href="#troubleshooting-adv" data-i18n="trouble-adv-title">Troubleshooting</a></li>
+                <li><a href="#installation" data-i18n="nav-install">Instalação</a></li>
+                <li><a href="#post-installation" data-i18n="post-install-title">Pós-Install</a></li>
+                <li><a href="#troubleshooting-adv" data-i18n="trouble-adv-title">Solução de Problemas</a></li>
                 <li><a href="#hnanoto-tools" data-i18n="nav-tools">Tools</a></li>
-                <li><a href="#resources" data-i18n="nav-resources">Resources</a></li>
             </ul>
+            <div class="action-bar">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" data-i18n-placeholder="search-placeholder"
+                        placeholder="Search..." id="searchInput">
+                </div>
+                <button class="icon-btn" id="themeToggle" title="Toggle Theme" onclick="toggleTheme()">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <div class="language-wrapper">
+                    <button class="icon-btn" title="Change Language">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                    <!-- Dropdown moved here from fixed position -->
+                    <div class="language-selector">
+                        <h4><i class="fas fa-globe"></i> <span data-i18n="language">Language</span></h4>
+                        <div class="language-buttons">
+                            <button class="lang-btn active" onclick="changeLanguage('en')">🇺🇸 EN</button>
+                            <button class="lang-btn" onclick="changeLanguage('pt-BR')">🇧🇷 PT</button>
+                            <button class="lang-btn" onclick="changeLanguage('es')">🇪🇸 ES</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </nav>
     </header>
 
@@ -9071,6 +9167,67 @@ PciRoot(0x0)/Pci(0x2,0x0)
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        }
+
+        // Search Functionality
+        document.getElementById('searchInput').addEventListener('input', function (e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const contentSections = document.querySelectorAll('section, .card');
+
+            if (searchTerm.length < 2) {
+                // Reset visibility
+                contentSections.forEach(section => {
+                    section.style.display = '';
+                    section.style.opacity = '1';
+                });
+                return;
+            }
+
+            contentSections.forEach(section => {
+                const text = section.innerText.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    section.style.display = '';
+                    section.style.opacity = '1';
+                    // Optional: Highlight border
+                    // section.style.border = '1px solid var(--primary)';
+                } else {
+                    // Check if it's a parent section container
+                    if (!section.querySelector('.card')) {
+                        section.style.opacity = '0.3';
+                    }
+                }
+            });
+        });
+
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.querySelector('#themeToggle i');
+
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+                // Update CSS variables for Dark Mode
+                document.documentElement.style.setProperty('--text', '#f5f5f7');
+                document.documentElement.style.setProperty('--text-secondary', '#a1a1a6');
+                document.documentElement.style.setProperty('--dark', '#1d1d1f');
+                body.style.background = 'linear-gradient(135deg, #1e1e1e 0%, #0a0a0a 100%)';
+            } else {
+                body.classList.add('light-mode');
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+                // Update CSS variables for Light Mode
+                document.documentElement.style.setProperty('--text', '#1d1d1f');
+                document.documentElement.style.setProperty('--text-secondary', '#424245');
+                document.documentElement.style.setProperty('--dark', '#f5f5f7');
+                body.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+            }
+        }
+
+        // Initialize Theme from LocalStorage
+        if (localStorage.getItem('theme') === 'light') {
+            toggleTheme();
         }
 
     </script>
