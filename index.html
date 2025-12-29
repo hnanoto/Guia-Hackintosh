@@ -1772,8 +1772,10 @@
             style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 3rem 0;">
             <div class="container">
                 <div class="section-header" style="color: white;">
-                    <h2><i class="fas fa-robot"></i> Hardware Analysis & Config Generator</h2>
-                    <p>Upload your hardware report and generate a perfect config.plist automatically</p>
+                    <h2 data-i18n="hw-analysis-title"><i class="fas fa-robot"></i> Hardware Analysis & Config Generator
+                    </h2>
+                    <p data-i18n="hw-analysis-desc">Upload your hardware report and generate a perfect config.plist
+                        automatically</p>
                 </div>
 
                 <div class="card" style="max-width: 900px; margin: 0 auto;">
@@ -5006,6 +5008,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'card-repos': 'Repositórios de Kexts',
 
                 // INSTRUCTIONS & ALERTS
+                'hw-analysis-title': 'Análise de Hardware e Gerador de Config',
+                'hw-analysis-desc': 'Envie seu relatório de hardware e gere um config.plist perfeito automaticamente',
                 'sec-kexts-title': 'Kexts Essenciais',
                 'sec-kexts-desc': 'Extensões do kernel necessárias para funcionalidade completa',
                 'alert-kexts': 'Important: Sempre baixe os kexts mais recentes dos repositórios oficiais do GitHub.',
@@ -5785,7 +5789,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'quirk-slide': 'Permite uso de safe mode (Shift)',
                 'quirk-write': 'Permite escrita em memórias protegidas',
                 'quirk-map': 'Reconstroi mapa de memória p/ compatibilidade',
-                'config-gpu-title': 'DeviceProperties (GPU Patching)',
+                'config-gpu-title': 'DeviceProperties (Patch de GPU)',
                 'config-gpu-desc': 'Configuração essencial para iGPU Intel (Intel HD/UHD Graphics).',
                 'config-gpu-igpur': 'Aceleradora Gráfica (iGPU)',
                 'config-gpu-warning': 'Atenção:',
@@ -5798,7 +5802,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'quirk-xhci': 'Desabilite após mapear USBs (macOS 11.3+)',
 
                 // TROUBLESHOOTING AVANÇADO
-                'trouble-adv-title': 'Troubleshooting Avançado',
+                'trouble-adv-title': 'Solução de Problemas Avançada',
                 'trouble-adv-desc': 'Diagnóstico e solução de problemas complexos',
                 'trouble-panic-title': 'Entendendo Kernel Panics',
                 'trouble-panic-boot': 'Se o PC reinicia antes de carregar:',
@@ -5935,6 +5939,10 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'card-essentials': 'Essential Tools',
                 'card-communities': 'Communities',
                 'card-repos': 'Kext Repositories',
+
+                'hw-analysis-title': 'Hardware Analysis & Config Generator',
+                'hw-analysis-desc': 'Upload your hardware report and generate a perfect config.plist automatically',
+
 
                 'sec-kexts-title': 'Essential Kexts',
                 'sec-kexts-desc': 'Kernel extensions required for full functionality',
@@ -6811,6 +6819,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'card-communities': 'Comunidades',
                 'card-repos': 'Repositorios de Kexts',
 
+                // INSTRUCTIONS & ALERTS
+                'hw-analysis-title': 'Análisis de Hardware y Generador de Config',
+                'hw-analysis-desc': 'Suba su informe de hardware y genere un config.plist perfecto automáticamente',
                 'sec-kexts-title': 'Kexts Esenciales',
                 'sec-kexts-desc': 'Extensiones de kernel necesarias para la funcionalidad completa',
                 'alert-kexts': 'Important: Siempre descargue los últimos kexts de los repositorios oficiales de GitHub.',
@@ -7182,7 +7193,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'glossary-smbios': 'SMBIOS',
                 'glossary-smbios-def': 'System Management BIOS - Define qué modelo de Mac emulará su Hackintosh',
                 'glossary-ssdt': 'SSDT',
-                'glossary-ssdt-def': 'Secondary System Description Table - Tablas secundárias de ACPI que agregan o modifican funcionalidades',
+                'glossary-ssdt-def': 'Secondary System Description Table - Tablas secundarias de ACPI que agregan o modifican funcionalidades',
                 'glossary-uefi': 'UEFI',
                 'glossary-uefi-def': 'Unified Extensible Firmware Interface - Sustituto moderno del BIOS legado',
                 'glossary-usbmap': 'Mapeo USB',
@@ -7256,7 +7267,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'quirk-xhci': 'Desactive después de mapear USBs (macOS 11.3+)',
 
                 // TROUBLESHOOTING ADVANCED
-                'trouble-adv-title': 'Troubleshooting Avanzado',
+                'trouble-adv-title': 'Solución de Problemas Avanzada',
                 'trouble-adv-desc': 'Diagnóstico y solución de problemas complejos',
                 'trouble-panic-title': 'Entendiendo Kernel Panics',
                 'trouble-panic-boot': 'Si la PC se reinicia antes de cargar:',
