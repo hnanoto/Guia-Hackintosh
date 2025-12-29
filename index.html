@@ -9169,27 +9169,53 @@ PciRoot(0x0)/Pci(0x2,0x0)
             URL.revokeObjectURL(url);
         }
 
-        // Search Functionality (Improved)
+        // Search Functionality (Optimized)
+        let searchTimeout;
+        // Cache elements to improve performance
+        // We defer this until DOMContentLoaded or first interaction if preferred, 
+        // but here we know elements exist or will exist shorty.
+        // Actually, some elements might be dynamic (like latest versions), so let's query inside but optimize.
+
         document.getElementById('searchInput').addEventListener('input', function (e) {
+            clearTimeout(searchTimeout);
             const searchTerm = e.target.value.toLowerCase().trim();
-            // Select Sections, Cards, and Table Rows for granular filtering
+
+            // Debounce: Wait 300ms after user stops typing
+            searchTimeout = setTimeout(() => {
+                requestAnimationFrame(() => {
+                    performSearch(searchTerm);
+                });
+            }, 300);
+        });
+
+        function performSearch(term) {
+            // Query selector is somewhat expensive, but necessary if content is dynamic.
+            // If content is mostly static, we could cache this.
+            // For now, let's optimize the loop.
             const contentSections = document.querySelectorAll('section, .card, tbody tr');
 
-            if (searchTerm.length === 0) {
-                // Reset visibility
+            if (term.length === 0) {
+                // Reset visibility efficiently
                 contentSections.forEach(el => {
-                    el.style.display = '';
-                    el.style.opacity = '1';
+                    if (el.style.display === 'none') {
+                        el.style.display = '';
+                        el.style.opacity = '1';
+                    }
                 });
                 return;
             }
 
             contentSections.forEach(el => {
-                const text = el.innerText.toLowerCase();
-                const isMatch = text.includes(searchTerm);
+                // innerText causes reflow. textContent is much faster.
+                // We trade a tiny bit of accuracy (hidden text) for massive speed.
+                const text = el.textContent.toLowerCase();
+                const isMatch = text.includes(term);
 
                 if (el.tagName === 'SECTION') {
-                    // For sections, if any content matches, keep it visible
+                    // Sections acts as containers. 
+                    // If a section matches, we show it. 
+                    // (Logic: If term is found anywhere in section, show section. 
+                    // Granular framing handles the kids).
                     if (isMatch) {
                         el.style.display = '';
                         el.style.opacity = '1';
@@ -9197,7 +9223,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                         el.style.display = 'none';
                     }
                 } else {
-                    // For Cards and Table Rows, hide specific elements if they don't match
+                    // Cards and Rows
                     if (isMatch) {
                         el.style.display = '';
                         el.style.opacity = '1';
@@ -9206,7 +9232,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                     }
                 }
             });
-        });
+        }
 
         // Theme Toggle
         function toggleTheme() {
