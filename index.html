@@ -806,14 +806,39 @@
             color: var(--primary);
         }
 
-        /* Responsive */
+        /* Scroll to Top */
+        /* Responsive CSS */
+        @media (max-width: 1024px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block !important;
+                font-size: 1.5rem;
+            }
+
+            .action-bar {
+                gap: 0.5rem;
+            }
+
+            /* Hide search on very small screens if needed, or adapt width */
+            .search-input {
+                width: 150px;
+            }
+
+            .search-input:focus {
+                width: 180px;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
             }
 
-            .nav-links {
-                display: none;
+            .section-header h2 {
+                font-size: 2rem;
             }
 
             .cards {
@@ -823,6 +848,96 @@
             .stats {
                 grid-template-columns: 1fr;
             }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .action-bar .search-container {
+                display: none;
+                /* Hide search in header on mobile to save space, maybe move to menu? For now hiding to prevent breakage */
+            }
+        }
+
+        /* Mobile Menu Styles */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-content {
+            position: absolute;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background: var(--header-bg);
+            padding: 2rem;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+        }
+
+        .mobile-menu-overlay.active .mobile-menu-content {
+            right: 0;
+        }
+
+        .close-menu-btn {
+            background: transparent;
+            border: none;
+            color: var(--header-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        .mobile-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-nav-links a {
+            color: var(--header-text);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .mobile-nav-links a:hover {
+            color: var(--primary);
         }
 
         /* Scroll to Top */
@@ -1034,7 +1149,36 @@
                     </div>
                 </div>
             </div>
+            <!-- Hamburger Menu Button -->
+            <button class="icon-btn mobile-menu-btn" onclick="toggleMobileMenu()" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
         </nav>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" id="mobileMenu">
+            <div class="mobile-menu-content">
+                <button class="close-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="mobile-logo">
+                    <i class="fab fa-apple"></i> Hackintosh Guide
+                </div>
+                <!-- Links cloned visually -->
+                <ul class="mobile-nav-links">
+                    <li><a href="#home" onclick="toggleMobileMenu()" data-i18n="nav-home">Home</a></li>
+                    <li><a href="#requirements" onclick="toggleMobileMenu()" data-i18n="nav-req">Requisitos</a></li>
+                    <li><a href="#hardware-configs" onclick="toggleMobileMenu()" data-i18n="sec-hw-title">Hardware</a>
+                    </li>
+                    <li><a href="#installation" onclick="toggleMobileMenu()" data-i18n="nav-install">Instalação</a></li>
+                    <li><a href="#post-installation" onclick="toggleMobileMenu()"
+                            data-i18n="post-install-title">Pós-Install</a></li>
+                    <li><a href="#troubleshooting-adv" onclick="toggleMobileMenu()"
+                            data-i18n="trouble-adv-title">Solução de Problemas</a></li>
+                    <li><a href="#hnanoto-tools" onclick="toggleMobileMenu()" data-i18n="nav-tools">Tools</a></li>
+                </ul>
+            </div>
+        </div>
     </header>
 
     <!-- Hero -->
@@ -8822,6 +8966,22 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 document.body.classList.add('light-mode');
                 const icon = document.querySelector('#themeToggle i');
                 if (icon) icon.className = 'fas fa-moon';
+            }
+        }
+
+        // ========================================
+        // MOBILE MENU
+        // ========================================
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+
+            // Prevent body scroll when menu is open
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
             }
         }
 
