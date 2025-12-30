@@ -1138,6 +1138,13 @@ class ConfigGenerator {
             }
         }
 
+        // 12th/13th Gen Helpers
+        const cpuCodename = hw.CPU.Codename || "";
+        if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor")) {
+            args.push("ctrsmt=full");
+            args.push("revpatch=cpuname,sbvmm"); // Common RestrictEvents args
+        }
+
         const audioCodec = this.detectAudioCodec(hw);
         if (audioCodec) {
             args.push(`alcid=${audioCodec.layoutId}`);
@@ -1397,11 +1404,14 @@ class ConfigGenerator {
 
         if (cpuMan === "Intel") {
             // PLUG - CPU Power Management
-            if (cpuCodename.includes("Haswell") || cpuCodename.includes("Broadwell") ||
+            // Special case for Alder/Raptor Lake (12th/13th+)
+            if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor")) {
+                addSSDT("SSDT-PLUG-ALT.aml", "CPU Power Management (12th+ Gen)");
+            }
+            else if (cpuCodename.includes("Haswell") || cpuCodename.includes("Broadwell") ||
                 cpuCodename.includes("Skylake") || cpuCodename.includes("Kaby") ||
                 cpuCodename.includes("Coffee") || cpuCodename.includes("Comet") ||
-                cpuCodename.includes("Rocket") || cpuCodename.includes("Alder") ||
-                cpuCodename.includes("Raptor")) {
+                cpuCodename.includes("Rocket")) {
                 addSSDT("SSDT-PLUG.aml", "CPU Power Management");
             }
 
@@ -1472,6 +1482,28 @@ class ConfigGenerator {
         // 2. Graphics & Audio
         addKext("WhateverGreen");
         addKext("AppleALC");
+
+        // Check for RX 6700 XT (Navi 22) -> Needs NootRX
+        // Check in GPU keys
+        const gpuKeys = Object.keys(hw.GPU || {});
+        const has6700XT = gpuKeys.some(k => k.includes("6700 XT") || k.includes("6700XT") || k.includes("6750"));
+
+        if (has6700XT) {
+            addKext("NootRX"); // Specialized kext for Navi 22
+        }
+
+        // 2.1 Storage (NVMeFix)
+        const storeKeys = Object.keys(hw["Storage Controllers"] || {});
+        if (storeKeys.some(k => k.toLowerCase().includes("nvme"))) {
+            addKext("NVMeFix");
+        }
+
+        // 2.2 CPU/System Support (Newer Intel)
+        const cpuCodename = hw.CPU.Codename || "";
+        if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor")) {
+            addKext("CpuTopologyRebuild"); // For P-cores/E-cores identification
+            addKext("RestrictEvents");
+        }
 
         // 3. Sensors (VirtualSMC Plugins)
         // Note: Plugins usually reside inside VirtualSMC, but standard OC setups often have them as separate entries in config.plist pointing to kext files in Kexts folder.
