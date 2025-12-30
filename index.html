@@ -807,6 +807,72 @@
         }
 
         /* Scroll to Top */
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--gradient-primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Community Section Styles */
+        .community-section {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(102, 126, 234, 0.1) 100%);
+            border-radius: 20px;
+            border: 2px solid #FF0000;
+            text-align: center;
+        }
+
+        .community-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .vip-section {
+            padding: 2rem;
+            background: rgba(255, 0, 0, 0.15);
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 2px solid #FF0000;
+            text-align: center;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .credits-section {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 2px solid var(--primary);
+        }
+
         /* Responsive CSS */
         @media (max-width: 1024px) {
             .nav-links {
@@ -856,6 +922,29 @@
             .action-bar .search-container {
                 display: none;
                 /* Hide search in header on mobile to save space, maybe move to menu? For now hiding to prevent breakage */
+            }
+
+            /* Community Section Mobile Responsiveness */
+            .community-section {
+                padding: 1.5rem;
+                margin-top: 2rem;
+            }
+
+            .community-title {
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .vip-section {
+                padding: 1.5rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .credits-section {
+                padding: 1.5rem;
             }
         }
 
@@ -3222,8 +3311,7 @@
                 </div>
             </div>
 
-            <div
-                style="text-align: center; margin-top: 3rem; padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 20px; border: 2px solid var(--primary);">
+            <div class="credits-section">
                 <h3 style="margin-bottom: 1rem;"><i class="fas fa-heart" style="color: #FF0000"></i>
                     <span data-i18n="credits-title">Special Credits</span>
                 </h3>
@@ -3243,16 +3331,14 @@
 
 
                 <!-- Contatos e Comunidade -->
-                <div
-                    style="margin-top: 4rem; padding: 3rem; background: linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, rgba(102, 126, 234, 0.1) 100%); border-radius: 20px; border: 2px solid #FF0000;">
-                    <h3 style="text-align: center; margin-bottom: 2rem; font-size: 2rem;">
+                <div class="community-section">
+                    <h3 class="community-title">
                         <i class="fas fa-users" style="color: #FF0000"></i> <span data-i18n="join-community">Join the
                             Community!</span>
                     </h3>
 
                     <!-- Torne-se Membro -->
-                    <div
-                        style="text-align: center; padding: 2rem; background: rgba(255, 0, 0, 0.15); border-radius: 15px; margin-bottom: 2rem; border: 2px solid #FF0000;">
+                    <div class="vip-section">
                         <h4 style="margin-bottom: 1rem; font-size: 1.5rem;">
                             <i class="fas fa-crown" style="color: #FFD700"></i> <span data-i18n="become-member">Become a
                                 VIP
@@ -3271,8 +3357,7 @@
                     </div>
 
                     <!-- Contatos -->
-                    <div
-                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                    <div class="contact-grid">
                         <!-- Discord -->
                         <div
                             style="background: rgba(88, 101, 242, 0.1); padding: 1.5rem; border-radius: 15px; border: 2px solid #5865F2; text-align: center; transition: all 0.3s ease;">
