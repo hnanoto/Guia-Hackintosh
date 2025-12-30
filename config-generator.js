@@ -686,14 +686,81 @@ class ConfigGenerator {
         this.hardwareData = hardwareData;
         this.selectedMacOS = macOSVersion;
 
-        // SMBIOS agora é selecionado com base na versão do macOS
+        // SMBIOS Selection
         const smbiosModel = this.selectSMBIOS(hardwareData, macOSVersion);
-
         console.log(`Generating config for ${smbiosModel} on macOS ${macOSVersion.name}`);
 
-        const config = {
+        // Use Sample.plist structure as base
+        // We do deep copy to avoid mutating the template
+        const baseConfig = JSON.parse(JSON.stringify(this.getSamplePlistStructure()));
+
+        // --- ACPI ---
+        baseConfig.ACPI.Add = this.generateACPIAdd(hardwareData);
+        // Only override Quirks we specifically manage, keep others default
+        Object.assign(baseConfig.ACPI.Quirks, {
+            "FadtEnableReset": false,
+            "NormalizeHeaders": false,
+            "RebaseRegions": false,
+            "ResetHwSig": false,
+            "ResetLogoStatus": false
+        });
+
+        // --- Booter ---
+        // Merge generated booter quirks with base
+        const booter = this.generateBooter(hardwareData, macOSVersion);
+        baseConfig.Booter.MmioWhitelist = booter.MmioWhitelist;
+        Object.assign(baseConfig.Booter.Quirks, booter.Quirks);
+
+        // --- DeviceProperties ---
+        baseConfig.DeviceProperties.Add = this.generateDeviceProperties(hardwareData, macOSVersion);
+
+        // --- Kernel ---
+        const kernel = this.generateKernel(hardwareData, macOSVersion);
+        baseConfig.Kernel.Add = kernel.Add;
+        baseConfig.Kernel.Emulate = kernel.Emulate;
+        Object.assign(baseConfig.Kernel.Quirks, kernel.Quirks);
+        // We don't touch Block/Force/Patch/Scheme typically unless specific logic requires it
+
+        // --- Misc ---
+        const misc = this.generateMisc(hardwareData, macOSVersion);
+        Object.assign(baseConfig.Misc.Boot, misc.Boot);
+        Object.assign(baseConfig.Misc.Debug, misc.Debug);
+        Object.assign(baseConfig.Misc.Security, misc.Security);
+        // Keep Tools/Entries from Sample or empty as preferred. Usually empty for clean config.
+        baseConfig.Misc.Tools = [];
+        baseConfig.Misc.Entries = [];
+
+        // --- NVRAM ---
+        const nvram = this.generateNVRAM(hardwareData, macOSVersion);
+        baseConfig.NVRAM.Add = nvram.Add; // Replace completely to ensure clean vars
+        baseConfig.NVRAM.Delete = nvram.Delete;
+
+        // --- PlatformInfo ---
+        const platformInfo = this.generatePlatformInfo(smbiosModel);
+        // Merge PlatformInfo carefully
+        Object.assign(baseConfig.PlatformInfo.Generic, platformInfo.Generic);
+        baseConfig.PlatformInfo.Automatic = platformInfo.Automatic;
+        baseConfig.PlatformInfo.UpdateDataHub = platformInfo.UpdateDataHub;
+        baseConfig.PlatformInfo.UpdateNVRAM = platformInfo.UpdateNVRAM;
+        baseConfig.PlatformInfo.UpdateSMBIOS = platformInfo.UpdateSMBIOS;
+        baseConfig.PlatformInfo.UpdateSMBIOSMode = platformInfo.UpdateSMBIOSMode;
+
+
+        // --- UEFI ---
+        const uefi = this.generateUEFI(hardwareData, macOSVersion);
+        baseConfig.UEFI.Drivers = uefi.Drivers;
+        Object.assign(baseConfig.UEFI.Quirks, uefi.Quirks);
+        Object.assign(baseConfig.UEFI.Input, uefi.Input);
+        Object.assign(baseConfig.UEFI.Output, uefi.Output);
+
+        this.generatedConfig = baseConfig;
+        return baseConfig;
+    }
+
+    getSamplePlistStructure() {
+        return {
             "ACPI": {
-                "Add": this.generateACPIAdd(hardwareData),
+                "Add": [],
                 "Delete": [],
                 "Patch": [],
                 "Quirks": {
@@ -701,23 +768,295 @@ class ConfigGenerator {
                     "NormalizeHeaders": false,
                     "RebaseRegions": false,
                     "ResetHwSig": false,
-                    "ResetLogoStatus": false
+                    "ResetLogoStatus": true,
+                    "SyncTableIds": false
                 }
             },
-            "Booter": this.generateBooter(hardwareData, macOSVersion),
+            "Booter": {
+                "MmioWhitelist": [],
+                "Patch": [],
+                "Quirks": {
+                    "AllowRelocationBlock": false,
+                    "AvoidRuntimeDefrag": true,
+                    "ClearTaskSwitchBit": false,
+                    "DevirtualiseMmio": false,
+                    "DisableSingleUser": false,
+                    "DisableVariableWrite": false,
+                    "DiscardHibernateMap": false,
+                    "EnableSafeModeSlide": true,
+                    "EnableWriteUnprotector": true,
+                    "FixupAppleEfiImages": true,
+                    "ForceBooterSignature": false,
+                    "ForceExitBootServices": false,
+                    "ProtectMemoryRegions": false,
+                    "ProtectSecureBoot": false,
+                    "ProtectUefiServices": false,
+                    "ProvideCustomSlide": true,
+                    "ProvideMaxSlide": 0,
+                    "RebuildAppleMemoryMap": false,
+                    "ResizeAppleGpuBars": -1,
+                    "SetupVirtualMap": true,
+                    "SignalAppleOS": false,
+                    "SyncRuntimePermissions": false
+                }
+            },
             "DeviceProperties": {
-                "Add": this.generateDeviceProperties(hardwareData, macOSVersion),
+                "Add": {},
                 "Delete": {}
             },
-            "Kernel": this.generateKernel(hardwareData, macOSVersion),
-            "Misc": this.generateMisc(hardwareData, macOSVersion),
-            "NVRAM": this.generateNVRAM(hardwareData, macOSVersion),
-            "PlatformInfo": this.generatePlatformInfo(smbiosModel),
-            "UEFI": this.generateUEFI(hardwareData, macOSVersion)
+            "Kernel": {
+                "Add": [],
+                "Block": [],
+                "Emulate": {
+                    "Cpuid1Data": { _isData: true, value: "" },
+                    "Cpuid1Mask": { _isData: true, value: "" },
+                    "DummyPowerManagement": false,
+                    "MaxKernel": "",
+                    "MinKernel": ""
+                },
+                "Force": [],
+                "Patch": [],
+                "Quirks": {
+                    "AppleCpuPmCfgLock": false,
+                    "AppleXcpmCfgLock": false,
+                    "AppleXcpmExtraMsrs": false,
+                    "AppleXcpmForceBoost": false,
+                    "CustomSMBIOSGuid": false,
+                    "DisableIoMapper": false,
+                    "DisableLinkeditJettison": true,
+                    "DisableRtcChecksum": false,
+                    "ExtendBTFeatureFlags": false,
+                    "ExternalDiskIcons": false,
+                    "ForceAquantiaEthernet": false,
+                    "ForceSecureBootScheme": false,
+                    "IncreasePciBarSize": false,
+                    "LapicKernelPanic": false,
+                    "LegacyCommpage": false,
+                    "PanicNoKextDump": true,
+                    "PowerTimeoutKernelPanic": true,
+                    "ProvideCurrentCpuInfo": false,
+                    "SetApfsTrimTimeout": -1,
+                    "ThirdPartyDrives": false,
+                    "XhciPortLimit": false
+                },
+                "Scheme": {
+                    "CustomKernel": false,
+                    "FuzzyMatch": true,
+                    "KernelArch": "Auto",
+                    "KernelCache": "Auto"
+                }
+            },
+            "Misc": {
+                "BlessOverride": [],
+                "Boot": {
+                    "ConsoleAttributes": 0,
+                    "HibernateMode": "None",
+                    "HideAuxiliary": false,
+                    "LauncherOption": "Disabled",
+                    "LauncherPath": "Default",
+                    "PickerAttributes": 17,
+                    "PickerAudioAssist": false,
+                    "PickerMode": "Builtin",
+                    "PickerVariant": "Auto",
+                    "PollAppleHotKeys": false,
+                    "ShowPicker": true,
+                    "TakeoffDelay": 0,
+                    "Timeout": 5
+                },
+                "Debug": {
+                    "AppleDebug": false,
+                    "ApplePanic": false,
+                    "DisableWatchDog": true,
+                    "DisplayDelay": 0,
+                    "DisplayLevel": 2147483650,
+                    "LogModules": "*",
+                    "SysReport": false,
+                    "Target": 3
+                },
+                "Entries": [],
+                "Security": {
+                    "AllowSetDefault": true,
+                    "ApECID": 0,
+                    "AuthRestart": false,
+                    "BlacklistAppleUpdate": true,
+                    "DmgLoading": "Signed",
+                    "EnablePassword": false,
+                    "ExposeSensitiveData": 6,
+                    "HaltLevel": 2147483648,
+                    "PasswordHash": { _isData: true, value: "" },
+                    "PasswordSalt": { _isData: true, value: "" },
+                    "ScanPolicy": 0,
+                    "SecureBootModel": "Default",
+                    "Vault": "Optional"
+                },
+                "Serial": {
+                    "Init": false,
+                    "Override": false
+                },
+                "Tools": []
+            },
+            "NVRAM": {
+                "Add": {
+                    "4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14": {
+                        "DefaultBackgroundColor": { _isData: true, value: "AAAAAA" }
+                    },
+                    "4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102": {
+                        "rtc-blacklist": { _isData: true, value: "" }
+                    },
+                    "7C436110-AB2A-4BBB-A880-FE41995C9F82": {
+                        "ForceDisplayRotationInEFI": 0,
+                        "SystemAudioVolume": { _isData: true, value: "Rg" },
+                        "boot-args": "",
+                        "csr-active-config": { _isData: true, value: "AAAAAA" },
+                        "prev-lang:kbd": { _isData: true, value: "" },
+                        "run-efi-updater": "No"
+                    }
+                },
+                "Delete": {
+                    "4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14": ["DefaultBackgroundColor"],
+                    "4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102": ["rtc-blacklist"],
+                    "7C436110-AB2A-4BBB-A880-FE41995C9F82": ["ForceDisplayRotationInEFI", "SystemAudioVolume", "boot-args", "csr-active-config", "prev-lang:kbd"]
+                },
+                "LegacyOverwrite": false,
+                "LegacySchema": {
+                    "7C436110-AB2A-4BBB-A880-FE41995C9F82": ["EFILoginHiDPI", "EFIBluetoothDelay", "LocationServicesEnabled", "SystemAudioVolume", "SystemAudioVolumeDB", "SystemAudioVolumeSaved", "bluetoothActiveControllerInfo", "bluetoothInternalControllerInfo", "flagstate", "fmm-computer-name", "fmm-mobileme-token-FMM", "fmm-mobileme-token-FMM-BridgeHasAccount", "nvda_drv", "prev-lang:kbd"],
+                    "8BE4DF61-93CA-11D2-AA0D-00E098032B8C": ["Boot0080", "Boot0081", "Boot0082", "BootNext", "BootOrder"]
+                },
+                "WriteFlash": true
+            },
+            "PlatformInfo": {
+                "Automatic": true,
+                "CustomMemory": false,
+                "Generic": {
+                    "AdviseFeatures": false,
+                    "MaxBIOSVersion": false,
+                    "MLB": "",
+                    "ProcessorType": 0,
+                    "ROM": { _isData: true, value: "112233445566" },
+                    "SpoofVendor": true,
+                    "SystemMemoryStatus": "Auto",
+                    "SystemProductName": "",
+                    "SystemSerialNumber": "",
+                    "SystemUUID": ""
+                },
+                "UpdateDataHub": true,
+                "UpdateNVRAM": true,
+                "UpdateSMBIOS": true,
+                "UpdateSMBIOSMode": "Create",
+                "UseRawUuidEncoding": false
+            },
+            "UEFI": {
+                "APFS": {
+                    "EnableJumpstart": true,
+                    "GlobalConnect": false,
+                    "HideVerbose": true,
+                    "JumpstartHotPlug": false,
+                    "MinDate": 0,
+                    "MinVersion": 0
+                },
+                "AppleInput": {
+                    "AppleEvent": "Builtin",
+                    "CustomDelays": false,
+                    "GraphicsInputMirroring": true,
+                    "KeyInitialDelay": 50,
+                    "KeySubsequentDelay": 5,
+                    "PointerDwellClickTimeout": 0,
+                    "PointerDwellDoubleClickTimeout": 0,
+                    "PointerDwellRadius": 0,
+                    "PointerPollMask": -1,
+                    "PointerPollMax": 80,
+                    "PointerPollMin": 10,
+                    "PointerSpeedDiv": 1,
+                    "PointerSpeedMul": 1
+                },
+                "Audio": {
+                    "AudioCodec": 0,
+                    "AudioDevice": "PciRoot(0x0)/Pci(0x1b,0x0)",
+                    "AudioOutMask": 1,
+                    "AudioSupport": false,
+                    "DisconnectHda": false,
+                    "MaximumGain": -15,
+                    "MinimumAssistGain": -30,
+                    "MinimumAudibleGain": -55,
+                    "PlayChime": "Auto",
+                    "ResetTrafficClass": false,
+                    "SetupDelay": 0
+                },
+                "ConnectDrivers": true,
+                "Drivers": [],
+                "Input": {
+                    "KeyFiltering": false,
+                    "KeyForgetThreshold": 5,
+                    "KeySupport": true,
+                    "KeySupportMode": "Auto",
+                    "KeySwap": false,
+                    "PointerSupport": false,
+                    "PointerSupportMode": "ASUS",
+                    "TimerResolution": 50000
+                },
+                "Output": {
+                    "ClearScreenOnModeSwitch": false,
+                    "ConsoleFont": "",
+                    "ConsoleMode": "",
+                    "DirectGopRendering": false,
+                    "ForceResolution": false,
+                    "GopBurstMode": false,
+                    "GopPassThrough": "Disabled",
+                    "IgnoreTextInGraphics": false,
+                    "InitialMode": "Auto",
+                    "ProvideConsoleGop": true,
+                    "ReconnectGraphicsOnConnect": false,
+                    "ReconnectOnResChange": false,
+                    "ReplaceTabWithSpace": false,
+                    "Resolution": "Max",
+                    "SanitiseClearScreen": false,
+                    "TextRenderer": "BuiltinGraphics",
+                    "UgaPassThrough": false,
+                    "UIScale": 0
+                },
+                "ProtocolOverrides": {
+                    "AppleAudio": false,
+                    "AppleBootPolicy": false,
+                    "AppleDebugLog": false,
+                    "AppleEg2Info": false,
+                    "AppleFramebufferInfo": false,
+                    "AppleImageConversion": false,
+                    "AppleImg4Verification": false,
+                    "AppleKeyMap": false,
+                    "AppleRtcRam": false,
+                    "AppleSecureBoot": false,
+                    "AppleSmcIo": false,
+                    "AppleUserInterfaceTheme": false,
+                    "DataHub": false,
+                    "DeviceProperties": false,
+                    "FirmwareVolume": true,
+                    "HashServices": false,
+                    "OSInfo": false,
+                    "PciIo": false,
+                    "UnicodeCollation": false
+                },
+                "Quirks": {
+                    "ActivateHpetSupport": false,
+                    "DisableSecurityPolicy": false,
+                    "EnableVectorAcceleration": true,
+                    "EnableVmx": false,
+                    "ExitBootServicesDelay": 0,
+                    "ForceOcWriteFlash": false,
+                    "ForgeUefiSupport": false,
+                    "IgnoreInvalidFlexRatio": false,
+                    "ReleaseUsbOwnership": false,
+                    "ReloadOptionRoms": false,
+                    "RequestBootVarRouting": true,
+                    "ResizeGpuBars": -1,
+                    "ResizeUsePciRbIo": false,
+                    "ShimRetainProtocol": false,
+                    "TscSyncTimeout": 0,
+                    "UnblockFsConnect": false
+                },
+                "ReservedMemory": [],
+                "Unload": []
+            }
         };
-
-        this.generatedConfig = config;
-        return config;
     }
 
     generateBooter(hw, macOS) {
