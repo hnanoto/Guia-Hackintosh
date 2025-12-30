@@ -102,9 +102,73 @@ class ConfigGenerator {
     }
 
     validateAndCleanReport(data) {
-        if (!data.CPU || !data.Motherboard || !data.BIOS) {
-            throw new Error('Invalid hardware report: missing required sections');
+        // Check for common top-level keys and normalize if needed
+        const normalized = {};
+
+        // Helper to find key case-insensitively
+        const findKey = (obj, keyName) => {
+            const lowerKey = keyName.toLowerCase();
+            const found = Object.keys(obj).find(k => k.toLowerCase() === lowerKey || k.toLowerCase().replace(/\s/g, '') === lowerKey);
+            return found ? obj[found] : null;
+        };
+
+        normalized.CPU = findKey(data, "CPU") || {};
+        normalized.Motherboard = findKey(data, "Motherboard") || {};
+        normalized.BIOS = findKey(data, "BIOS") || {};
+        normalized.GPU = findKey(data, "GPU") || {};
+        normalized.Network = findKey(data, "Network") || {};
+        normalized.Sound = findKey(data, "Sound") || {};
+        normalized["Storage Controllers"] = findKey(data, "Storage Controllers") || findKey(data, "Storage") || {};
+
+        // Validation
+        if (!normalized.CPU || Object.keys(normalized.CPU).length === 0) {
+            throw new Error('Invalid hardware report: missing CPU section');
         }
+
+        // CPU Normalization
+        const cpuMap = {
+            "Processor Name": ["Processor Name", "Name", "Model"],
+            "Codename": ["Codename", "Code Name", "Microarchitecture"],
+            "Manufacturer": ["Manufacturer", "Vendor"]
+        };
+
+        for (const [target, sources] of Object.entries(cpuMap)) {
+            if (!normalized.CPU[target]) {
+                for (const src of sources) {
+                    if (normalized.CPU[src]) {
+                        normalized.CPU[target] = normalized.CPU[src];
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Motherboard Normalization
+        if (normalized.Motherboard) {
+            const moboMap = {
+                "Platform": ["Platform", "Type", "Chassis"],
+                "Chipset": ["Chipset", "PCH"]
+            };
+            for (const [target, sources] of Object.entries(moboMap)) {
+                if (!normalized.Motherboard[target]) {
+                    for (const src of sources) {
+                        if (normalized.Motherboard[src]) {
+                            normalized.Motherboard[target] = normalized.Motherboard[src];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Force Platform detection if missing
+        if (!normalized.Motherboard.Platform) {
+            const cpuName = normalized.CPU["Processor Name"] || "";
+            if (cpuName.match(/i\d-\d+[UHYM]|HQ|HK|G[147]/)) normalized.Motherboard.Platform = "Laptop";
+            else normalized.Motherboard.Platform = "Desktop";
+        }
+
+        data = normalized; // Use normalized structure
 
         if (data.CPU.Codename) {
             data.CPU.Codename = this.normalizeCPUCodename(data.CPU.Codename);
