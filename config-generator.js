@@ -629,7 +629,7 @@ class ConfigGenerator {
 
         const config = {
             "ACPI": {
-                "Add": [],
+                "Add": this.generateACPIAdd(hardwareData),
                 "Delete": [],
                 "Patch": [],
                 "Quirks": {
@@ -961,7 +961,7 @@ class ConfigGenerator {
         const isIntel12Plus = cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") || cpuCodename.includes("Meteor") || cpuCodename.includes("Arrow");
 
         return {
-            "Add": [],
+            "Add": this.generateKernelAdd(hw, macOS),
             "Block": [],
             "Emulate": this.generateKernelEmulate(hw, macOS),
             "Force": [],
@@ -972,7 +972,7 @@ class ConfigGenerator {
                 "AppleXcpmExtraMsrs": false, // Generally false unless specifically needed for Pentiums/HEDT
                 "AppleXcpmForceBoost": false,
                 "CustomSMBIOSGuid": false, // Use false for maximum compatibility
-                "DisableIoMapper": cpuMan === "Intel" && !isIntel12Plus, // VT-d
+                "DisableIoMapper": true, // VT-d (Safer to default true unless user specifically needs it)
                 "DisableLinkeditJettison": true,
                 "DisableRtcChecksum": this.needsDisableRtcChecksum(hw),
                 "ExtendBTFeatureFlags": false,
@@ -1310,6 +1310,181 @@ class ConfigGenerator {
             binary += String.fromCharCode(bytes[i]);
         }
         return window.btoa(binary);
+    }
+    // ========================================================================
+    // HELPER GENERATORS FOR ACPI AND KERNEL (IMPROVED)
+    // ========================================================================
+
+    generateACPIAdd(hw) {
+        const ssdts = [];
+        const platform = hw.Motherboard.Platform || "Desktop";
+        const cpuCodename = hw.CPU.Codename;
+        const cpuMan = hw.CPU.Manufacturer;
+        const mobo = hw.Motherboard;
+
+        // Path helper
+        const addSSDT = (name, comment) => {
+            ssdts.push({
+                "Comment": comment,
+                "Enabled": true,
+                "Path": name
+            });
+        };
+
+        if (cpuMan === "Intel") {
+            // PLUG - CPU Power Management
+            if (cpuCodename.includes("Haswell") || cpuCodename.includes("Broadwell") ||
+                cpuCodename.includes("Skylake") || cpuCodename.includes("Kaby") ||
+                cpuCodename.includes("Coffee") || cpuCodename.includes("Comet") ||
+                cpuCodename.includes("Rocket") || cpuCodename.includes("Alder") ||
+                cpuCodename.includes("Raptor")) {
+                addSSDT("SSDT-PLUG.aml", "CPU Power Management");
+            }
+
+            // EC - Embedded Controller
+            if (platform === "Desktop") {
+                if (cpuCodename.includes("Skylake") || cpuCodename.includes("Kaby") ||
+                    cpuCodename.includes("Coffee") || cpuCodename.includes("Comet") ||
+                    cpuCodename.includes("Rocket") || cpuCodename.includes("Alder") ||
+                    cpuCodename.includes("Raptor")) {
+                    addSSDT("SSDT-EC-USBX-DESKTOP.aml", "EC and USBX Power (Desktop)");
+                    addSSDT("SSDT-AWAC.aml", "RTC AWAC Fix");
+                } else if (cpuCodename.includes("Haswell") || cpuCodename.includes("Broadwell")) {
+                    addSSDT("SSDT-EC-DESKTOP.aml", "EC Fix (Desktop)");
+                }
+            } else {
+                // Laptop
+                addSSDT("SSDT-EC-USBX-LAPTOP.aml", "EC and USBX Power (Laptop)");
+                addSSDT("SSDT-PNLF.aml", "Backlight Control");
+                addSSDT("SSDT-XOSI.aml", "OSI Rename for I2C Trackpad");
+            }
+
+            // PMC - NVRAM
+            if (mobo.Chipset && (mobo.Chipset.includes("Z390") || mobo.Chipset.includes("B360") || mobo.Chipset.includes("H370"))) {
+                addSSDT("SSDT-PMC.aml", "NVRAM PMC Fix");
+            }
+
+            // IMEI
+            if (cpuCodename.includes("Sandy") || cpuCodename.includes("Ivy")) {
+                addSSDT("SSDT-IMEI.aml", "IMEI Fix");
+            }
+        }
+        else if (cpuMan === "AMD") {
+            addSSDT("SSDT-CPUR.aml", "B550/A520 CPU Support"); // General safe fallback for B550/A520, others ignore
+            if (platform === "Desktop") {
+                addSSDT("SSDT-EC-USBX-DESKTOP.aml", "EC and USBX Power");
+            }
+        }
+
+        return ssdts;
+    }
+
+    generateKernelAdd(hw, macOS) {
+        const kexts = [];
+        const platform = hw.Motherboard.Platform;
+
+        const addKext = (name, exec = true, plugin = false, bundlePathOverride = null) => {
+            // Handles simple kext structure assumption
+            const bundlePath = bundlePathOverride || (name + ".kext");
+            const executablePath = exec ? "Contents/MacOS/" + name : "";
+            const plistPath = "Contents/Info.plist";
+
+            kexts.push({
+                "Arch": "Any",
+                "BundlePath": bundlePath,
+                "Comment": name,
+                "Enabled": true,
+                "ExecutablePath": executablePath,
+                "MaxKernel": "",
+                "MinKernel": "",
+                "PlistPath": plistPath
+            });
+        };
+
+        // 1. Essentials
+        addKext("Lilu");
+        addKext("VirtualSMC");
+
+        // 2. Graphics & Audio
+        addKext("WhateverGreen");
+        addKext("AppleALC");
+
+        // 3. Sensors (VirtualSMC Plugins)
+        // Note: Plugins usually reside inside VirtualSMC, but standard OC setups often have them as separate entries in config.plist pointing to kext files in Kexts folder.
+        if (platform === "Laptop") {
+            addKext("SMCBatteryManager");
+            addKext("SMCLightSensor");
+        } else {
+            addKext("SMCProcessor");
+            addKext("SMCSuperIO");
+        }
+
+        // 4. Ethernet (Auto-Detect)
+        if (hw.Network) {
+            const netKeys = Object.keys(hw.Network);
+            // Check descriptions or names
+            for (const key of netKeys) {
+                const net = hw.Network[key];
+                const lowerKey = key.toLowerCase();
+                const deviceId = net["Device ID"] || "";
+
+                if (lowerKey.includes("rtl8111") || lowerKey.includes("rtl8168") || deviceId.startsWith("10EC")) {
+                    addKext("RealtekRTL8111");
+                }
+                else if (lowerKey.includes("rtl8125") || deviceId === "10EC-8125") {
+                    addKext("LucyRTL8125Ethernet");
+                }
+                else if (lowerKey.includes("i219") || lowerKey.includes("i218") || lowerKey.includes("i217") || lowerKey.includes("82579")) {
+                    addKext("IntelMausi");
+                }
+                else if (lowerKey.includes("i225")) {
+                    // Monterey+ natively supports I225-V with boot-arg e1000=0 usually, or AppleIGC
+                    const darwin = macOS ? parseInt(macOS.darwin.split('.')[0]) : 20;
+                    if (darwin < 21) {
+                        // Older macOS might need patches or different kexts, but AppleIGC is a good modern solution for I225
+                        addKext("AppleIGC");
+                    }
+                }
+            }
+        }
+
+        // 5. WiFi (Intel/Broadcom)
+        // Basic heuristics
+        if (JSON.stringify(hw.Network).toLowerCase().includes("ax200") || JSON.stringify(hw.Network).toLowerCase().includes("ax210") || JSON.stringify(hw.Network).toLowerCase().includes("intel wi-fi")) {
+            // AirportItlwm depends on macOS version!
+            const version = macOS.name.split(' ')[1]; // "Sonoma", "Ventura", etc.
+            addKext(`AirportItlwm`, true, false, `AirportItlwm-${version}.kext`);
+            addKext("IntelBluetoothFirmware");
+            addKext("IntelBTPatcher"); // Required for Monterey+
+            addKext("BlueToolFixup"); // Required for Monterey+
+        }
+
+        // 6. USB
+        addKext("USBToolBox", true);
+        addKext("UTBMap", false); // Map usually has no executable, just plist
+        // Fallback if no map
+        // addKext("USBInjectAll"); 
+
+        // 7. Laptop Specific (Input)
+        if (platform === "Laptop") {
+            addKext("VoodooPS2Controller");
+            // Add sub-kexts of VoodooPS2? Usually needed unless using VoodooInput separately.
+            // For simplicity, we add the main controller. Detailed setups might add specific plugins.
+
+            addKext("VoodooI2C");
+            addKext("VoodooI2CHID");
+
+            // Brightness
+            addKext("BrightnessKeys");
+        }
+
+        // 8. AMD Specific
+        if (hw.CPU.Manufacturer === "AMD") {
+            addKext("AMDRyzenCPUPowerManagement");
+            // XLNCUSBFix?
+        }
+
+        return kexts;
     }
 }
 
