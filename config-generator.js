@@ -1449,20 +1449,38 @@ class ConfigGenerator {
     generateNVRAM(hw, macOS) {
         const bootArgs = this.generateBootArgs(hw, macOS);
 
+        // We return a simplified structure here because the base 'Sample.plist' structure
+        // already contains the placeholders. We just need to RETURN the overrides
+        // However, the caller (generateConfig) replaces the entire object for NVRAM.Add
+        // so we must provide the FULL objects for Add and Delete to be safe.
+
         return {
             "Add": {
-                "4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102": {},
+                "4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14": {
+                    "DefaultBackgroundColor": { _isData: true, value: "AAAAAA" }
+                },
+                "4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102": {
+                    "rtc-blacklist": { _isData: true, value: "" }
+                },
                 "7C436110-AB2A-4BBB-A880-FE41995C9F82": {
+                    "ForceDisplayRotationInEFI": 0,
+                    "SystemAudioVolume": { _isData: true, value: "Rg" },
                     "boot-args": bootArgs,
                     "csr-active-config": this.generateCSRConfig(macOS),
-                    "prev-lang:kbd": "en-US:0"
+                    "prev-lang:kbd": { _isData: true, value: "" }, // Keep empty or set default
+                    "run-efi-updater": "No"
                 }
             },
             "Delete": {
-                "4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102": [],
-                "7C436110-AB2A-4BBB-A880-FE41995C9F82": ["boot-args"]
+                "4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14": ["DefaultBackgroundColor"],
+                "4D1FDA02-38C7-4A6A-9CC6-4BCCA8B30102": ["rtc-blacklist"],
+                "7C436110-AB2A-4BBB-A880-FE41995C9F82": ["ForceDisplayRotationInEFI", "SystemAudioVolume", "boot-args", "csr-active-config", "prev-lang:kbd"]
             },
             "LegacyOverwrite": false,
+            "LegacySchema": { // Hardcoded standard schema
+                "7C436110-AB2A-4BBB-A880-FE41995C9F82": ["EFILoginHiDPI", "EFIBluetoothDelay", "LocationServicesEnabled", "SystemAudioVolume", "SystemAudioVolumeDB", "SystemAudioVolumeSaved", "bluetoothActiveControllerInfo", "bluetoothInternalControllerInfo", "flagstate", "fmm-computer-name", "fmm-mobileme-token-FMM", "fmm-mobileme-token-FMM-BridgeHasAccount", "nvda_drv", "prev-lang:kbd"],
+                "8BE4DF61-93CA-11D2-AA0D-00E098032B8C": ["Boot0080", "Boot0081", "Boot0082", "BootNext", "BootOrder"]
+            },
             "WriteFlash": true
         };
     }
