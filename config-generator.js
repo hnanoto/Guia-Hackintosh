@@ -691,8 +691,19 @@ class ConfigGenerator {
         console.log(`Generating config for ${smbiosModel} on macOS ${macOSVersion.name}`);
 
         // Use Sample.plist structure as base
-        // We do deep copy to avoid mutating the template
-        const baseConfig = JSON.parse(JSON.stringify(this.getSamplePlistStructure()));
+        // 1. Try to fetch online (Latest OpenCore)
+        // 2. Fallback to offline structure
+        let baseConfig;
+        try {
+            baseConfig = await this.getLatestSamplePlist();
+            console.log("ConfigGenerator: Using online Sample.plist from OpenCore repository");
+        } catch (e) {
+            console.warn("ConfigGenerator: Could not fetch online Sample.plist, using offline backup:", e);
+            baseConfig = this.getSamplePlistStructure();
+        }
+
+        // Deep copy
+        baseConfig = JSON.parse(JSON.stringify(baseConfig));
 
         // --- ACPI ---
         baseConfig.ACPI.Add = this.generateACPIAdd(hardwareData);
@@ -755,6 +766,92 @@ class ConfigGenerator {
 
         this.generatedConfig = baseConfig;
         return baseConfig;
+    }
+
+    // ========================================================================
+    // DYNAMIC FETCHER (mimics OpCore Simplify)
+    // ========================================================================
+
+    async getLatestSamplePlist() {
+        // Fetch from Acidanthera Source
+        // Note: In some local environments (file://), CORS might block this.
+        // It works in most local dev servers or hosted environments.
+        const url = 'https://raw.githubusercontent.com/acidanthera/OpenCorePkg/master/Docs/Sample.plist';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Fetch status: ' + res.status);
+        const text = await res.text();
+        return this.parsePlistXML(text);
+    }
+
+    parsePlistXML(xmlContent) {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlContent, "text/xml");
+        const plist = xmlDoc.getElementsByTagName("plist")[0];
+        if (!plist) throw new Error("Invalid plist XML");
+
+        let rootDict = null;
+        for (let i = 0; i < plist.childNodes.length; i++) {
+            if (plist.childNodes[i].nodeName === 'dict') {
+                rootDict = plist.childNodes[i];
+                break;
+            }
+        }
+        return this.parsePlistNode(rootDict);
+    }
+
+    parsePlistNode(node) {
+        if (!node) return null;
+
+        switch (node.nodeName) {
+            case 'dict':
+                const obj = {};
+                let key = null;
+                for (let i = 0; i < node.childNodes.length; i++) {
+                    const child = node.childNodes[i];
+                    if (child.nodeName === 'key') {
+                        key = child.textContent;
+                    } else if (child.nodeType === 1) { // Element
+                        if (key) {
+                            obj[key] = this.parsePlistNode(child);
+                            key = null;
+                        }
+                    }
+                }
+                return obj;
+            case 'array':
+                const arr = [];
+                for (let i = 0; i < node.childNodes.length; i++) {
+                    const child = node.childNodes[i];
+                    if (child.nodeType === 1) { // Element
+                        arr.push(this.parsePlistNode(child));
+                    }
+                }
+                return arr;
+            case 'string': return node.textContent;
+            case 'integer': return parseInt(node.textContent, 10);
+            case 'real': return parseFloat(node.textContent);
+            case 'true': return true;
+            case 'false': return false;
+            case 'data':
+                return { _isData: true, value: this.base64ToHex(node.textContent) };
+            case 'date': return node.textContent;
+            default: return null;
+        }
+    }
+
+    base64ToHex(str) {
+        try {
+            const bin = atob(str.replace(/\s/g, ''));
+            let hex = [];
+            for (let i = 0; i < bin.length; i++) {
+                let h = bin.charCodeAt(i).toString(16).toUpperCase();
+                if (h.length < 2) h = "0" + h;
+                hex.push(h);
+            }
+            return hex.join("");
+        } catch (e) {
+            return "";
+        }
     }
 
     getSamplePlistStructure() {
