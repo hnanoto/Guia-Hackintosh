@@ -38,12 +38,26 @@
             top: 100px;
             right: 2rem;
             z-index: 1001;
-            background: rgba(29, 29, 31, 0.95);
+            background: var(--header-bg);
             backdrop-filter: blur(20px);
             padding: 1rem;
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(128, 128, 128, 0.1);
             box-shadow: var(--shadow);
+            transform-origin: top right;
+            animation: scaleIn 0.2s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .language-selector h4 {
@@ -59,10 +73,10 @@
 
         .lang-btn {
             padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--search-bg);
+            border: 1px solid rgba(128, 128, 128, 0.1);
             border-radius: 8px;
-            color: var(--text);
+            color: var(--header-text);
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 0.9rem;
@@ -70,7 +84,7 @@
         }
 
         .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(128, 128, 128, 0.2);
             transform: translateY(-2px);
         }
 
@@ -369,6 +383,17 @@
             right: 0;
             margin-top: 1rem;
             display: none;
+        }
+
+        /* Bridge the gap so mouse doesn't lose focus */
+        .language-selector::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: transparent;
         }
 
         .language-wrapper {
