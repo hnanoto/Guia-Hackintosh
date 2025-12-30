@@ -8756,12 +8756,43 @@ PciRoot(0x0)/Pci(0x2,0x0)
         });
 
         // ========================================
+        // SEARCH FUNCTIONALITY
+        // ========================================
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            if (!searchInput) return;
+
+            searchInput.addEventListener('input', function (e) {
+                const query = e.target.value.toLowerCase();
+                // Filterable items: Cards, Accordion Items, Table Rows
+                const items = document.querySelectorAll('.accordion-item, .card, .stat-card, tbody tr');
+
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(query)) {
+                        item.style.display = '';
+
+                        // If it's an accordion item and we have a specific query, 
+                        // we might want to ensure the parent accordion is visible if it was nested (not the case here usually)
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                // Handle section visibility (optional: hide empty sections)
+                // This is a bit more expensive, so skipping for now to ensure performance.
+            });
+        }
+
+        // ========================================
         // INITIALIZATION
         // ========================================
 
         document.addEventListener('DOMContentLoaded', function () {
             initLanguage();
             fetchLatestVersions();
+            setupSearch();
 
             // Auto-refresh every 30 minutes
             setInterval(fetchLatestVersions, 30 * 60 * 1000);
