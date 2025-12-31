@@ -9531,71 +9531,86 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
             if (term.length === 0) {
                 // Reset visibility efficiently
-                document.querySelectorAll('section, .card, .stat-card, .accordion-item, tbody tr, .alert, .table-container').forEach(el => {
+                document.querySelectorAll('section, .card, .stat-card, .accordion-item, tbody tr, .alert, .code-block, details').forEach(el => {
                     el.style.display = '';
                     el.style.opacity = '1';
+                    // Reset highlights or active states if needed
+                    if (el.tagName === 'DETAILS') el.removeAttribute('open');
                 });
                 return;
             }
 
             sections.forEach(section => {
-                // 1. Check if Section Header matches
-                // We look for headers: .section-header h2, or just h2/h3 as fallback
+                // 1. Broad Text Check: Does the ENTIRE section contain the term?
+                // This ensures we never hide a section if the term is in a paragraph (<p>) or list (<ul>) outside cards.
+                const sectionText = section.textContent.toLowerCase();
+                const isSectionMatch = sectionText.includes(term);
+
+                // If absolutely no match in the whole section, hide it and move on.
+                if (!isSectionMatch) {
+                    section.style.display = 'none';
+                    return;
+                }
+
+                // If we are here, there is a match SOMEWHERE in the section.
+                // We show the section, but we need to refine the visibility of inner items to highlight the match.
+                section.style.display = '';
+                section.style.opacity = '1';
+
+                // 2. Check Header specifically to see if we should show ALL children
                 const sectionHeader = section.querySelector('.section-header h2') || section.querySelector('h2') || section.querySelector('h3');
-                const sectionTitle = sectionHeader ? sectionHeader.textContent.toLowerCase() : '';
-                const isSectionMatch = sectionTitle.includes(term);
+                const isHeaderMatch = sectionHeader && sectionHeader.textContent.toLowerCase().includes(term);
 
-                // 2. Identify all filterable "Leaf" items in this section
-                // Added .alert, .code-block and ensure we catch all cards
-                const items = section.querySelectorAll('.card, .stat-card, .accordion-item, tbody tr, .alert, .code-block');
-
-                let visibleItemsCount = 0;
+                // 3. Filter "Structured Items" (Cards, Rows, Accordions/Details)
+                // If header matches, we show all items. If not, we filter them.
+                const items = section.querySelectorAll('.card, .stat-card, .accordion-item, tbody tr, .alert, .code-block, details');
 
                 if (items.length > 0) {
                     items.forEach(item => {
-                        const text = item.textContent.toLowerCase();
-                        // If Section Header matches, we show ALL items in it (contextual search)
-                        // OR if the item itself matches
-                        if (isSectionMatch || text.includes(term)) {
+                        // If Header matches, show everything.
+                        if (isHeaderMatch) {
                             item.style.display = '';
                             item.style.opacity = '1';
-                            visibleItemsCount++;
+                            return;
+                        }
+
+                        // Otherwise, check item content
+                        const text = item.textContent.toLowerCase();
+                        if (text.includes(term)) {
+                            item.style.display = '';
+                            item.style.opacity = '1';
+
+                            // AUTO-EXPAND DETAILS/ACCORDIONS
+                            // If this item is a <details> tag, open it.
+                            if (item.tagName === 'DETAILS') {
+                                item.setAttribute('open', 'true');
+                            }
+                            // If this item is inside a <details> (e.g. a list item match inside a card details), find parent details
+                            let parent = item.parentElement;
+                            while (parent && parent !== section) {
+                                if (parent.tagName === 'DETAILS') {
+                                    parent.setAttribute('open', 'true');
+                                }
+                                parent = parent.parentElement;
+                            }
+
                         } else {
                             item.style.display = 'none';
                         }
                     });
-                } else {
-                    // Fallback for sections without designated items (e.g. pure text sections)
-                    // If the section textual content matches (and it has no structured items), show it.
-                    // But be careful: if we hid all items, we shouldn't show the section just because the section *contained* them.
-                    // This else block is for sections that have NO cards/rows/etc.
-                    if (section.textContent.toLowerCase().includes(term)) {
-                        visibleItemsCount = 1;
-                    }
                 }
 
-                // 3. Handle Table Containers visibility inside this section
+                // 4. Handle Table Containers visibility inside this section
                 // If a table has filtered out all rows, hide the container/header too
                 section.querySelectorAll('.table-container').forEach(tableContainer => {
-                    const rows = tableContainer.querySelectorAll('tbody tr');
-                    if (rows.length > 0) {
-                        const visibleRows = Array.from(rows).filter(r => r.style.display !== 'none');
-                        if (visibleRows.length === 0) {
-                            tableContainer.style.display = 'none';
-                        } else {
-                            tableContainer.style.display = '';
-                        }
+                    // Check if there are any visible rows
+                    const visibleRows = Array.from(tableContainer.querySelectorAll('tbody tr')).filter(r => r.style.display !== 'none');
+                    if (visibleRows.length === 0 && !isHeaderMatch) {
+                        tableContainer.style.display = 'none';
+                    } else {
+                        tableContainer.style.display = '';
                     }
                 });
-
-                // 4. Section Visibility logic
-                // If section matched (Title) OR has visible children, show it.
-                if (isSectionMatch || visibleItemsCount > 0) {
-                    section.style.display = '';
-                    section.style.opacity = '1';
-                } else {
-                    section.style.display = 'none';
-                }
             });
         }
 
