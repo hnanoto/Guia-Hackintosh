@@ -9528,10 +9528,11 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         function performSearch(term) {
             const sections = document.querySelectorAll('section');
+            let firstVisibleElement = null;
 
             if (term.length === 0) {
                 // Reset visibility efficiently
-                document.querySelectorAll('section, .card, .stat-card, .accordion-item, tbody tr, .alert, .code-block, details').forEach(el => {
+                document.querySelectorAll('section, .section-header, .card, .stat-card, .accordion-item, tbody tr, .alert, .code-block, details').forEach(el => {
                     el.style.display = '';
                     el.style.opacity = '1';
                     // Reset highlights or active states if needed
@@ -9541,51 +9542,50 @@ PciRoot(0x0)/Pci(0x2,0x0)
             }
 
             sections.forEach(section => {
-                // 1. Broad Text Check: Does the ENTIRE section contain the term?
-                // This ensures we never hide a section if the term is in a paragraph (<p>) or list (<ul>) outside cards.
+                // 1. Check if ENTIRE section contains the term
                 const sectionText = section.textContent.toLowerCase();
-                const isSectionMatch = sectionText.includes(term);
+                const hasSectionMatch = sectionText.includes(term);
 
-                // If absolutely no match in the whole section, hide it and move on.
-                if (!isSectionMatch) {
+                // If no match at all, hide entire section including header
+                if (!hasSectionMatch) {
                     section.style.display = 'none';
                     return;
                 }
 
-                // If we are here, there is a match SOMEWHERE in the section.
-                // We show the section, but we need to refine the visibility of inner items to highlight the match.
-                section.style.display = '';
-                section.style.opacity = '1';
-
-                // 2. Check Header specifically to see if we should show ALL children
+                // 2. Check if section header matches
                 const sectionHeader = section.querySelector('.section-header h2') || section.querySelector('h2') || section.querySelector('h3');
                 const isHeaderMatch = sectionHeader && sectionHeader.textContent.toLowerCase().includes(term);
 
-                // 3. Filter "Structured Items" (Cards, Rows, Accordions/Details)
-                // If header matches, we show all items. If not, we filter them.
+                // 3. Filter structured items
                 const items = section.querySelectorAll('.card, .stat-card, .accordion-item, tbody tr, .alert, .code-block, details');
+                let hasVisibleContent = false;
 
                 if (items.length > 0) {
                     items.forEach(item => {
-                        // If Header matches, show everything.
+                        // If header matches, show everything
                         if (isHeaderMatch) {
                             item.style.display = '';
                             item.style.opacity = '1';
+                            hasVisibleContent = true;
+                            if (!firstVisibleElement) firstVisibleElement = item;
                             return;
                         }
 
-                        // Otherwise, check item content
+                        // Check item content
                         const text = item.textContent.toLowerCase();
                         if (text.includes(term)) {
                             item.style.display = '';
                             item.style.opacity = '1';
+                            hasVisibleContent = true;
+
+                            // Track first visible element for scrolling
+                            if (!firstVisibleElement) firstVisibleElement = item;
 
                             // AUTO-EXPAND DETAILS/ACCORDIONS
-                            // If this item is a <details> tag, open it.
                             if (item.tagName === 'DETAILS') {
                                 item.setAttribute('open', 'true');
                             }
-                            // If this item is inside a <details> (e.g. a list item match inside a card details), find parent details
+                            // Expand parent details
                             let parent = item.parentElement;
                             while (parent && parent !== section) {
                                 if (parent.tagName === 'DETAILS') {
@@ -9593,25 +9593,49 @@ PciRoot(0x0)/Pci(0x2,0x0)
                                 }
                                 parent = parent.parentElement;
                             }
-
                         } else {
                             item.style.display = 'none';
                         }
                     });
+                } else {
+                    // Section has no structured items but contains the term (e.g., plain text sections)
+                    hasVisibleContent = true;
+                    if (!firstVisibleElement) firstVisibleElement = section;
                 }
 
-                // 4. Handle Table Containers visibility inside this section
-                // If a table has filtered out all rows, hide the container/header too
+                // 4. Handle table containers
                 section.querySelectorAll('.table-container').forEach(tableContainer => {
-                    // Check if there are any visible rows
                     const visibleRows = Array.from(tableContainer.querySelectorAll('tbody tr')).filter(r => r.style.display !== 'none');
                     if (visibleRows.length === 0 && !isHeaderMatch) {
                         tableContainer.style.display = 'none';
                     } else {
                         tableContainer.style.display = '';
+                        if (visibleRows.length > 0 && !firstVisibleElement) {
+                            firstVisibleElement = tableContainer;
+                        }
                     }
                 });
+
+                // 5. Hide section header if no visible content
+                const sectionHeaderContainer = section.querySelector('.section-header');
+                if (!hasVisibleContent && !isHeaderMatch) {
+                    section.style.display = 'none';
+                    if (sectionHeaderContainer) sectionHeaderContainer.style.display = 'none';
+                } else {
+                    section.style.display = '';
+                    if (sectionHeaderContainer) sectionHeaderContainer.style.display = '';
+                }
             });
+
+            // 6. AUTO-SCROLL to first visible result
+            if (firstVisibleElement) {
+                setTimeout(() => {
+                    firstVisibleElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }, 100);
+            }
         }
 
         // Theme Toggle
