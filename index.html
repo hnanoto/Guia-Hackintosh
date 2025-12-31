@@ -9092,29 +9092,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
         // ========================================
 
         function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            if (!searchInput) return;
-
-            searchInput.addEventListener('input', function (e) {
-                const query = e.target.value.toLowerCase();
-                // Filterable items: Cards, Accordion Items, Table Rows
-                const items = document.querySelectorAll('.accordion-item, .card, .stat-card, tbody tr');
-
-                items.forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    if (text.includes(query)) {
-                        item.style.display = '';
-
-                        // If it's an accordion item and we have a specific query, 
-                        // we might want to ensure the parent accordion is visible if it was nested (not the case here usually)
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-
-                // Handle section visibility (optional: hide empty sections)
-                // This is a bit more expensive, so skipping for now to ensure performance.
-            });
+            // Legacy search disabled in favor of optimized version below
         }
 
         // ========================================
@@ -9533,12 +9511,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
             URL.revokeObjectURL(url);
         }
 
-        // Search Functionality (Optimized)
+        // Search Functionality (Optimized & Robust)
         let searchTimeout;
-        // Cache elements to improve performance
-        // We defer this until DOMContentLoaded or first interaction if preferred, 
-        // but here we know elements exist or will exist shorty.
-        // Actually, some elements might be dynamic (like latest versions), so let's query inside but optimize.
 
         document.getElementById('searchInput').addEventListener('input', function (e) {
             clearTimeout(searchTimeout);
@@ -9553,47 +9527,74 @@ PciRoot(0x0)/Pci(0x2,0x0)
         });
 
         function performSearch(term) {
-            // Query selector is somewhat expensive, but necessary if content is dynamic.
-            // If content is mostly static, we could cache this.
-            // For now, let's optimize the loop.
-            const contentSections = document.querySelectorAll('section, .card, tbody tr');
+            const sections = document.querySelectorAll('section');
 
             if (term.length === 0) {
                 // Reset visibility efficiently
-                contentSections.forEach(el => {
-                    if (el.style.display === 'none') {
-                        el.style.display = '';
-                        el.style.opacity = '1';
-                    }
+                document.querySelectorAll('section, .card, .stat-card, .accordion-item, tbody tr, .alert, .table-container').forEach(el => {
+                    el.style.display = '';
+                    el.style.opacity = '1';
                 });
                 return;
             }
 
-            contentSections.forEach(el => {
-                // innerText causes reflow. textContent is much faster.
-                // We trade a tiny bit of accuracy (hidden text) for massive speed.
-                const text = el.textContent.toLowerCase();
-                const isMatch = text.includes(term);
+            sections.forEach(section => {
+                // 1. Check if Section Header matches
+                // We look for headers: .section-header h2, or just h2/h3 as fallback
+                const sectionHeader = section.querySelector('.section-header h2') || section.querySelector('h2') || section.querySelector('h3');
+                const sectionTitle = sectionHeader ? sectionHeader.textContent.toLowerCase() : '';
+                const isSectionMatch = sectionTitle.includes(term);
 
-                if (el.tagName === 'SECTION') {
-                    // Sections acts as containers. 
-                    // If a section matches, we show it. 
-                    // (Logic: If term is found anywhere in section, show section. 
-                    // Granular framing handles the kids).
-                    if (isMatch) {
-                        el.style.display = '';
-                        el.style.opacity = '1';
-                    } else {
-                        el.style.display = 'none';
-                    }
+                // 2. Identify all filterable "Leaf" items in this section
+                // Added .alert, .code-block and ensure we catch all cards
+                const items = section.querySelectorAll('.card, .stat-card, .accordion-item, tbody tr, .alert, .code-block');
+
+                let visibleItemsCount = 0;
+
+                if (items.length > 0) {
+                    items.forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        // If Section Header matches, we show ALL items in it (contextual search)
+                        // OR if the item itself matches
+                        if (isSectionMatch || text.includes(term)) {
+                            item.style.display = '';
+                            item.style.opacity = '1';
+                            visibleItemsCount++;
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
                 } else {
-                    // Cards and Rows
-                    if (isMatch) {
-                        el.style.display = '';
-                        el.style.opacity = '1';
-                    } else {
-                        el.style.display = 'none';
+                    // Fallback for sections without designated items (e.g. pure text sections)
+                    // If the section textual content matches (and it has no structured items), show it.
+                    // But be careful: if we hid all items, we shouldn't show the section just because the section *contained* them.
+                    // This else block is for sections that have NO cards/rows/etc.
+                    if (section.textContent.toLowerCase().includes(term)) {
+                        visibleItemsCount = 1;
                     }
+                }
+
+                // 3. Handle Table Containers visibility inside this section
+                // If a table has filtered out all rows, hide the container/header too
+                section.querySelectorAll('.table-container').forEach(tableContainer => {
+                    const rows = tableContainer.querySelectorAll('tbody tr');
+                    if (rows.length > 0) {
+                        const visibleRows = Array.from(rows).filter(r => r.style.display !== 'none');
+                        if (visibleRows.length === 0) {
+                            tableContainer.style.display = 'none';
+                        } else {
+                            tableContainer.style.display = '';
+                        }
+                    }
+                });
+
+                // 4. Section Visibility logic
+                // If section matched (Title) OR has visible children, show it.
+                if (isSectionMatch || visibleItemsCount > 0) {
+                    section.style.display = '';
+                    section.style.opacity = '1';
+                } else {
+                    section.style.display = 'none';
                 }
             });
         }
