@@ -2321,20 +2321,22 @@
 
             <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
                 <!-- AMD Card -->
-                                <div class="card">
+                <div class="card">
                     <div class="card-icon"><i class="fas fa-microchip" style="color: #EF4444;"></i></div>
                     <h3 data-i18n="hw-amd-title">AMD Ryzen (Zen)</h3>
                     <p data-i18n="hw-amd-desc">Ryzen 1000-7000 & Threadripper</p>
 
                     <!-- ACPI -->
                     <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             ACPI
                         </summary>
                         <div style="padding: 10px;">
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
                                 <li><strong>SSDT-EC-USBX-DESKTOP.aml</strong> (Mandatory)</li>
-                                <li><strong>SSDT-CPUR.aml</strong> (B550/A520/TRX40) or <strong>SSDT-PLUG.aml</strong> (Older)</li>
+                                <li><strong>SSDT-CPUR.aml</strong> (B550/A520/TRX40) or <strong>SSDT-PLUG.aml</strong>
+                                    (Older)</li>
                                 <li>SSDT-SBUS-MCHC.aml (Recommended)</li>
                             </ul>
                         </div>
@@ -2342,7 +2344,8 @@
 
                     <!-- Booter -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Booter
                         </summary>
                         <div style="padding: 10px;">
@@ -2358,13 +2361,16 @@
 
                     <!-- Kernel -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Kernel
                         </summary>
                         <div style="padding: 10px;">
                             <h5 style="color: var(--primary); font-size: 0.9em;">AMD Patches</h5>
                             <div style="font-size:0.85rem; margin-bottom:10px; color: var(--warning);">
-                                <strong>Mandatory:</strong> <a href="https://github.com/AMD-OSX/AMD_Vanilla" target="_blank" style="color:var(--text); text-decoration:underline;">AMD_Vanilla Patches</a>
+                                <strong>Mandatory:</strong> <a href="https://github.com/AMD-OSX/AMD_Vanilla"
+                                    target="_blank" style="color:var(--text); text-decoration:underline;">AMD_Vanilla
+                                    Patches</a>
                             </div>
                             <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
@@ -2383,12 +2389,14 @@
 
                     <!-- Misc / NVRAM -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Misc & NVRAM
                         </summary>
                         <div style="padding: 10px;">
                             <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
-                            <code style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 npci=0x2000 alcid=1</code>
+                            <code
+                                style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 npci=0x2000 alcid=1</code>
                             <div style="margin-top:10px; font-size:0.85rem;">
                                 <strong>PlatformInfo (SMBIOS):</strong><br>
                                 MacPro7,1 (Recommended) or iMacPro1,1
@@ -2398,7 +2406,8 @@
 
                     <!-- UEFI -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             UEFI & BIOS
                         </summary>
                         <div style="padding: 10px;">
@@ -2412,14 +2421,15 @@
                 </div>
 
                 <!-- Intel 10th Card -->
-                                <div class="card">
+                <div class="card">
                     <div class="card-icon"><i class="fas fa-microchip" style="color: #0071C5;"></i></div>
                     <h3 data-i18n="hw-intel-10-title">Intel 8th-10th Gen</h3>
                     <p data-i18n="hw-intel-10-desc">Comet Lake (Native)</p>
 
                     <!-- ACPI -->
                     <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             ACPI
                         </summary>
                         <div style="padding: 10px;">
@@ -2434,7 +2444,8 @@
 
                     <!-- Booter -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Booter
                         </summary>
                         <div style="padding: 10px;">
@@ -2450,7 +2461,8 @@
 
                     <!-- DeviceProperties -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             DeviceProperties
                         </summary>
                         <div style="padding: 10px;">
@@ -2470,7 +2482,8 @@
 
                     <!-- Kernel -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Kernel
                         </summary>
                         <div style="padding: 10px;">
@@ -2486,7 +2499,8 @@
 
                     <!-- PlatformInfo / Misc -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             PlatformInfo & Misc
                         </summary>
                         <div style="padding: 10px;">
@@ -2503,14 +2517,15 @@
                 </div>
 
                 <!-- Intel 12th+ Card -->
-                                <div class="card">
+                <div class="card">
                     <div class="card-icon"><i class="fas fa-microchip" style="color: #00C7FD;"></i></div>
                     <h3 data-i18n="hw-intel-12-title">Intel 12th-14th Gen</h3>
                     <p data-i18n="hw-intel-12-desc">Alder/Raptor (Spoof)</p>
 
                     <!-- ACPI -->
                     <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             ACPI
                         </summary>
                         <div style="padding: 10px;">
@@ -2525,7 +2540,8 @@
 
                     <!-- Booter -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Booter
                         </summary>
                         <div style="padding: 10px;">
@@ -2542,14 +2558,17 @@
 
                     <!-- Kernel / Spoof -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Kernel (Spoof & Quirks)
                         </summary>
                         <div style="padding: 10px;">
                             <h5 style="color: var(--primary); font-size: 0.9em;">Emulate (Comet Lake Spoof)</h5>
                             <div style="font-size:0.8rem; font-family:monospace; margin-bottom:10px;">
-                                Cpuid1Data: <span style="color:var(--success)">EB060800 00000000 00000000 00000000</span><br>
-                                Cpuid1Mask: <span style="color:var(--success)">FFFFFFFF 00000000 00000000 00000000</span>
+                                Cpuid1Data: <span style="color:var(--success)">55060A00 00000000 00000000
+                                    00000000</span><br>
+                                Cpuid1Mask: <span style="color:var(--success)">FFFFFFFF 00000000 00000000
+                                    00000000</span>
                             </div>
                             <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
@@ -2558,14 +2577,16 @@
                                 <li>PowerTimeoutKernelPanic: <code>True</code></li>
                             </ul>
                             <div style="margin-top:10px; font-size:0.8rem; color:var(--text-secondary);">
-                                <strong>Note:</strong> iGPU (UHD 770) is NOT supported. You need a dedicated GPU (AMD RX 400/500/5000/6000 series).
+                                <strong>Note:</strong> iGPU (UHD 770) is NOT supported. You need a dedicated GPU (AMD RX
+                                400/500/5000/6000 series).
                             </div>
                         </div>
                     </details>
 
                     <!-- PlatformInfo -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             PlatformInfo & UEFI
                         </summary>
                         <div style="padding: 10px;">
@@ -2575,7 +2596,7 @@
                                 <strong>iMacPro1,1</strong> (Alternative)
                             </div>
                             <h5 style="color: var(--primary); font-size: 0.9em;">UEFI Quirks</h5>
-                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
                                 <li>ResizeAppleGpuBars: <code>-1</code> (Disabled - Critical!)</li>
                             </ul>
                             <h5 style="color: var(--primary); font-size: 0.9em; margin-top:10px;">Boot-args</h5>
@@ -9436,13 +9457,13 @@ PciRoot(0x0)/Pci(0x2,0x0)
             setupSearch();
 
             // Auto-refresh every 30 minutes
-            setInterval(fetchLatestVersions, 30 * 60 * 1000);
+            setInterval(fetchLatestVers, 00);
         });
     </script>
 
     <script>
-        /* =================================== 
-         * ADVANCED CONFIG GENERATOR 
+        /* ==         ======================== 
+            DVANCED CONFIG GENERATOR 
          * =================================== */
         const DATASETS = {
             IntelChipsets: {
@@ -9996,8 +10017,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         // Initialize Theme from LocalStorage
         if (localStorage.getItem('theme') === 'light') {
-            toggleTheme();
-        }
+        togg       }
 
     </script>
 
@@ -10361,8 +10381,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         console.log("✅ Notebook Support loaded");
 
-<!-- ============================================ -->
-< !--SEÇÃO: CONFIGURAÇÃO PARA LAPTOPS INTEL-- >
+<!-- ============== ============================= -->
+< !--SEÇO:  CO NFIGURAÇÃO PARA LAPTOPS INTEL-- >
 < !-- ============================================ -->
 <section id="laptop-config" class="container">
     <div class="section-header">
@@ -10850,9 +10870,9 @@ PciRoot(0x0)/Pci(0x2,0x0)
                     <p>Esta seção será expandida em breve com configurações específicas para Skylake.</p>
                 </div>
             </div>
-        </div>
+       </div>
     </div>
-</section>
+</sectin> 
 
 <!--CSS Adicional para Laptops-- >
 <style>
@@ -10880,49 +10900,45 @@ PciRoot(0x0)/Pci(0x2,0x0)
 
         to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY0);
         }
     }
 </style>
 
-<!--JavaScript para Navegação de Laptops-- >
+<!--JaaS cr            ipt para Navegação de Laptops-- >
             <script>
     // Navegação entre gerações de laptop
-    document.querySelectorAll('.laptop-gen-btn').forEach(btn => {
-                    btn.addEventListener('click', function () {
-                        // Remove active de todos os botões
-                        document.querySelectorAll('.laptop-gen-btn').forEach(b => b.classList.remove('active'));
+    document.querySe                    l('.laptop-gen-btn').forEach(btn => {
+                                btn.addEventListener('click', func                                              // Remove active de todos os botões
+                        document                        orAll('.laptop-gen-btn').forEach(b =                        t.remove('active'));
 
-                        // Adiciona active ao botão clicado
-                        this.classList.add('active');
+                                    // Adiciona active ao bo                                                this.classList.add('active');
 
-                        // Esconde todo o conteúdo
-                        document.querySelectorAll('.laptop-gen-content').forEach(content => {
-                            content.style.display = 'none';
+                                           nde todo o conteúdo
+                                    docum                        ectorAll('.laptop-gen-content').forE                        => {
+                            content.st                        = 'none';
                         });
 
-                        // Mostra o conteúdo correspondente
-                        const gen = this.getAttribute('data-gen');
-                        document.getElementById(gen).style.display = 'block';
+                                    // Mostra o                 eúdo correspondente
+                                    const gen = this.getAttribute('data-gen');
+                                document.getElementById(gen).style.display                k';
                     });
     });
 
-                // Accordion toggle
-                function toggleAccordion(header) {
-        const item = header.parentElement;
-                const content = header.nextElementSibling;
-                const icon = header.querySelector('.fa-chevron-down');
+                //                 n toggle
+                        function toggleAccordion(header) {
+        const item = heade                    ent;
+                const cont                .nextElementSibling;
+                const icon = header                    or('.fa-chevron-down');
 
-                // Toggle
-                if (content.style.maxHeight && content.style.maxHeight !== '0px') {
-                    content.style.maxHeight = '0';
-                icon.style.transform = 'rotate(0deg)';
-        } else {
-                    // Fecha outros accordions
-                    document.querySelectorAll('.laptop-gen-content [style*="max-height"]').forEach(el => {
-                        if (el !== content && el.style.maxHeight !== '0px') {
-                            el.style.maxHeight = '0';
-                            const otherIcon = el.previousElementSibling.querySelector('.fa-chevron-down');
+                        // Toggle
+                if (content.style.maxHeight && content.style.maxHeight !==                                      content.style.maxHeight = '0';
+                                      nsform = 'rotate(0deg)';
+                                             // Fecha outros accordions
+                    document.querySe                            en-content [style*="max-height"]').forEach(el => {
+                                if                    tent                 maxHeight !== '0px') {
+                            el.s                ht = '0';
+                            const otherIcon = el.previovron-down');
                             if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
                         }
                     });
