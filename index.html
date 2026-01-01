@@ -2321,251 +2321,265 @@
 
             <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
                 <!-- AMD Card -->
-                <div class="card">
+                                <div class="card">
                     <div class="card-icon"><i class="fas fa-microchip" style="color: #EF4444;"></i></div>
                     <h3 data-i18n="hw-amd-title">AMD Ryzen (Zen)</h3>
                     <p data-i18n="hw-amd-desc">Ryzen 1000-7000 & Threadripper</p>
 
                     <!-- ACPI -->
                     <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            ACPI</summary>
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            ACPI
+                        </summary>
                         <div style="padding: 10px;">
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li>SSDT-EC-USBX-DESKTOP.aml</li>
-                                <li>SSDT-CPUR.aml (B550/A520)</li>
+                                <li><strong>SSDT-EC-USBX-DESKTOP.aml</strong> (Mandatory)</li>
+                                <li><strong>SSDT-CPUR.aml</strong> (B550/A520/TRX40) or <strong>SSDT-PLUG.aml</strong> (Older)</li>
+                                <li>SSDT-SBUS-MCHC.aml (Recommended)</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- Booter -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Booter
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>EnableWriteUnprotector: <code>False</code></li>
+                                <li>RebuildAppleMemoryMap: <code>True</code></li>
+                                <li>SetupVirtualMap: <code>True</code></li>
+                                <li>DevirtualiseMmio: <code>False</code> (Generally)</li>
                             </ul>
                         </div>
                     </details>
 
                     <!-- Kernel -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            Kernel</summary>
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Kernel
+                        </summary>
                         <div style="padding: 10px;">
-                            <h5 style="color: var(--primary); font-size: 0.9em;">Emulate</h5>
-                            <div
-                                style="font-size: 0.85rem; font-family: monospace; color: var(--success); margin-bottom: 5px;">
-                                DummyPowerManagement: True
+                            <h5 style="color: var(--primary); font-size: 0.9em;">AMD Patches</h5>
+                            <div style="font-size:0.85rem; margin-bottom:10px; color: var(--warning);">
+                                <strong>Mandatory:</strong> <a href="https://github.com/AMD-OSX/AMD_Vanilla" target="_blank" style="color:var(--text); text-decoration:underline;">AMD_Vanilla Patches</a>
                             </div>
                             <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
-                            <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                                <li>ProvideCurrentCpuInfo: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
-                                <li>PanicNoKextDump: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>ProvideCurrentCpuInfo: <code>True</code></li>
+                                <li>PanicNoKextDump: <code>True</code></li>
+                                <li>PowerTimeoutKernelPanic: <code>True</code></li>
                             </ul>
-                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top:5px;">Patch
-                            </h5>
-                            <div style="font-size: 0.8rem;" data-i18n="hw-amd-patch-msg">AMD Kernel Patches (Mandatory)
-                            </div>
-                        </div>
-                    </details>
-
-                    <!-- Booter -->
-                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            Booter</summary>
-                        <div style="padding: 10px;">
-                            <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
-                            <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                                <li>SetupVirtualMap: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
-                                <li>EnableWriteUnprotector: <span data-i18n="val-false"
-                                        style="color:var(--danger); font-weight:bold">False</span></li>
+                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top:10px;">Drivers (Kexts)</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li><strong>AMDRyzenCPUPowerManagement.kext</strong></li>
+                                <li><strong>SMCAMDProcessor.kext</strong></li>
+                                <li>XLNCUSBFIX.kext (Only for FX CPUs)</li>
                             </ul>
                         </div>
                     </details>
 
-                    <!-- NVRAM & Misc -->
+                    <!-- Misc / NVRAM -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            NVRAM & Misc</summary>
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Misc & NVRAM
+                        </summary>
                         <div style="padding: 10px;">
                             <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
-                            <code
-                                style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 npci=0x2000 alcid=1</code>
-                            <div style="margin-top:0.5rem; font-size:0.85rem;">
-                                <strong>SecureBootModel:</strong> Disabled<br>
-                                <strong>PickerMode:</strong> External
+                            <code style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 npci=0x2000 alcid=1</code>
+                            <div style="margin-top:10px; font-size:0.85rem;">
+                                <strong>PlatformInfo (SMBIOS):</strong><br>
+                                MacPro7,1 (Recommended) or iMacPro1,1
                             </div>
+                        </div>
+                    </details>
+
+                    <!-- UEFI -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            UEFI & BIOS
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">BIOS Settings</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li><strong>Disable:</strong> CSM, Secure Boot, Serial/Parallel Port</li>
+                                <li><strong>Enable:</strong> Above 4G Decoding, EHCI/XHCI Handoff</li>
+                            </ul>
                         </div>
                     </details>
                 </div>
 
                 <!-- Intel 10th Card -->
-                <div class="card">
-                    <div class="card-icon"><i class="fas fa-microchip" style="color: #0071C5;"></i>
-                    </div>
+                                <div class="card">
+                    <div class="card-icon"><i class="fas fa-microchip" style="color: #0071C5;"></i></div>
                     <h3 data-i18n="hw-intel-10-title">Intel 8th-10th Gen</h3>
                     <p data-i18n="hw-intel-10-desc">Comet Lake (Native)</p>
 
                     <!-- ACPI -->
                     <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             ACPI
                         </summary>
                         <div style="padding: 10px;">
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li>SSDT-PLUG.aml</li>
-                                <li>SSDT-EC-USBX.aml</li>
-                                <li>SSDT-AWAC.aml</li>
+                                <li><strong>SSDT-PLUG.aml</strong> (CPU Power Management)</li>
+                                <li><strong>SSDT-EC-USBX.aml</strong> (Embedded Controller)</li>
+                                <li><strong>SSDT-AWAC.aml</strong> (Real Time Clock)</li>
+                                <li>SSDT-RHUB.aml (Examples: Asus Z490)</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- Booter -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Booter
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>DevirtualiseMmio: <code>True</code></li>
+                                <li>ProtectUefiServices: <code>False</code></li>
+                                <li>RebuildAppleMemoryMap: <code>True</code></li>
+                                <li>SetupVirtualMap: <code>True</code></li>
                             </ul>
                         </div>
                     </details>
 
                     <!-- DeviceProperties -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            DeviceProperties</summary>
-                        <div style="padding: 10px; font-size: 0.85rem;">
-                            <strong>PciRoot(0x0)/Pci(0x2,0x0)</strong>
-                            <br>
-                            AAPL,ig-platform-id: <code style="color:var(--warning)">07009B3E</code>
-                        </div>
-                    </details>
-
-                    <!-- Booter/Kernel -->
-                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            Booter & Kernel</summary>
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            DeviceProperties
+                        </summary>
                         <div style="padding: 10px;">
-                            <h5 style="color: var(--primary); font-size: 0.9em;">Booter Quirks</h5>
-                            <ul style="font-size: 0.85rem; list-style: none; padding: 0; margin-bottom: 5px;">
-                                <li>DevirtualiseMmio: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
-                                <li>ProtectUefiServices: <span data-i18n="val-false"
-                                        style="color:var(--danger); font-weight:bold">False</span></li>
-                            </ul>
-                            <h5 style="color: var(--primary); font-size: 0.9em;">Kernel Quirks</h5>
-                            <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                                <li>PanicNoKextDump: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
-                            </ul>
-                        </div>
-                    </details>
-
-                    <!-- NVRAM & Misc -->
-                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            NVRAM & Misc</summary>
-                        <div style="padding: 10px;">
-                            <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
-                            <code
-                                style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 alcid=1</code>
-                            <div style="margin-top:0.5rem; font-size:0.85rem;">
-                                <strong>SecureBootModel:</strong> Disabled<br>
-                                <strong>PickerMode:</strong> External
+                            <h5 style="color: var(--primary); font-size: 0.9em;">iGPU (UHD 630 Desktop)</h5>
+                            <div class="code-block" style="margin-bottom: 5px;">
+                                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                <code>&lt;key&gt;AAPL,ig-platform-id&lt;/key&gt;
+&lt;data&gt;BwCbPg==&lt;/data&gt;
+&lt;key&gt;device-id&lt;/key&gt;
+&lt;data&gt;mz4AAA==&lt;/data&gt;</code>
                             </div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">
+                                Use <strong>07009B3E</strong> for Headless (dGPU only).
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Kernel -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Kernel
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>AppleXcpmCfgLock: <code>True</code> (If CFG-Lock enabled)</li>
+                                <li>DisableIoMapper: <code>True</code> (If VT-d enabled)</li>
+                                <li>PanicNoKextDump: <code>True</code></li>
+                                <li>PowerTimeoutKernelPanic: <code>True</code></li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- PlatformInfo / Misc -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            PlatformInfo & Misc
+                        </summary>
+                        <div style="padding: 10px;">
+                            <div style="font-size:0.85rem;">
+                                <strong>SMBIOS:</strong><br>
+                                <strong>iMac20,1</strong> (i7-10700K, i9-10900K)<br>
+                                <strong>iMac20,2</strong> (i5-10600K and lower)<br>
+                                <strong>iMac19,1</strong> (8th/9th Gen)
+                            </div>
+                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top:10px;">Boot-args</h5>
+                            <code>-v keepsyms=1 debug=0x100 alcid=1</code>
                         </div>
                     </details>
                 </div>
 
                 <!-- Intel 12th+ Card -->
-                <div class="card">
+                                <div class="card">
                     <div class="card-icon"><i class="fas fa-microchip" style="color: #00C7FD;"></i></div>
                     <h3 data-i18n="hw-intel-12-title">Intel 12th-14th Gen</h3>
                     <p data-i18n="hw-intel-12-desc">Alder/Raptor (Spoof)</p>
 
                     <!-- ACPI -->
                     <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             ACPI
                         </summary>
                         <div style="padding: 10px;">
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li>SSDT-PLUG-ALT.aml (Important!)</li>
-                                <li>SSDT-EC-USBX.aml</li>
+                                <li><strong>SSDT-PLUG-ALT.aml</strong> (Required for Hybrid CPUs)</li>
+                                <li><strong>SSDT-EC-USBX.aml</strong></li>
+                                <li><strong>SSDT-AWAC.aml</strong> (or SSDT-AWAC-DISABLE)</li>
+                                <li>SSDT-RHUB.aml (Asus motherboards)</li>
                             </ul>
-                        </div>
-                    </details>
-
-                    <!-- Kernel Spoof -->
-                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            Kernel Emulate</summary>
-                        <div style="padding: 10px; font-size: 0.8rem; font-family: monospace;">
-                            <span style="color:var(--warning)">Cpuid1Data:</span> EB060800 00000000...<br>
-                            <span style="color:var(--warning)">Cpuid1Mask:</span> FFFFFFFF 00000000...
                         </div>
                     </details>
 
                     <!-- Booter -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            Booter</summary>
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Booter
+                        </summary>
                         <div style="padding: 10px;">
                             <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
-                            <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                                <li>DevirtualiseMmio: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
-                                <li>EnableWriteUnprotector: <span data-i18n="val-false"
-                                        style="color:var(--danger); font-weight:bold">False</span></li>
-                                <li>RebuildAppleMemoryMap: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
-                                <li>SetupVirtualMap: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
-                                <li>SyncRuntimePermissions: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>DevirtualiseMmio: <code>True</code></li>
+                                <li>EnableWriteUnprotector: <code>False</code></li>
+                                <li>RebuildAppleMemoryMap: <code>True</code></li>
+                                <li>SetupVirtualMap: <code>True</code></li>
+                                <li>SyncRuntimePermissions: <code>True</code></li>
                             </ul>
                         </div>
                     </details>
 
-                    <!-- Kernel -->
+                    <!-- Kernel / Spoof -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            Kernel</summary>
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Kernel (Spoof & Quirks)
+                        </summary>
                         <div style="padding: 10px;">
-                            <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
-                            <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                                <li>PanicNoKextDump: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
-                                <li>ProvideCurrentCpuInfo: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
-                                <li>PowerTimeoutKernelPanic: <span data-i18n="val-true"
-                                        style="color:var(--success); font-weight:bold">True</span></li>
-                            </ul>
-                        </div>
-                    </details>
-
-                    <!-- UEFI -->
-                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            UEFI -> Quirks</summary>
-                        <div style="padding: 10px;">
-                            <ul style="font-size: 0.85rem; list-style: none; padding: 0;">
-                                <li>ResizeAppleGpuBars: <span data-i18n="val-minus-one"
-                                        style="color:var(--warning); font-weight:bold">-1 (Disabled)</span></li>
-                            </ul>
-                        </div>
-                    </details>
-
-                    <!-- NVRAM & Misc -->
-                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            NVRAM & Misc</summary>
-                        <div style="padding: 10px;">
-                            <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
-                            <code
-                                style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 agdpmod=pikera</code>
-                            <div style="margin-top:0.5rem; font-size:0.85rem;">
-                                <strong>SecureBootModel:</strong> Disabled<br>
-                                <strong>PickerMode:</strong> External
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Emulate (Comet Lake Spoof)</h5>
+                            <div style="font-size:0.8rem; font-family:monospace; margin-bottom:10px;">
+                                Cpuid1Data: <span style="color:var(--success)">EB060800 00000000 00000000 00000000</span><br>
+                                Cpuid1Mask: <span style="color:var(--success)">FFFFFFFF 00000000 00000000 00000000</span>
                             </div>
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>ProvideCurrentCpuInfo: <code>True</code> (Critical for E-Cores)</li>
+                                <li>PanicNoKextDump: <code>True</code></li>
+                                <li>PowerTimeoutKernelPanic: <code>True</code></li>
+                            </ul>
+                            <div style="margin-top:10px; font-size:0.8rem; color:var(--text-secondary);">
+                                <strong>Note:</strong> iGPU (UHD 770) is NOT supported. You need a dedicated GPU (AMD RX 400/500/5000/6000 series).
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- PlatformInfo -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            PlatformInfo & UEFI
+                        </summary>
+                        <div style="padding: 10px;">
+                            <div style="font-size:0.85rem; margin-bottom:10px;">
+                                <strong>SMBIOS:</strong><br>
+                                <strong>MacPro7,1</strong> (Recommended)<br>
+                                <strong>iMacPro1,1</strong> (Alternative)
+                            </div>
+                            <h5 style="color: var(--primary); font-size: 0.9em;">UEFI Quirks</h5>
+                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>ResizeAppleGpuBars: <code>-1</code> (Disabled - Critical!)</li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top:10px;">Boot-args</h5>
+                            <code>-v keepsyms=1 debug=0x100 agdpmod=pikera</code> (pikera for Navi GPUs)
                         </div>
                     </details>
                 </div>
