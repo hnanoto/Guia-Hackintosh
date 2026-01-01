@@ -2454,15 +2454,26 @@
                         </div>
                     </details>
 
-                    <!-- BIOS Settings -->
+                                        <!-- BIOS Settings (DETAILED) -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
                         <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             <span style="color: var(--warning);">⚙️ BIOS Settings</span>
                         </summary>
                         <div style="padding: 10px;">
+                            <h5 style="color: var(--danger); font-size: 0.9em;">DISABLE</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0; margin-bottom: 10px;">
+                                <li><strong>Fast Boot</strong></li>
+                                <li><strong>Secure Boot</strong></li>
+                                <li><strong>Serial/COM Port</strong></li>
+                                <li><strong>Parallel Port</strong></li>
+                                <li><strong>CSM</strong> (Compatibility Support Module) - <strong>CRITICAL!</strong></li>
+                            </ul>
+                            <h5 style="color: var(--success); font-size: 0.9em;">ENABLE</h5>
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li><strong>Disable:</strong> CSM, Secure Boot, Serial Port</li>
-                                <li><strong>Enable:</strong> Above 4G Decoding, EHCI/XHCI Handoff</li>
+                                <li><strong>Above 4G Decoding</strong> (Critical)</li>
+                                <li><strong>EHCI/XHCI Hand-off</strong></li>
+                                <li><strong>OS Type:</strong> Windows 8.1/10 UEFI Mode</li>
+                                <li><strong>SATA Mode:</strong> AHCI</li>
                             </ul>
                         </div>
                     </details>
@@ -2607,15 +2618,28 @@
                         </div>
                     </details>
 
-                    <!-- BIOS Settings -->
+                                        <!-- BIOS Settings (DETAILED) -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
                         <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             <span style="color: var(--warning);">⚙️ BIOS Settings</span>
                         </summary>
                         <div style="padding: 10px;">
+                            <h5 style="color: var(--danger); font-size: 0.9em;">DISABLE</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0; margin-bottom: 10px;">
+                                <li><strong>Fast Boot</strong></li>
+                                <li><strong>Secure Boot</strong></li>
+                                <li><strong>CSM</strong> (Compatibility Support Module)</li>
+                                <li><strong>Intel SGX</strong></li>
+                                <li><strong>CFG Lock</strong> (MSR 0xE2) - <strong>CRITICAL!</strong></li>
+                            </ul>
+                            <h5 style="color: var(--success); font-size: 0.9em;">ENABLE</h5>
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li><strong>Disable:</strong> CFG-Lock, Secure Boot, Fast Boot</li>
-                                <li><strong>Enable:</strong> VT-d (if needed), Above 4G Decoding</li>
+                                <li><strong>VT-x</strong></li>
+                                <li><strong>Above 4G Decoding</strong></li>
+                                <li><strong>Hyper-Threading</strong></li>
+                                <li><strong>Execute Disable Bit</strong></li>
+                                <li><strong>EHCI/XHCI Hand-off</strong></li>
+                                <li><strong>DVMT Pre-Allocated:</strong> 64MB+</li>
                             </ul>
                         </div>
                     </details>
@@ -2754,15 +2778,29 @@
                         </div>
                     </details>
 
-                    <!-- BIOS Settings -->
+                                        <!-- BIOS Settings (DETAILED) -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
                         <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             <span style="color: var(--warning);">⚙️ BIOS Settings</span>
                         </summary>
                         <div style="padding: 10px;">
+                            <h5 style="color: var(--danger); font-size: 0.9em;">DISABLE</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0; margin-bottom: 10px;">
+                                <li><strong>Fast Boot</strong></li>
+                                <li><strong>Secure Boot</strong></li>
+                                <li><strong>Serial/COM Port</strong></li>
+                                <li><strong>Parallel Port</strong></li>
+                                <li><strong>CSM</strong> (Must be off for GPU to work)</li>
+                                <li><strong>Intel SGX</strong></li>
+                                <li><strong>CFG Lock</strong></li>
+                            </ul>
+                            <h5 style="color: var(--success); font-size: 0.9em;">ENABLE</h5>
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li><strong>Disable:</strong> CFG-Lock, Secure Boot</li>
-                                <li><strong>Enable:</strong> Above 4G Decoding, Hyper-Threading</li>
+                                <li><strong>VT-x</strong> & <strong>VT-d</strong></li>
+                                <li><strong>Above 4G Decoding</strong></li>
+                                <li><strong>Hyper-Threading</strong></li>
+                                <li><strong>Execute Disable Bit</strong></li>
+                                <li><strong>EHCI/XHCI Hand-off</strong></li>
                             </ul>
                         </div>
                     </details>
