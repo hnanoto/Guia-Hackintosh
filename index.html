@@ -2668,226 +2668,319 @@
 
 
 
-<!-- Booter -->
-<details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-        Booter
-    </summary>
-    <div style="padding: 10px;">
-        <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li>DevirtualiseMmio: <code>False</code></li>
-            <li>EnableWriteUnprotector: <code>False</code></li>
-            <li>ProtectUefiServices: <code>False</code></li>
-            <li>ProvideCustomSlide: <code>True</code></li>
-            <li>RebuildAppleMemoryMap: <code>True</code></li>
-            <li>SetupVirtualMap: <code>False</code> (True for Haswell and older)</li>
-            <li>SyncRuntimePermissions: <code>True</code></li>
-        </ul>
-    </div>
-</details>
+                    <!-- Booter -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Booter
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>DevirtualiseMmio: <code>False</code></li>
+                                <li>EnableWriteUnprotector: <code>False</code></li>
+                                <li>ProtectUefiServices: <code>False</code></li>
+                                <li>ProvideCustomSlide: <code>True</code></li>
+                                <li>RebuildAppleMemoryMap: <code>True</code></li>
+                                <li>SetupVirtualMap: <code>False</code> (True for Haswell and older)</li>
+                                <li>SyncRuntimePermissions: <code>True</code></li>
+                            </ul>
+                        </div>
+                    </details>
 
-<!-- DeviceProperties -->
-<details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-        DeviceProperties
-    </summary>
-    <div style="padding: 10px;">
-        <h5 style="color: var(--primary); font-size: 0.9em;">Add</h5>
-        <div style="font-size:0.85rem; margin-bottom:10px;">
-            <strong>PciRoot(0x0)/Pci(0x2,0x0)</strong> - iGPU Properties
-        </div>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li><code>AAPL,ig-platform-id</code> - See Graphics section above</li>
-            <li><code>device-id</code> - Required for UHD 620 (Kaby Lake-R): <code>16590000</code></li>
-            <li><code>framebuffer-patch-enable</code> - <code>01000000</code> (if DVMT &lt; 64MB)</li>
-            <li><code>framebuffer-stolenmem</code> - <code>00003001</code> (if DVMT &lt; 64MB)</li>
-            <li><code>framebuffer-fbmem</code> - <code>00009000</code> (if DVMT &lt; 64MB)</li>
-        </ul>
-        <div style="margin-top: 10px; font-size:0.85rem;">
-            <strong>PciRoot(0x0)/Pci(0x1f,0x3)</strong> - Audio
-        </div>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li><code>layout-id</code> - Try: 3, 11, 13, 21, 28, 29 (Data format)</li>
-        </ul>
-    </div>
-</details>
+                    <!-- DeviceProperties -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            DeviceProperties
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Add - Copy & Paste Ready Examples</h5>
 
-<!-- Kernel -->
-<details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-        Kernel
-    </summary>
-    <div style="padding: 10px;">
-        <h5 style="color: var(--primary); font-size: 0.9em;">Add (Kexts)</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li><strong>Lilu.kext</strong> - Required</li>
-            <li><strong>VirtualSMC.kext</strong> + SMCProcessor + SMCBatteryManager</li>
-            <li><strong>WhateverGreen.kext</strong> - Graphics patches</li>
-            <li><strong>AppleALC.kext</strong> - Audio</li>
-            <li><strong>VoodooPS2Controller.kext</strong> - Keyboard/Trackpad (PS2)</li>
-            <li><strong>VoodooI2C.kext</strong> + VoodooI2CHID - I2C Trackpad (if applicable)</li>
-            <li><strong>ECEnabler.kext</strong> - Battery readout</li>
-            <li><strong>BrightnessKeys.kext</strong> - Fn brightness keys</li>
-            <li><strong>RealtekRTL8111.kext</strong> or <strong>IntelMausi.kext</strong> - Ethernet</li>
-            <li><strong>AirportItlwm.kext</strong> + IntelBluetoothFirmware - Intel Wi-Fi</li>
-        </ul>
-        <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Quirks</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li>AppleCpuPmCfgLock: <code>True</code> (if CFG-Lock can't be disabled in BIOS)</li>
-            <li>AppleXcpmCfgLock: <code>True</code> (if CFG-Lock can't be disabled in BIOS)</li>
-            <li>DisableIoMapper: <code>True</code> (if VT-d can't be disabled in BIOS)</li>
-            <li>PanicNoKextDump: <code>True</code></li>
-            <li>PowerTimeoutKernelPanic: <code>True</code></li>
-            <li>XhciPortLimit: <code>False</code> (use USBMap.kext instead)</li>
-        </ul>
-    </div>
-</details>
+                            <!-- UHD 620 Example -->
+                            <div
+                                style="margin-top: 15px; padding: 15px; background: rgba(0,113,227,0.1); border-radius: 8px; border-left: 4px solid var(--primary);">
+                                <h6 style="color: var(--primary); margin: 0 0 10px 0; font-size: 0.95em;">
+                                    <i class="fas fa-laptop"></i> Intel UHD 620 (Kaby Lake-R / 8th Gen)
+                                </h6>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">
+                                    For: i3-8130U, i5-8250U, i5-8350U, i7-8550U, i7-8650U
+                                </div>
+                                <div class="code-block" style="margin-bottom: 10px;">
+                                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                    <code>&lt;key&gt;PciRoot(0x0)/Pci(0x2,0x0)&lt;/key&gt;
+&lt;dict&gt;
+    &lt;key&gt;AAPL,ig-platform-id&lt;/key&gt;
+    &lt;data&gt;AAAWWQ==&lt;/data&gt;
+    &lt;key&gt;device-id&lt;/key&gt;
+    &lt;data&gt;FllgAA==&lt;/data&gt;
+    &lt;key&gt;framebuffer-patch-enable&lt;/key&gt;
+    &lt;data&gt;AQAAAA==&lt;/data&gt;
+    &lt;key&gt;framebuffer-stolenmem&lt;/key&gt;
+    &lt;data&gt;AAAwAQ==&lt;/data&gt;
+    &lt;key&gt;framebuffer-fbmem&lt;/key&gt;
+    &lt;data&gt;AACQAA==&lt;/data&gt;
+&lt;/dict&gt;</code>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                                    <strong>Notes:</strong> AAPL,ig-platform-id = 0x59160000 | device-id = 0x16590000
+                                    (spoofs UHD 620 to HD 620)
+                                </div>
+                            </div>
 
-<!-- Misc -->
-<details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-        Misc
-    </summary>
-    <div style="padding: 10px;">
-        <h5 style="color: var(--primary); font-size: 0.9em;">Boot</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li>HideAuxiliary: <code>True</code></li>
-            <li>PickerMode: <code>Builtin</code></li>
-            <li>ShowPicker: <code>True</code></li>
-            <li>Timeout: <code>5</code></li>
-        </ul>
-        <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Debug</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li>AppleDebug: <code>True</code></li>
-            <li>ApplePanic: <code>True</code></li>
-            <li>DisableWatchDog: <code>True</code></li>
-            <li>Target: <code>67</code> (for debugging)</li>
-        </ul>
-        <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Security</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li>AllowSetDefault: <code>True</code></li>
-            <li>BlacklistAppleUpdate: <code>True</code></li>
-            <li>ScanPolicy: <code>0</code></li>
-            <li>SecureBootModel: <code>Default</code></li>
-            <li>Vault: <code>Optional</code></li>
-        </ul>
-    </div>
-</details>
+                            <!-- UHD 630 Example -->
+                            <div
+                                style="margin-top: 15px; padding: 15px; background: rgba(168,85,247,0.1); border-radius: 8px; border-left: 4px solid #A855F7;">
+                                <h6 style="color: #A855F7; margin: 0 0 10px 0; font-size: 0.95em;">
+                                    <i class="fas fa-laptop"></i> Intel UHD 630 (Coffee Lake / 8th-9th Gen)
+                                </h6>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">
+                                    For: i5-8300H, i5-9300H, i7-8750H, i7-9750H, i9-8950HK, i9-9880H
+                                </div>
+                                <div class="code-block" style="margin-bottom: 10px;">
+                                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                    <code>&lt;key&gt;PciRoot(0x0)/Pci(0x2,0x0)&lt;/key&gt;
+&lt;dict&gt;
+    &lt;key&gt;AAPL,ig-platform-id&lt;/key&gt;
+    &lt;data&gt;AAAWWQ==&lt;/data&gt;
+    &lt;key&gt;device-id&lt;/key&gt;
+    &lt;data&gt;mz4AAA==&lt;/data&gt;
+    &lt;key&gt;framebuffer-patch-enable&lt;/key&gt;
+    &lt;data&gt;AQAAAA==&lt;/data&gt;
+    &lt;key&gt;framebuffer-stolenmem&lt;/key&gt;
+    &lt;data&gt;AAAwAQ==&lt;/data&gt;
+    &lt;key&gt;framebuffer-fbmem&lt;/key&gt;
+    &lt;data&gt;AACQAA==&lt;/data&gt;
+&lt;/dict&gt;</code>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                                    <strong>Notes:</strong> AAPL,ig-platform-id = 0x59160000 | device-id = 0x3E9B0000
+                                    (for UHD 630)
+                                </div>
+                            </div>
 
-<!-- NVRAM -->
-<details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-        NVRAM
-    </summary>
-    <div style="padding: 10px;">
-        <h5 style="color: var(--primary); font-size: 0.9em;">Add</h5>
-        <div style="font-size:0.85rem; margin-bottom:10px;">
-            <strong>7C436110-AB2A-4BBB-A880-FE41995C9F82</strong>
-        </div>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li><code>boot-args</code>: <code>-v keepsyms=1 debug=0x100 alcid=13</code></li>
-            <li><code>csr-active-config</code>: <code>00000000</code> (SIP enabled)</li>
-            <li><code>prev-lang:kbd</code>: <code>656E2D55533A30</code> (en-US:0)</li>
-        </ul>
-        <div style="margin-top: 10px; font-size:0.85rem;">
-            <strong>4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14</strong>
-        </div>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li><code>UIScale</code>: <code>01</code> (normal) or <code>02</code> (HiDPI)</li>
-        </ul>
-    </div>
-</details>
+                            <!-- Audio Section -->
+                            <div
+                                style="margin-top: 15px; padding: 15px; background: rgba(34,197,94,0.1); border-radius: 8px; border-left: 4px solid #22C55E;">
+                                <h6 style="color: #22C55E; margin: 0 0 10px 0; font-size: 0.95em;">
+                                    <i class="fas fa-volume-up"></i> Audio (AppleALC)
+                                </h6>
+                                <div class="code-block" style="margin-bottom: 10px;">
+                                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                                    <code>&lt;key&gt;PciRoot(0x0)/Pci(0x1f,0x3)&lt;/key&gt;
+&lt;dict&gt;
+    &lt;key&gt;layout-id&lt;/key&gt;
+    &lt;data&gt;DQAAAA==&lt;/data&gt;
+&lt;/dict&gt;</code>
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                                    <strong>Common layouts:</strong> 3, 11, 13 (0x0D000000), 21, 28, 29 - Try different
+                                    values if audio doesn't work
+                                </div>
+                            </div>
 
-<!-- PlatformInfo -->
-<details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-        PlatformInfo
-    </summary>
-    <div style="padding: 10px;">
-        <h5 style="color: var(--primary); font-size: 0.9em;">Generic</h5>
-        <div style="font-size:0.85rem; margin-bottom:10px;">
-            <strong>Recommended SMBIOS:</strong>
-        </div>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li><strong>Ivy Bridge:</strong> MacBookPro10,1 (15") or MacBookPro10,2 (13")</li>
-            <li><strong>Haswell:</strong> MacBookPro11,1 (13") or MacBookPro11,2 (15")</li>
-            <li><strong>Broadwell:</strong> MacBookPro12,1 (13")</li>
-            <li><strong>Skylake:</strong> MacBookPro13,1 (13") or MacBookPro13,3 (15")</li>
-            <li><strong>Kaby Lake:</strong> MacBookPro14,1 (13") or MacBookPro14,2 (13" Touch)</li>
-            <li><strong>Coffee Lake:</strong> MacBookPro15,2 (13") or MacBookPro15,1 (15")</li>
-            <li><strong>Comet Lake:</strong> MacBookPro16,2 (13") or MacBookPro16,1 (16")</li>
-            <li><strong>Ice Lake:</strong> MacBookAir9,1 or MacBookPro16,2</li>
-        </ul>
-        <div style="margin-top: 10px; padding: 10px; background: rgba(0,113,227,0.1); border-radius: 6px;">
-            <strong style="color: var(--primary);">Generate SMBIOS:</strong>
-            <a href="https://github.com/corpnewt/GenSMBIOS" target="_blank"
-                style="color: var(--primary); text-decoration: underline; margin-left: 10px;">
-                GenSMBIOS Tool <i class="fas fa-external-link-alt"></i>
-            </a>
-        </div>
-    </div>
-</details>
+                            <!-- Important Notes -->
+                            <div
+                                style="margin-top: 15px; padding: 12px; background: rgba(251,191,36,0.1); border-radius: 8px; border-left: 4px solid #FBBF24;">
+                                <h6 style="color: #FBBF24; margin: 0 0 8px 0; font-size: 0.9em;">
+                                    <i class="fas fa-exclamation-triangle"></i> Important Notes
+                                </h6>
+                                <ul
+                                    style="font-size: 0.8rem; margin: 0; padding-left: 1.2rem; color: var(--text-secondary);">
+                                    <li>DVMT patches (framebuffer-*) are only needed if BIOS doesn't allow 64MB+ DVMT
+                                        allocation</li>
+                                    <li>For UHD 620, device-id spoofs it to HD 620 for better compatibility</li>
+                                    <li>For external displays (HDMI/DP), you may need additional framebuffer patches
+                                    </li>
+                                    <li>If you have a dedicated GPU, disable it in BIOS or use SSDT-dGPU-Off</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </details>
 
-<!-- UEFI -->
-<details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-        UEFI
-    </summary>
-    <div style="padding: 10px;">
-        <h5 style="color: var(--primary); font-size: 0.9em;">Drivers</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li><strong>OpenRuntime.efi</strong> - Required</li>
-            <li><strong>HfsPlus.efi</strong> - Required for HFS+ (macOS)</li>
-            <li><strong>OpenCanopy.efi</strong> - Optional (GUI boot picker)</li>
-        </ul>
-        <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Quirks</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li>RequestBootVarRouting: <code>True</code></li>
-            <li>ReleaseUsbOwnership: <code>True</code></li>
-            <li>UnblockFsConnect: <code>False</code></li>
-        </ul>
-        <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Input</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li>KeySupport: <code>True</code></li>
-            <li>PointerSupport: <code>False</code></li>
-        </ul>
-        <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Output</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li>ProvideConsoleGop: <code>True</code></li>
-            <li>Resolution: <code>Max</code></li>
-            <li>TextRenderer: <code>BuiltinGraphics</code></li>
-        </ul>
-    </div>
-</details>
+                    <!-- Kernel -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Kernel
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Add (Kexts)</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li><strong>Lilu.kext</strong> - Required</li>
+                                <li><strong>VirtualSMC.kext</strong> + SMCProcessor + SMCBatteryManager</li>
+                                <li><strong>WhateverGreen.kext</strong> - Graphics patches</li>
+                                <li><strong>AppleALC.kext</strong> - Audio</li>
+                                <li><strong>VoodooPS2Controller.kext</strong> - Keyboard/Trackpad (PS2)</li>
+                                <li><strong>VoodooI2C.kext</strong> + VoodooI2CHID - I2C Trackpad (if applicable)</li>
+                                <li><strong>ECEnabler.kext</strong> - Battery readout</li>
+                                <li><strong>BrightnessKeys.kext</strong> - Fn brightness keys</li>
+                                <li><strong>RealtekRTL8111.kext</strong> or <strong>IntelMausi.kext</strong> - Ethernet
+                                </li>
+                                <li><strong>AirportItlwm.kext</strong> + IntelBluetoothFirmware - Intel Wi-Fi</li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Quirks</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>AppleCpuPmCfgLock: <code>True</code> (if CFG-Lock can't be disabled in BIOS)</li>
+                                <li>AppleXcpmCfgLock: <code>True</code> (if CFG-Lock can't be disabled in BIOS)</li>
+                                <li>DisableIoMapper: <code>True</code> (if VT-d can't be disabled in BIOS)</li>
+                                <li>PanicNoKextDump: <code>True</code></li>
+                                <li>PowerTimeoutKernelPanic: <code>True</code></li>
+                                <li>XhciPortLimit: <code>False</code> (use USBMap.kext instead)</li>
+                            </ul>
+                        </div>
+                    </details>
 
-<!-- BIOS Settings -->
-<details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-    <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-        <span style="color: var(--warning);">⚙️ BIOS Settings</span>
-    </summary>
-    <div style="padding: 10px;">
-        <h5 style="color: var(--success); font-size: 0.9em;">✅ Enable:</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li>UEFI Boot Mode</li>
-            <li>AHCI Mode (for SATA)</li>
-            <li>Above 4G Decoding (if available)</li>
-            <li>Hyper-Threading</li>
-            <li>Execute Disable Bit</li>
-            <li>EHCI/XHCI Hand-off</li>
-        </ul>
-        <h5 style="color: var(--danger); font-size: 0.9em; margin-top: 10px;">❌ Disable:</h5>
-        <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-            <li>Secure Boot</li>
-            <li>Fast Boot</li>
-            <li>CFG-Lock (if possible)</li>
-            <li>VT-d (if not needed)</li>
-            <li>CSM/Legacy Boot</li>
-            <li>Intel SGX</li>
-            <li>Intel Platform Trust</li>
-        </ul>
-    </div>
-</details>
+                    <!-- Misc -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Misc
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Boot</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>HideAuxiliary: <code>True</code></li>
+                                <li>PickerMode: <code>Builtin</code></li>
+                                <li>ShowPicker: <code>True</code></li>
+                                <li>Timeout: <code>5</code></li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Debug</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>AppleDebug: <code>True</code></li>
+                                <li>ApplePanic: <code>True</code></li>
+                                <li>DisableWatchDog: <code>True</code></li>
+                                <li>Target: <code>67</code> (for debugging)</li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Security</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>AllowSetDefault: <code>True</code></li>
+                                <li>BlacklistAppleUpdate: <code>True</code></li>
+                                <li>ScanPolicy: <code>0</code></li>
+                                <li>SecureBootModel: <code>Default</code></li>
+                                <li>Vault: <code>Optional</code></li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- NVRAM -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            NVRAM
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Add</h5>
+                            <div style="font-size:0.85rem; margin-bottom:10px;">
+                                <strong>7C436110-AB2A-4BBB-A880-FE41995C9F82</strong>
+                            </div>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li><code>boot-args</code>: <code>-v keepsyms=1 debug=0x100 alcid=13</code></li>
+                                <li><code>csr-active-config</code>: <code>00000000</code> (SIP enabled)</li>
+                                <li><code>prev-lang:kbd</code>: <code>656E2D55533A30</code> (en-US:0)</li>
+                            </ul>
+                            <div style="margin-top: 10px; font-size:0.85rem;">
+                                <strong>4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14</strong>
+                            </div>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li><code>UIScale</code>: <code>01</code> (normal) or <code>02</code> (HiDPI)</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- PlatformInfo -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            PlatformInfo
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Generic</h5>
+                            <div style="font-size:0.85rem; margin-bottom:10px;">
+                                <strong>Recommended SMBIOS:</strong>
+                            </div>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li><strong>Ivy Bridge:</strong> MacBookPro10,1 (15") or MacBookPro10,2 (13")</li>
+                                <li><strong>Haswell:</strong> MacBookPro11,1 (13") or MacBookPro11,2 (15")</li>
+                                <li><strong>Broadwell:</strong> MacBookPro12,1 (13")</li>
+                                <li><strong>Skylake:</strong> MacBookPro13,1 (13") or MacBookPro13,3 (15")</li>
+                                <li><strong>Kaby Lake:</strong> MacBookPro14,1 (13") or MacBookPro14,2 (13" Touch)</li>
+                                <li><strong>Coffee Lake:</strong> MacBookPro15,2 (13") or MacBookPro15,1 (15")</li>
+                                <li><strong>Comet Lake:</strong> MacBookPro16,2 (13") or MacBookPro16,1 (16")</li>
+                                <li><strong>Ice Lake:</strong> MacBookAir9,1 or MacBookPro16,2</li>
+                            </ul>
+                            <div
+                                style="margin-top: 10px; padding: 10px; background: rgba(0,113,227,0.1); border-radius: 6px;">
+                                <strong style="color: var(--primary);">Generate SMBIOS:</strong>
+                                <a href="https://github.com/corpnewt/GenSMBIOS" target="_blank"
+                                    style="color: var(--primary); text-decoration: underline; margin-left: 10px;">
+                                    GenSMBIOS Tool <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- UEFI -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            UEFI
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Drivers</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li><strong>OpenRuntime.efi</strong> - Required</li>
+                                <li><strong>HfsPlus.efi</strong> - Required for HFS+ (macOS)</li>
+                                <li><strong>OpenCanopy.efi</strong> - Optional (GUI boot picker)</li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Quirks</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>RequestBootVarRouting: <code>True</code></li>
+                                <li>ReleaseUsbOwnership: <code>True</code></li>
+                                <li>UnblockFsConnect: <code>False</code></li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Input</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>KeySupport: <code>True</code></li>
+                                <li>PointerSupport: <code>False</code></li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top: 10px;">Output</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>ProvideConsoleGop: <code>True</code></li>
+                                <li>Resolution: <code>Max</code></li>
+                                <li>TextRenderer: <code>BuiltinGraphics</code></li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- BIOS Settings -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary
+                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            <span style="color: var(--warning);">⚙️ BIOS Settings</span>
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--success); font-size: 0.9em;">✅ Enable:</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>UEFI Boot Mode</li>
+                                <li>AHCI Mode (for SATA)</li>
+                                <li>Above 4G Decoding (if available)</li>
+                                <li>Hyper-Threading</li>
+                                <li>Execute Disable Bit</li>
+                                <li>EHCI/XHCI Hand-off</li>
+                            </ul>
+                            <h5 style="color: var(--danger); font-size: 0.9em; margin-top: 10px;">❌ Disable:</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>Secure Boot</li>
+                                <li>Fast Boot</li>
+                                <li>CFG-Lock (if possible)</li>
+                                <li>VT-d (if not needed)</li>
+                                <li>CSM/Legacy Boot</li>
+                                <li>Intel SGX</li>
+                                <li>Intel Platform Trust</li>
+                            </ul>
+                        </div>
+                    </details>
                 </div>
             </div>
         </section>
@@ -10255,8 +10348,8 @@ PciRoot(0x0)/Pci(0x2,0x0)
         console.log("✅ Notebook Support loaded");
 
 <!-- ============================================ -->
-<!-- SEÇÃO: CONFIGURAÇÃO PARA LAPTOPS INTEL -->
-<!-- ============================================ -->
+< !--SEÇÃO: CONFIGURAÇÃO PARA LAPTOPS INTEL-- >
+< !-- ============================================ -->
 <section id="laptop-config" class="container">
     <div class="section-header">
         <h2><i class="fas fa-laptop"></i> <span data-i18n="laptop-config-title">Configuração Específica para Laptops
@@ -10747,7 +10840,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
     </div>
 </section>
 
-<!-- CSS Adicional para Laptops -->
+<!--CSS Adicional para Laptops-- >
 <style>
     .laptop-gen-btn:hover {
         background: rgba(0, 113, 227, 0.1);
@@ -10778,56 +10871,56 @@ PciRoot(0x0)/Pci(0x2,0x0)
     }
 </style>
 
-<!-- JavaScript para Navegação de Laptops -->
-<script>
+<!--JavaScript para Navegação de Laptops-- >
+            <script>
     // Navegação entre gerações de laptop
     document.querySelectorAll('.laptop-gen-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            // Remove active de todos os botões
-            document.querySelectorAll('.laptop-gen-btn').forEach(b => b.classList.remove('active'));
+                    btn.addEventListener('click', function () {
+                        // Remove active de todos os botões
+                        document.querySelectorAll('.laptop-gen-btn').forEach(b => b.classList.remove('active'));
 
-            // Adiciona active ao botão clicado
-            this.classList.add('active');
+                        // Adiciona active ao botão clicado
+                        this.classList.add('active');
 
-            // Esconde todo o conteúdo
-            document.querySelectorAll('.laptop-gen-content').forEach(content => {
-                content.style.display = 'none';
-            });
+                        // Esconde todo o conteúdo
+                        document.querySelectorAll('.laptop-gen-content').forEach(content => {
+                            content.style.display = 'none';
+                        });
 
-            // Mostra o conteúdo correspondente
-            const gen = this.getAttribute('data-gen');
-            document.getElementById(gen).style.display = 'block';
-        });
+                        // Mostra o conteúdo correspondente
+                        const gen = this.getAttribute('data-gen');
+                        document.getElementById(gen).style.display = 'block';
+                    });
     });
 
-    // Accordion toggle
-    function toggleAccordion(header) {
+                // Accordion toggle
+                function toggleAccordion(header) {
         const item = header.parentElement;
-        const content = header.nextElementSibling;
-        const icon = header.querySelector('.fa-chevron-down');
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('.fa-chevron-down');
 
-        // Toggle
-        if (content.style.maxHeight && content.style.maxHeight !== '0px') {
-            content.style.maxHeight = '0';
-            icon.style.transform = 'rotate(0deg)';
+                // Toggle
+                if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                    content.style.maxHeight = '0';
+                icon.style.transform = 'rotate(0deg)';
         } else {
-            // Fecha outros accordions
-            document.querySelectorAll('.laptop-gen-content [style*="max-height"]').forEach(el => {
-                if (el !== content && el.style.maxHeight !== '0px') {
-                    el.style.maxHeight = '0';
-                    const otherIcon = el.previousElementSibling.querySelector('.fa-chevron-down');
-                    if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
-                }
-            });
+                    // Fecha outros accordions
+                    document.querySelectorAll('.laptop-gen-content [style*="max-height"]').forEach(el => {
+                        if (el !== content && el.style.maxHeight !== '0px') {
+                            el.style.maxHeight = '0';
+                            const otherIcon = el.previousElementSibling.querySelector('.fa-chevron-down');
+                            if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+                        }
+                    });
 
-            content.style.maxHeight = content.scrollHeight + 'px';
-            icon.style.transform = 'rotate(180deg)';
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
         }
     }
-</script>
+    </script>
 
 
-        console.log("🎯 100% FIDELIDADE ATINGIDA - OpCore Simplify + Hardware Sniffer");
+    console.log("🎯 100% FIDELIDADE ATINGIDA - OpCore Simplify + Hardware Sniffer");
     </script>
 </body>
 
