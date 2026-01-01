@@ -2321,31 +2321,27 @@
 
             <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
                 <!-- AMD Card -->
-                <div class="card">
+                                                <div class="card">
                     <div class="card-icon"><i class="fas fa-microchip" style="color: #EF4444;"></i></div>
                     <h3 data-i18n="hw-amd-title">AMD Ryzen (Zen)</h3>
                     <p data-i18n="hw-amd-desc">Ryzen 1000-7000 & Threadripper</p>
 
                     <!-- ACPI -->
                     <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             ACPI
                         </summary>
                         <div style="padding: 10px;">
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li><strong>SSDT-EC-USBX-DESKTOP.aml</strong> (Mandatory)</li>
-                                <li><strong>SSDT-CPUR.aml</strong> (B550/A520/TRX40) or <strong>SSDT-PLUG.aml</strong>
-                                    (Older)</li>
-                                <li>SSDT-SBUS-MCHC.aml (Recommended)</li>
+                                <li><strong>SSDT-EC-USBX-DESKTOP.aml</strong></li>
+                                <li><strong>SSDT-CPUR.aml</strong> (B550/A520) or <strong>SSDT-PLUG.aml</strong></li>
                             </ul>
                         </div>
                     </details>
 
                     <!-- Booter -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Booter
                         </summary>
                         <div style="padding: 10px;">
@@ -2354,23 +2350,31 @@
                                 <li>EnableWriteUnprotector: <code>False</code></li>
                                 <li>RebuildAppleMemoryMap: <code>True</code></li>
                                 <li>SetupVirtualMap: <code>True</code></li>
-                                <li>DevirtualiseMmio: <code>False</code> (Generally)</li>
                             </ul>
+                        </div>
+                    </details>
+
+                    <!-- DeviceProperties -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            DeviceProperties
+                        </summary>
+                        <div style="padding: 10px;">
+                            <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                                Typically empty for AMD (Most iGPUs not supported).
+                            </div>
                         </div>
                     </details>
 
                     <!-- Kernel -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Kernel
                         </summary>
                         <div style="padding: 10px;">
                             <h5 style="color: var(--primary); font-size: 0.9em;">AMD Patches</h5>
-                            <div style="font-size:0.85rem; margin-bottom:10px; color: var(--warning);">
-                                <strong>Mandatory:</strong> <a href="https://github.com/AMD-OSX/AMD_Vanilla"
-                                    target="_blank" style="color:var(--text); text-decoration:underline;">AMD_Vanilla
-                                    Patches</a>
+                            <div style="font-size:0.85rem; margin-bottom:10px;">
+                                <a href="https://github.com/AMD-OSX/AMD_Vanilla" target="_blank" style="color:var(--warning); text-decoration:underline;">Mandatory Patches</a>
                             </div>
                             <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
@@ -2378,42 +2382,86 @@
                                 <li>PanicNoKextDump: <code>True</code></li>
                                 <li>PowerTimeoutKernelPanic: <code>True</code></li>
                             </ul>
-                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top:10px;">Drivers (Kexts)</h5>
+                        </div>
+                    </details>
+
+                    <!-- Misc (COSMETICS ADDED) -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Misc
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Boot (Cosmetics)</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0; margin-bottom: 10px;">
+                                <li>PickerMode: <code>External</code> (Enable GUI/Themes)</li>
+                                <li>PickerAttributes: <code>17</code> (Mouse Support)</li>
+                                <li>ShowPicker: <code>True</code></li>
+                                <li>PollAppleHotKeys: <code>True</code></li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Security & Debug</h5>
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li><strong>AMDRyzenCPUPowerManagement.kext</strong></li>
-                                <li><strong>SMCAMDProcessor.kext</strong></li>
-                                <li>XLNCUSBFIX.kext (Only for FX CPUs)</li>
+                                <li>SecureBootModel: <code>Disabled</code></li>
+                                <li>AppleDidMessage: <code>True</code> (if using Debug)</li>
+                                <li>ScanPolicy: <code>0</code></li>
                             </ul>
                         </div>
                     </details>
 
-                    <!-- Misc / NVRAM -->
+                    <!-- NVRAM -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            Misc & NVRAM
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            NVRAM
                         </summary>
                         <div style="padding: 10px;">
                             <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
-                            <code
-                                style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 npci=0x2000 alcid=1</code>
-                            <div style="margin-top:10px; font-size:0.85rem;">
-                                <strong>PlatformInfo (SMBIOS):</strong><br>
-                                MacPro7,1 (Recommended) or iMacPro1,1
+                            <code style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 npci=0x2000 alcid=1</code>
+                            <div style="font-size:0.8rem; margin-top:5px; color:var(--text-secondary);">
+                                Remove <code>-v</code> for Apple Logo boot (Clean Boot).
                             </div>
                         </div>
                     </details>
 
-                    <!-- UEFI -->
+                    <!-- PlatformInfo -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            UEFI & BIOS
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            PlatformInfo
                         </summary>
                         <div style="padding: 10px;">
-                            <h5 style="color: var(--primary); font-size: 0.9em;">BIOS Settings</h5>
+                            <div style="font-size:0.85rem;">
+                                <strong>MacPro7,1</strong> (Recommended)<br>
+                                <strong>iMacPro1,1</strong> (Alternative)
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- UEFI (VISUALS ADDED) -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            UEFI
+                        </summary>
+                         <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Output (Visuals)</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0; margin-bottom:10px;">
+                                <li>Resolution: <code>Max</code> (Native Res)</li>
+                                <li>TextRenderer: <code>BuiltinGraphics</code></li>
+                                <li>ConsoleMode: <code>Max</code></li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Drivers</h5>
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li><strong>Disable:</strong> CSM, Secure Boot, Serial/Parallel Port</li>
+                                <li>OpenRuntime.efi</li>
+                                <li>HfsPlus.efi</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- BIOS Settings -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            <span style="color: var(--warning);">⚙️ BIOS Settings</span>
+                        </summary>
+                        <div style="padding: 10px;">
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li><strong>Disable:</strong> CSM, Secure Boot, Serial Port</li>
                                 <li><strong>Enable:</strong> Above 4G Decoding, EHCI/XHCI Handoff</li>
                             </ul>
                         </div>
@@ -2421,22 +2469,21 @@
                 </div>
 
                 <!-- Intel 10th Card -->
-                <div class="card">
+                                                <div class="card">
                     <div class="card-icon"><i class="fas fa-microchip" style="color: #0071C5;"></i></div>
                     <h3 data-i18n="hw-intel-10-title">Intel 8th-10th Gen</h3>
                     <p data-i18n="hw-intel-10-desc">Comet Lake (Native)</p>
 
                     <!-- ACPI -->
                     <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             ACPI
                         </summary>
                         <div style="padding: 10px;">
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li><strong>SSDT-PLUG.aml</strong> (CPU Power Management)</li>
-                                <li><strong>SSDT-EC-USBX.aml</strong> (Embedded Controller)</li>
-                                <li><strong>SSDT-AWAC.aml</strong> (Real Time Clock)</li>
+                                <li><strong>SSDT-PLUG.aml</strong></li>
+                                <li><strong>SSDT-EC-USBX.aml</strong></li>
+                                <li><strong>SSDT-AWAC.aml</strong></li>
                                 <li>SSDT-RHUB.aml (Examples: Asus Z490)</li>
                             </ul>
                         </div>
@@ -2444,8 +2491,7 @@
 
                     <!-- Booter -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Booter
                         </summary>
                         <div style="padding: 10px;">
@@ -2461,8 +2507,7 @@
 
                     <!-- DeviceProperties -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             DeviceProperties
                         </summary>
                         <div style="padding: 10px;">
@@ -2482,8 +2527,7 @@
 
                     <!-- Kernel -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Kernel
                         </summary>
                         <div style="padding: 10px;">
@@ -2492,63 +2536,120 @@
                                 <li>AppleXcpmCfgLock: <code>True</code> (If CFG-Lock enabled)</li>
                                 <li>DisableIoMapper: <code>True</code> (If VT-d enabled)</li>
                                 <li>PanicNoKextDump: <code>True</code></li>
-                                <li>PowerTimeoutKernelPanic: <code>True</code></li>
                             </ul>
                         </div>
                     </details>
 
-                    <!-- PlatformInfo / Misc -->
+                    <!-- Misc (COSMETICS ADDED) -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            PlatformInfo & Misc
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Misc
                         </summary>
                         <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Boot (Cosmetics)</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0; margin-bottom: 10px;">
+                                <li>PickerMode: <code>External</code> (Enable GUI/Themes)</li>
+                                <li>PickerAttributes: <code>17</code> (Mouse Support)</li>
+                                <li>ShowPicker: <code>True</code></li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Security</h5>
+                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>SecureBootModel: <code>Disabled</code></li>
+                                <li>ScanPolicy: <code>0</code></li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- NVRAM -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            NVRAM
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
+                            <code style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 alcid=1</code>
+                            <div style="font-size:0.8rem; margin-top:5px; color:var(--text-secondary);">
+                                Remove <code>-v</code> for Apple Logo boot (Clean Boot).
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- PlatformInfo -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            PlatformInfo
+                        </summary>
+                         <div style="padding: 10px;">
                             <div style="font-size:0.85rem;">
-                                <strong>SMBIOS:</strong><br>
-                                <strong>iMac20,1</strong> (i7-10700K, i9-10900K)<br>
-                                <strong>iMac20,2</strong> (i5-10600K and lower)<br>
+                                <strong>iMac20,1</strong> (High-end 10th Gen)<br>
+                                <strong>iMac20,2</strong> (Mid-range 10th Gen)<br>
                                 <strong>iMac19,1</strong> (8th/9th Gen)
                             </div>
-                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top:10px;">Boot-args</h5>
-                            <code>-v keepsyms=1 debug=0x100 alcid=1</code>
+                        </div>
+                    </details>
+
+                    <!-- UEFI (VISUALS ADDED) -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            UEFI
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Output (Visuals)</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0; margin-bottom:10px;">
+                                <li>Resolution: <code>Max</code> (Native Res)</li>
+                                <li>TextRenderer: <code>BuiltinGraphics</code></li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Drivers</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>OpenRuntime.efi</li>
+                                <li>HfsPlus.efi</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- BIOS Settings -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            <span style="color: var(--warning);">⚙️ BIOS Settings</span>
+                        </summary>
+                        <div style="padding: 10px;">
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li><strong>Disable:</strong> CFG-Lock, Secure Boot, Fast Boot</li>
+                                <li><strong>Enable:</strong> VT-d (if needed), Above 4G Decoding</li>
+                            </ul>
                         </div>
                     </details>
                 </div>
 
                 <!-- Intel 12th+ Card -->
-                <div class="card">
+                                                <div class="card">
                     <div class="card-icon"><i class="fas fa-microchip" style="color: #00C7FD;"></i></div>
                     <h3 data-i18n="hw-intel-12-title">Intel 12th-14th Gen</h3>
                     <p data-i18n="hw-intel-12-desc">Alder/Raptor (Spoof)</p>
 
                     <!-- ACPI -->
                     <details style="margin-top: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             ACPI
                         </summary>
                         <div style="padding: 10px;">
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li><strong>SSDT-PLUG-ALT.aml</strong> (Required for Hybrid CPUs)</li>
+                                <li><strong>SSDT-PLUG-ALT.aml</strong> (Required)</li>
                                 <li><strong>SSDT-EC-USBX.aml</strong></li>
-                                <li><strong>SSDT-AWAC.aml</strong> (or SSDT-AWAC-DISABLE)</li>
-                                <li>SSDT-RHUB.aml (Asus motherboards)</li>
+                                <li><strong>SSDT-AWAC.aml</strong></li>
                             </ul>
                         </div>
                     </details>
 
                     <!-- Booter -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
                             Booter
                         </summary>
                         <div style="padding: 10px;">
                             <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
                                 <li>DevirtualiseMmio: <code>True</code></li>
-                                <li>EnableWriteUnprotector: <code>False</code></li>
                                 <li>RebuildAppleMemoryMap: <code>True</code></li>
                                 <li>SetupVirtualMap: <code>True</code></li>
                                 <li>SyncRuntimePermissions: <code>True</code></li>
@@ -2556,51 +2657,113 @@
                         </div>
                     </details>
 
-                    <!-- Kernel / Spoof -->
+                    <!-- DeviceProperties -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            Kernel (Spoof & Quirks)
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            DeviceProperties
+                        </summary>
+                        <div style="padding: 10px;">
+                            <div style="font-size:0.8rem; color:var(--text-secondary);">
+                                <strong>Note:</strong> iGPU (UHD 770) is NOT supported.<br> You need a dedicated GPU (AMD RX 400/500/5000/6000 series).
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Kernel -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Kernel
                         </summary>
                         <div style="padding: 10px;">
                             <h5 style="color: var(--primary); font-size: 0.9em;">Emulate (Comet Lake Spoof)</h5>
                             <div style="font-size:0.8rem; font-family:monospace; margin-bottom:10px;">
-                                Cpuid1Data: <span style="color:var(--success)">55060A00 00000000 00000000
-                                    00000000</span><br>
-                                Cpuid1Mask: <span style="color:var(--success)">FFFFFFFF 00000000 00000000
-                                    00000000</span>
+                                Cpuid1Data: <span style="color:var(--success)">55060A00 00000000 00000000 00000000</span><br>
+                                Cpuid1Mask: <span style="color:var(--success)">FFFFFFFF 00000000 00000000 00000000</span>
                             </div>
                             <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
-                                <li>ProvideCurrentCpuInfo: <code>True</code> (Critical for E-Cores)</li>
+                                <li>ProvideCurrentCpuInfo: <code>True</code></li>
                                 <li>PanicNoKextDump: <code>True</code></li>
                                 <li>PowerTimeoutKernelPanic: <code>True</code></li>
                             </ul>
-                            <div style="margin-top:10px; font-size:0.8rem; color:var(--text-secondary);">
-                                <strong>Note:</strong> iGPU (UHD 770) is NOT supported. You need a dedicated GPU (AMD RX
-                                400/500/5000/6000 series).
+                        </div>
+                    </details>
+
+                    <!-- Misc (COSMETICS ADDED) -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            Misc
+                        </summary>
+                        <div style="padding: 10px;">
+                             <h5 style="color: var(--primary); font-size: 0.9em;">Boot (Cosmetics)</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0; margin-bottom: 10px;">
+                                <li>PickerMode: <code>External</code> (Enable GUI/Themes)</li>
+                                <li>PickerAttributes: <code>17</code> (Mouse Support)</li>
+                                <li>ShowPicker: <code>True</code></li>
+                            </ul>
+                             <h5 style="color: var(--primary); font-size: 0.9em;">Security</h5>
+                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li>SecureBootModel: <code>Disabled</code></li>
+                                <li>ScanPolicy: <code>0</code></li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <!-- NVRAM -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            NVRAM
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Boot-args</h5>
+                            <code style="display:block; margin-top:0.2rem; font-size:0.8rem; word-break: break-all;">-v keepsyms=1 debug=0x100 agdpmod=pikera</code>
+                            <div style="font-size:0.8rem; margin-top:5px; color:var(--text-secondary);">
+                                Remove <code>-v</code> for Apple Logo boot (Clean Boot).
                             </div>
                         </div>
                     </details>
 
                     <!-- PlatformInfo -->
                     <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
-                        <summary
-                            style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
-                            PlatformInfo & UEFI
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            PlatformInfo
                         </summary>
                         <div style="padding: 10px;">
-                            <div style="font-size:0.85rem; margin-bottom:10px;">
-                                <strong>SMBIOS:</strong><br>
+                            <div style="font-size:0.85rem;">
                                 <strong>MacPro7,1</strong> (Recommended)<br>
                                 <strong>iMacPro1,1</strong> (Alternative)
                             </div>
-                            <h5 style="color: var(--primary); font-size: 0.9em;">UEFI Quirks</h5>
-                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                        </div>
+                    </details>
+
+                    <!-- UEFI (VISUALS ADDED) -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            UEFI
+                        </summary>
+                        <div style="padding: 10px;">
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Output (Visuals)</h5>
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0; margin-bottom:10px;">
+                                <li>Resolution: <code>Max</code> (Native Res)</li>
+                                <li>TextRenderer: <code>BuiltinGraphics</code></li>
+                            </ul>
+                            <h5 style="color: var(--primary); font-size: 0.9em;">Quirks</h5>
+                             <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
                                 <li>ResizeAppleGpuBars: <code>-1</code> (Disabled - Critical!)</li>
                             </ul>
-                            <h5 style="color: var(--primary); font-size: 0.9em; margin-top:10px;">Boot-args</h5>
-                            <code>-v keepsyms=1 debug=0x100 agdpmod=pikera</code> (pikera for Navi GPUs)
+                        </div>
+                    </details>
+
+                    <!-- BIOS Settings -->
+                    <details style="margin-top: 0.5rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px;">
+                        <summary style="padding: 10px; cursor: pointer; font-weight: bold; background: rgba(0,0,0,0.1);">
+                            <span style="color: var(--warning);">⚙️ BIOS Settings</span>
+                        </summary>
+                        <div style="padding: 10px;">
+                            <ul style="font-size: 0.85rem; padding-left: 1rem; margin: 0;">
+                                <li><strong>Disable:</strong> CFG-Lock, Secure Boot</li>
+                                <li><strong>Enable:</strong> Above 4G Decoding, Hyper-Threading</li>
+                            </ul>
                         </div>
                     </details>
                 </div>
