@@ -11072,88 +11072,169 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 </div>
             </div>
        </div>
+        </div>
     </div>
-</sectin> 
+</section>
 
-<!--CSS Adicional para Laptops-- >
+<!-- Laptop CSS -->
 <style>
     .laptop-gen-btn:hover {
         background: rgba(0, 113, 227, 0.1);
         border-color: var(--primary);
         transform: translateY(-2px);
     }
-
     .laptop-gen-btn.active {
         background: var(--gradient-primary);
         border-color: var(--primary);
         color: white;
     }
-
     .laptop-gen-content {
         animation: fadeIn 0.5s ease;
     }
-
     @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY0);
-        }
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 
-<!--JaaS cr            ipt para Navegação de Laptops-- >
-            <script>
-    // Navegação entre gerações de laptop
-    document.querySe                    l('.laptop-gen-btn').forEach(btn => {
-                                btn.addEventListener('click', func                                              // Remove active de todos os botões
-                        document                        orAll('.laptop-gen-btn').forEach(b =                        t.remove('active'));
+<!-- SCRIPTS -->
+<!-- Datasets -->
+<script src="datasets/igpu-properties.js"></script>
+<script src="datasets/ethernet-ids.js"></script>
+<script src="datasets/codec-layouts.js"></script>
 
-                                    // Adiciona active ao bo                                                this.classList.add('active');
+<!-- Generator Logic -->
+<script src="config-generator.js"></script>
 
-                                           nde todo o conteúdo
-                                    docum                        ectorAll('.laptop-gen-content').forE                        => {
-                            content.st                        = 'none';
-                        });
+<!-- Initialization -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
-                                    // Mostra o                 eúdo correspondente
-                                    const gen = this.getAttribute('data-gen');
-                                document.getElementById(gen).style.display                k';
-                    });
+    // 1. Laptop Navigation
+    document.querySelectorAll('.laptop-gen-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.laptop-gen-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.laptop-gen-content').forEach(c => c.style.display = 'none');
+            const gen = this.getAttribute('data-gen');
+            if(document.getElementById(gen)) document.getElementById(gen).style.display = 'block';
+        });
     });
 
-                //                 n toggle
-                        function toggleAccordion(header) {
-        const item = heade                    ent;
-                const cont                .nextElementSibling;
-                const icon = header                    or('.fa-chevron-down');
+    // 2. Config Generator Initialization
+    if (typeof ConfigGenerator !== 'undefined') {
+        const generator = new ConfigGenerator();
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
+        
+        // Drag and Drop
+        if (dropZone) {
+            dropZone.addEventListener('click', () => fileInput.click());
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--primary)';
+                dropZone.style.background = 'rgba(102, 126, 234, 0.1)';
+            });
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.style.borderColor = 'var(--primary)';
+                dropZone.style.background = 'rgba(102, 126, 234, 0.05)';
+            });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--primary)';
+                dropZone.style.background = 'rgba(102, 126, 234, 0.05)';
+                if (e.dataTransfer.files.length) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+        }
 
-                        // Toggle
-                if (content.style.maxHeight && content.style.maxHeight !==                                      content.style.maxHeight = '0';
-                                      nsform = 'rotate(0deg)';
-                                             // Fecha outros accordions
-                    document.querySe                            en-content [style*="max-height"]').forEach(el => {
-                                if                    tent                 maxHeight !== '0px') {
-                            el.s                ht = '0';
-                            const otherIcon = el.previovron-down');
-                            if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
-                        }
-                    });
+        // File Selection
+        if (fileInput) {
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) handleFile(e.target.files[0]);
+            });
+        }
 
-                content.style.maxHeight = content.scrollHeight + 'px';
-                icon.style.transform = 'rotate(180deg)';
+        async function handleFile(file) {
+            try {
+                // UI Update
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(2) + ' KB';
+                document.getElementById('fileInfo').style.display = 'block';
+
+                // Parse
+                const data = await generator.parseHardwareReport(file);
+                console.log("Hardware Data:", data);
+
+                // Show Step 2
+                document.getElementById('step2-macos').style.display = 'block';
+                
+                // Populate macOS Versions
+                const versionsDiv = document.getElementById('macosVersions');
+                versionsDiv.innerHTML = '';
+                
+                generator.macOSVersions.forEach(ver => {
+                    const btn = document.createElement('div');
+                    btn.className = 'version-card';
+                    btn.style = "background: rgba(255,255,255,0.05); padding: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: all 0.2s; text-align:center;";
+                    btn.innerHTML = `<strong>${ver.name}</strong><br><small>Darwin ${ver.darwin}</small>`;
+                    
+                    btn.onclick = () => {
+                        // Highlight
+                        document.querySelectorAll('.version-card').forEach(v => {
+                            v.style.background = 'rgba(255,255,255,0.05)';
+                            v.style.borderColor = 'rgba(255,255,255,0.1)';
+                        });
+                        btn.style.background = 'rgba(102, 126, 234, 0.2)';
+                        btn.style.borderColor = '#667eea';
+
+                        // Show Step 3
+                        document.getElementById('step3-analysis').style.display = 'block';
+                        
+                        // Populate Info
+                        document.getElementById('cpuInfo').innerHTML = `<strong>${data.CPU["Processor Name"]}</strong><br><small>${data.CPU.Codename}</small>`;
+                        document.getElementById('moboInfo').innerHTML = `<strong>${data.Motherboard.Name}</strong><br><small>${data.Motherboard.Platform}</small>`;
+                        const gpuNames = Object.keys(data.GPU || {}).join(", ");
+                        document.getElementById('gpuInfo').textContent = gpuNames || "None";
+                        
+                        const smbios = generator.selectSMBIOS(data, ver);
+                        document.getElementById('smbiosInfo').textContent = smbios;
+
+                        // Setup Generate Button
+                        const genBtn = document.getElementById('generateBtn');
+                        genBtn.onclick = async () => {
+                             await generator.generateConfig(data, ver);
+                             document.getElementById('step4-download').style.display = 'block';
+                             document.getElementById('selectedSMBIOS').textContent = smbios;
+                             
+                             // Setup Download
+                             document.getElementById('downloadBtn').onclick = () => generator.downloadConfigPlist();
+                             document.getElementById('restartBtn').onclick = () => location.reload();
+                        };
+                    };
+                    versionsDiv.appendChild(btn);
+                });
+
+            } catch (e) {
+                console.error(e);
+                alert("Error parsing report: " + e.message);
+            }
         }
     }
-    </script>
+});
 
-
-    console.log("🎯 100% FIDELIDADE ATINGIDA - OpCore Simplify + Hardware Sniffer");
-    </script>
+function toggleAccordion(header) {
+    const content = header.nextElementSibling;
+    const icon = header.querySelector('.fa-chevron-down');
+    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+        content.style.maxHeight = '0';
+        if(icon) icon.style.transform = 'rotate(0deg)';
+    } else {
+        content.style.maxHeight = content.scrollHeight + 'px';
+         if(icon) icon.style.transform = 'rotate(180deg)';
+    }
+}
+</script>
 </body>
-
 </html>
-<!-- Local Version Sync: 2025-12-28 -->
