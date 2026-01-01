@@ -11111,143 +11111,172 @@ PciRoot(0x0)/Pci(0x2,0x0)
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-</section >
+        </div>
+    </div>
+</section>
 
-< !--Laptop CSS-- >
-            <style>
-                .laptop-gen-btn:hover {
-                    background: rgba(0, 113, 227, 0.1);
-                border-color: var(--primary);
-                transform: translateY(-2px);
+<!-- Laptop CSS -->
+<style>
+    .laptop-gen-btn:hover {
+        background: rgba(0, 113, 227, 0.1);
+        border-color: var(--primary);
+        transform: translateY(-2px);
     }
-                .laptop-gen-btn.active {
-                    background: var(--gradient-primary);
-                border-color: var(--primary);
-                color: white;
+    .laptop-gen-btn.active {
+        background: var(--gradient-primary);
+        border-color: var(--primary);
+        color: white;
     }
-                .laptop-gen-content {
-                    animation: fadeIn .5s ease;
+    .laptop-gen-content {
+        animation: fadeIn 0.5s ease;
     }
-                @keyframes fadeI {
-                    from {opacity: 0; transform: translateY(20px); }
-                to {opacity: 1; transform: translateY(0); }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-                <                    
+</style>
+
 <!-- SCRIPTS -->
-                <!-- Datasets -->
-                <script src="datasets/igpu-properties.js"></script>
-    <script src="datasets/ethernet-ids.js"></script>
-    <script src="datasets/codec-layouts.js"></script>
+<!-- Datasets -->
+<script src="datasets/igpu-properties.js"></script>
+<script src="datasets/ethernet-ids.js"></script>
+<script src="datasets/codec-layouts.js"></script>
 
-    <!-- Generator Logic -->
-    <script src="config-generator.js"></script>
+<!-- Generator Logic -->
+<script src="config-generator.js"></script>
 
-    <!-- Initialization -->
-    <script>
+<!-- Initialization -->
+<script>
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Laptop Navigation
+    document.querySelectorAll('.laptop-gen-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.laptop-gen-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.laptop-gen-content').forEach(c => c.style.display = 'none');
+            const gen = this.getAttribute('data-gen');
+            if(document.getElementById(gen)) document.getElementById(gen).style.display = 'block';
+        });
+    });
 
-                // 1. Laptop Navigation
-                document.querySelectorAll('.laptop-gen-btn').forEach(btn => {
-                    btn.addEventListener('click', function () {
-                        document.querySelectorAll('.laptop-gen-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                        document.querySelectorAll('.laptop-gen-content').forEach(c => c.style.display = 'none');
-                        const gen = this.getAttribute('data-gen');
-                        if (document.getElementById(gen)) document.getElemen                d(gen).style.display                block';
-                    });
-                });
+    // 2. Config Generator Initialization
+    if (typeof ConfigGenerator !== 'undefined') {
+        const generator = new ConfigGenerator();
+        const fileInput = document.getElementById('fileInput');
+        const dropZone = document.getElementById('dropZone');
 
-            // 2. Config Generator Initialization
-            if                 ConfigGenerator !== 'undefined') {
-                nerator = new ConfigGenerator();
-            const fileInput                ent.getEle                ('fileInput');
-            const dropZone = document.getElementById('dro
-            // Drag and Drop
-            dropZone) {
-                dropZone.addEventListener('click                    eInput.click());
-                              ddEventListener('dragover', (e) => {
-                    e.preventDefault();
-                                      .borderColor = 'var(--primary)';
-            dropZ                             = 'rgba(102, 126, 234, 0.                            
+        // Drag and Drop
+        if (dropZone) {
+            dropZone.addEventListener('click', () => fileInput.click());
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--primary)';
+                dropZone.style.background = 'rgba(102, 126, 234, 0.1)';
+            });
             dropZone.addEventListener('dragleave', () => {
-                dro                            lor = 'var(--primary)';
-                dropZone.style.back                        02                    0.05)                   });
-            dropZone.addEventListener('drop', (e                           e.preventDefault();
-            dropZone.style.bor      dropZone.style.background = 'rgba(102, 126, 234, 0.05)';
-            if (e.dataTransfer.files.length) {
-                handleFile(e.dataTransfer.files[0]);
+                dropZone.style.borderColor = 'var(--primary)';
+                dropZone.style.background = 'rgba(102, 126, 234, 0.05)';
+            });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'var(--primary)';
+                dropZone.style.background = 'rgba(102, 126, 234, 0.05)';
+                if (e.dataTransfer.files.length) {
+                    handleFile(e.dataTransfer.files[0]);
                 }
             });
         }
 
-            // File Selection
-            if (fileInput) {
-                fileInput.addEventListener('change', (e) => {
-                    if (e.target.files.length) handleFile(e.target.files[0]);
-                });
+        // File Selection
+        if (fileInput) {
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) handleFile(e.target.files[0]);
+            });
         }
+        
+        // Define global downloadJSONReport for the button in HTML
+        window.downloadJSONReport = function() {
+             if(generator.hardwareData) {
+                 const blob = new Blob([JSON.stringify(generator.hardwareData, null, 2)], {type: "application/json"});
+                 const url = URL.createObjectURL(blob);
+                 const a = document.createElement('a');
+                 a.href = url;
+                 a.download = 'Report.json';
+                 document.body.appendChild(a);
+                 a.click();
+                 document.body.removeChild(a);
+             } else {
+                 alert("No hardware data to download yet!");
+             }
+        };
 
-            async function handleFile(file) {
+        async function handleFile(file) {
             try {
                 // UI Update
                 document.getElementById('fileName').textContent = file.name;
-            document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(2) + ' KB';
-            document.getElementById('fileInfo').style.display = 'block';
+                document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(2) + ' KB';
+                document.getElementById('fileInfo').style.display = 'block';
 
-            // Parse
-            const data = await generator.parseHardwareReport(file);
-            console.log("Hardware Data:", data);
-
-            // Show Step 2
-            document.getElementById('step2-macos').style.display = 'block';
-
-            // Populate macOS Versions
-            const versionsDiv = document.getElementById('macosVersions');
-            versionsDiv.innerHTML = '';
+                // Parse
+                const data = await generator.parseHardwareReport(file);
+                generator.hardwareData = data; // Store for downloadJSONReport
                 
+                console.log("Hardware Data:", data);
+
+                // Show Step 2
+                document.getElementById('step2-macos').style.display = 'block';
+
+                // Populate macOS Versions
+                const versionsDiv = document.getElementById('macosVersions');
+                versionsDiv.innerHTML = '';
+
                 generator.macOSVersions.forEach(ver => {
                     const btn = document.createElement('div');
-            btn.className = 'version-card';
-            btn.style = "background: rgba(255,255,255,0.05); padding: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: all 0.2s; text-align:center;";
-            btn.innerHTML = `<strong>${ver.name}</strong><br><small>Darwin ${ver.darwin}</small>`;
-                    
+                    btn.className = 'version-card';
+                    btn.style = "background: rgba(255,255,255,0.05); padding: 1rem; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; cursor: pointer; transition: all 0.2s; text-align:center;";
+                    btn.innerHTML = `<strong>${ver.name}</strong><br><small>Darwin ${ver.darwin}</small>`;
+
                     btn.onclick = () => {
-                    // Highlight
-                    document.querySelectorAll('.version-card').forEach(v => {
-                        v.style.background = 'rgba(255,255,255,0.05)';
-                        v.style.borderColor = 'rgba(255,255,255,0.1)';
-                    });
-                btn.style.background = 'rgba(102, 126, 234, 0.2)';
-                btn.style.borderColor = '#667eea';
+                        // Highlight
+                        document.querySelectorAll('.version-card').forEach(v => {
+                            v.style.background = 'rgba(255,255,255,0.05)';
+                            v.style.borderColor = 'rgba(255,255,255,0.1)';
+                        });
+                        btn.style.background = 'rgba(102, 126, 234, 0.2)';
+                        btn.style.borderColor = '#667eea';
 
-                // Show Step 3
-                document.getElementById('step3-analysis').style.display = 'block';
+                        // Show Step 3
+                        document.getElementById('step3-analysis').style.display = 'block';
 
-                // Populate Info
-                document.getElementById('cpuInfo').innerHTML = `<strong>${data.CPU["Processor Name"]}</strong><br><small>${data.CPU.Codename}</small>`;
-                    document.getElementById('moboInfo').innerHTML = `<strong>${data.Motherboard.Name}</strong><br><small>${data.Motherboard.Platform}</small>`;
+                        // Populate Info
+                        document.getElementById('cpuInfo').innerHTML = `<strong>${data.CPU["Processor Name"] || "Unknown"}</strong><br><small>${data.CPU.Codename || ""}</small>`;
+                        document.getElementById('moboInfo').innerHTML = `<strong>${data.Motherboard.Name || "Unknown"}</strong><br><small>${data.Motherboard.Platform || ""}</small>`;
                         const gpuNames = Object.keys(data.GPU || {}).join(", ");
                         document.getElementById('gpuInfo').textContent = gpuNames || "None";
-                        
+
                         const smbios = generator.selectSMBIOS(data, ver);
                         document.getElementById('smbiosInfo').textContent = smbios;
 
                         // Setup Generate Button
                         const genBtn = document.getElementById('generateBtn');
                         genBtn.onclick = async () => {
-                             await generator.generateConfig(data, ver);
+                             const config = await generator.generateConfig(data, ver);
                              document.getElementById('step4-download').style.display = 'block';
                              document.getElementById('selectedSMBIOS').textContent = smbios;
-                             
+
                              // Setup Download
                              document.getElementById('downloadBtn').onclick = () => generator.downloadConfigPlist();
                              document.getElementById('restartBtn').onclick = () => location.reload();
                         };
+                        
+                         // Scroll to Step 3
+                        document.getElementById('step3-analysis').scrollIntoView({behavior: 'smooth'});
                     };
                     versionsDiv.appendChild(btn);
                 });
+                
+                // Scroll to Step 2
+                document.getElementById('step2-macos').scrollIntoView({behavior: 'smooth'});
 
             } catch (e) {
                 console.error(e);
@@ -11268,7 +11297,6 @@ function toggleAccordion(header) {
          if(icon) icon.style.transform = 'rotate(180deg)';
     }
 }
-    </script>
+</script>
 </body>
-
 </html>
