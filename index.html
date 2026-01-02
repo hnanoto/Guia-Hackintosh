@@ -14086,10 +14086,26 @@ PciRoot(0x0)/Pci(0x2,0x0)
         document.addEventListener('DOMContentLoaded', () => {
             // Theme Init
             const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-mode');
-        const icon = document.querySelector('#themeToggle i');
-        if (icon) icon.className = 'fas fa-moon';
+            const icon = document.querySelector('#themeToggle i');
+
+            const applyLightMode = () => {
+                document.body.classList.add('light-mode');
+                if (icon) icon.className = 'fas fa-moon';
+            };
+
+            // 1. Check Saved Preference (Manual Override)
+            if (savedTheme) {
+                if (savedTheme === 'light') {
+                    applyLightMode();
+                }
+            } 
+            // 2. Auto-Schedule (If no preference saved)
+            // Light Mode between 06:00 (6 AM) and 18:00 (6 PM)
+            else {
+                const hour = new Date().getHours();
+                if (hour >= 6 && hour < 18) {
+                    applyLightMode();
+                }
             }
 
         // Bind Scroll to Top click if element exists (some HTML might use onclick="scrollToTop()")
