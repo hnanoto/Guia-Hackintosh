@@ -125,6 +125,11 @@ class ConfigGenerator {
             throw new Error('Invalid hardware report: missing CPU section');
         }
 
+        // Ensure BIOS Firmware Type defaults to UEFI for modern hackintoshes if missing
+        if (!normalized.BIOS["Firmware Type"]) {
+            normalized.BIOS["Firmware Type"] = "UEFI";
+        }
+
         // CPU Normalization
         const cpuMap = {
             "Processor Name": ["Processor Name", "Name", "Model"],
@@ -1002,9 +1007,9 @@ class ConfigGenerator {
                     },
                     "7C436110-AB2A-4BBB-A880-FE41995C9F82": {
                         "ForceDisplayRotationInEFI": 0,
-                        "SystemAudioVolume": { _isData: true, value: "Rg" },
+                        "SystemAudioVolume": { _isData: true, value: "46" },
                         "boot-args": "",
-                        "csr-active-config": { _isData: true, value: "AAAAAA" },
+                        "csr-active-config": { _isData: true, value: "00000000" },
                         "prev-lang:kbd": { _isData: true, value: "" },
                         "run-efi-updater": "No"
                     }
@@ -1159,12 +1164,16 @@ class ConfigGenerator {
     generateBooter(hw, macOS) {
         const chipset = hw.Motherboard.Chipset || "";
         const cpuCodename = hw.CPU.Codename || "";
-        const firmware = hw.BIOS["Firmware Type"];
+        const firmware = hw.BIOS["Firmware Type"] || "UEFI";
         const cpuMan = hw.CPU.Manufacturer;
 
         // Logic matched with OpCore-Simplify
-        const isIntelNewer = chipset.match(/Z[4-7]90/) || chipset.match(/[BHQ][4-7][0-9]0/); // Intel 400+
+        // Intel 500+ (Z590/B560+) usually needs SetupVirtualMap = False
+        // Intel 400 (Z490/Comet Lake) needs SetupVirtualMap = True (So we exclude it from "Newer")
+        const isIntelNewer = chipset.match(/Z[5-7]90/) || chipset.match(/[BHQ][5-7][0-9]0/);
         const isAMDNewer = chipset.match(/X570|B550|A520|TRX40|B650|X670/); // AMD 500+
+
+
 
         return {
             "MmioWhitelist": this.generateMmioWhitelist(chipset),
@@ -1187,7 +1196,10 @@ class ConfigGenerator {
                 "ProvideMaxSlide": 0,
                 "RebuildAppleMemoryMap": !this.needsWriteUnprotector(hw), // Inverse of EnableWriteUnprotector
                 "ResizeAppleGpuBars": -1, // Conservative default
-                "SetupVirtualMap": firmware === "UEFI" && !isIntelNewer && !isAMDNewer,
+                // "SetupVirtualMap": firmware === "UEFI" && !isIntelNewer && !isAMDNewer, 
+                // Z690/Z790 (IntelNewer) recommends False, but many users (Gigabyte Z690) need True to avoid EXITBS:START.
+                // We default to TRUE for all Intel UEFI to maximize boot success/compatibility.
+                "SetupVirtualMap": firmware === "UEFI" && !isAMDNewer,
                 "SignalAppleOS": false,
                 "SyncRuntimePermissions": this.needsWriteUnprotector(hw) ? false : true // True for Matryoshka (AMD/New Intel)
             }
@@ -1258,7 +1270,47 @@ class ConfigGenerator {
             }
         }
 
+
+        // Global Pass: Convert all hex-looking strings to Data objects (OpCore Simplify Logic)
+        for (const pciPath of Object.keys(deviceProps)) {
+            const props = deviceProps[pciPath];
+            for (const key of Object.keys(props)) {
+                if (typeof props[key] === 'string') {
+                    props[key] = this.tryParseHex(props[key]);
+                }
+            }
+        }
+
         return deviceProps;
+    }
+
+    tryParseHex(str) {
+        // OpCore Simplify Logic:
+        // 1. Remove non-hex characters (regex)
+        // 2. If length doesn't match string-without-spaces length, it had invalid chars -> return string
+        // 3. Else, it is valid hex -> return Data
+
+        if (typeof str !== 'string') return str;
+
+        // Strip spaces first to check "clean" length vs "hex only" length
+        const cleanStr = str.replace(/\s+/g, '');
+        if (cleanStr.length === 0) return str;
+
+        const hexOnly = cleanStr.replace(/[^0-9a-fA-F]/g, '');
+
+        if (cleanStr.length !== hexOnly.length) {
+            // Contains non-hex chars (like 'p','c','i',',')
+            return str;
+        }
+
+        // Even length check is implicit for bytes, but Python's unhexlify requires it.
+        // If odd, we usually pad or treat as string? Python throws Error. OpCore Simplify catches Error and returns string.
+        if (hexOnly.length % 2 !== 0) {
+            return str;
+        }
+
+        // It is valid hex bytes
+        return { _isData: true, value: hexOnly };
     }
 
     // ========================================================================
@@ -1406,13 +1458,9 @@ class ConfigGenerator {
             props["framebuffer-fbmem"] = "00009000";
         }
 
-        // Wrap properties in Data object
-        for (const key of Object.keys(props)) {
-            const val = props[key];
-            if (typeof val === 'string' && /^[0-9A-F]+$/.test(val)) {
-                props[key] = { _isData: true, value: val };
-            }
-        }
+        // Local wrapping removed in favor of global check in generateDeviceProperties
+        // But we keep the structure clean
+
 
         return props;
     }
@@ -1425,15 +1473,19 @@ class ConfigGenerator {
         const deviceId = netProps["Device ID"];
         if (!deviceId) return {};
 
+        let props = {};
+
         // Usar dataset se disponível
         if (this.generateEthernetPropertiesHelper && typeof this.generateEthernetPropertiesHelper === 'function') {
-            return this.generateEthernetPropertiesHelper(deviceId);
+            props = this.generateEthernetPropertiesHelper(deviceId);
+        } else {
+            // Fallback: apenas marcar como built-in
+            props = { "built-in": "01" };
         }
 
-        // Fallback: apenas marcar como built-in
-        return {
-            "built-in": "01"
-        };
+        // Local wrapping removed in favor of global check in generateDeviceProperties
+
+        return props;
     }
 
     // Manter função antiga para compatibilidade
@@ -1498,8 +1550,8 @@ class ConfigGenerator {
 
         // Spoof Comet Lake (0x0506A5) for Alder Lake, Raptor Lake, Rocket Lake
         if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") || cpuCodename.includes("Rocket")) {
-            emulate.Cpuid1Data = { _isData: true, value: "55060A0000000000000000000000000000000000" };
-            emulate.Cpuid1Mask = { _isData: true, value: "FFFFFFFF00000000000000000000000000000000" };
+            emulate.Cpuid1Data = { _isData: true, value: "55060A00000000000000000000000000" };
+            emulate.Cpuid1Mask = { _isData: true, value: "FFFFFFFF000000000000000000000000" };
         }
 
         return emulate;
@@ -1561,9 +1613,9 @@ class ConfigGenerator {
                 },
                 "7C436110-AB2A-4BBB-A880-FE41995C9F82": {
                     "ForceDisplayRotationInEFI": 0,
-                    "SystemAudioVolume": { _isData: true, value: "Rg" },
+                    "SystemAudioVolume": { _isData: true, value: "46" },
                     "boot-args": bootArgs,
-                    "csr-active-config": this.generateCSRConfig(macOS),
+                    "csr-active-config": { _isData: true, value: this.generateCSRConfig(macOS) },
                     "prev-lang:kbd": { _isData: true, value: "" }, // Keep empty or set default
                     "run-efi-updater": "No"
                 }
@@ -1622,7 +1674,7 @@ class ConfigGenerator {
                 "MaxBIOSVersion": false,
                 "MLB": "M0000000000000001",
                 "ProcessorType": 0,
-                "ROM": "112233445566",
+                "ROM": { _isData: true, value: "112233445566" },
                 "SpoofVendor": true,
                 "SystemProductName": smbiosModel,
                 "SystemSerialNumber": "W00000000001",
