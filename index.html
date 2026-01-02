@@ -13893,6 +13893,24 @@ PciRoot(0x0)/Pci(0x2,0x0)
         const container = document.getElementById('versionsContainer');
         if (!container) return;
 
+        // Cache Implementation
+        const CACHE_KEY = 'hackintosh_api_cache_v1';
+        const cached = localStorage.getItem(CACHE_KEY);
+        let useCache = false;
+
+        if (cached) {
+            try {
+                const {timestamp, data} = JSON.parse(cached);
+        // 1 hour cache duration
+        if (Date.now() - timestamp < 3600000) {
+            console.log('Using cached API data');
+        allReposData = data;
+        useCache = true;
+                }
+            } catch (e) {console.error('Cache parsing error:', e); }
+        }
+
+        if (!useCache) {
              // Parallel fetch
             const promises = repos.map(async (repo) => {
                 try {
@@ -13908,7 +13926,22 @@ PciRoot(0x0)/Pci(0x2,0x0)
             });
 
         const results = await Promise.all(promises);
-            allReposData = results.filter(r => r !== null);
+            const freshData = results.filter(r => r !== null);
+
+            if (freshData.length > 0) {
+            allReposData = freshData;
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+            timestamp: Date.now(),
+        data: freshData
+                }));
+            } else if (cached) {
+            // Determine if we should fallback to expired cache
+            console.warn('API Rate Limit likely hit or network error. Using expired cache.');
+        try {
+            allReposData = JSON.parse(cached).data;
+                } catch (e) { }
+            }
+        }
 
         // Render Initial View (Active filter or 'all')
         // Check if there is an active button currently (e.g. from previous state?)
@@ -14086,25 +14119,25 @@ PciRoot(0x0)/Pci(0x2,0x0)
         document.addEventListener('DOMContentLoaded', () => {
             // Theme Init
             const savedTheme = localStorage.getItem('theme');
-            const icon = document.querySelector('#themeToggle i');
+        const icon = document.querySelector('#themeToggle i');
 
             const applyLightMode = () => {
-                document.body.classList.add('light-mode');
-                if (icon) icon.className = 'fas fa-moon';
+            document.body.classList.add('light-mode');
+        if (icon) icon.className = 'fas fa-moon';
             };
 
-            // 1. Check Saved Preference (Manual Override)
-            if (savedTheme) {
+        // 1. Check Saved Preference (Manual Override)
+        if (savedTheme) {
                 if (savedTheme === 'light') {
-                    applyLightMode();
+            applyLightMode();
                 }
-            } 
-            // 2. Auto-Schedule (If no preference saved)
-            // Light Mode between 06:00 (6 AM) and 18:00 (6 PM)
-            else {
+            }
+        // 2. Auto-Schedule (If no preference saved)
+        // Light Mode between 06:00 (6 AM) and 18:00 (6 PM)
+        else {
                 const hour = new Date().getHours();
                 if (hour >= 6 && hour < 18) {
-                    applyLightMode();
+            applyLightMode();
                 }
             }
 
