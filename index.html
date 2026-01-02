@@ -13914,6 +13914,21 @@ PciRoot(0x0)/Pci(0x2,0x0)
              // Parallel fetch
 
 
+
+            // Function to fetch with timeout
+            const fetchWithTimeout = async (url, timeout = 5000) => {
+                const controller = new AbortController();
+                const id = setTimeout(() => controller.abort(), timeout);
+        try {
+                    const response = await fetch(url, {signal: controller.signal });
+        clearTimeout(id);
+        return response;
+                } catch (error) {
+            clearTimeout(id);
+        throw error;
+                }
+            };
+
         // Process in batches to avoid choking Safari/Network
         const batchSize = 3;
         const results = [];
