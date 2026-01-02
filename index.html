@@ -1497,252 +1497,320 @@
             <!-- 1. Must-Haves -->
             <h3
                 style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
-                <i class="fas fa-exclamation-circle"></i> <span data-i18n="kext-category-musthave">Essenciais
-                    (Obrigatórios)</span>
-            </h3>
-            <div class="table-container">
-                <table style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th data-i18n="th-kext">Kext</th>
-                            <th data-i18n="th-function">Function</th>
-                            <th data-i18n="th-link">Link</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Lilu.kext</strong></td>
-                            <td data-i18n="kext-desc-lilu">Essential base for other kexts, patches, and libraries.</td>
-                            <td><a href="https://github.com/acidanthera/Lilu/releases" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>VirtualSMC.kext</strong></td>
-                            <td data-i18n="kext-desc-vsmc">Advanced SMC emulation. Mandatory for booting.</td>
-                            <td><a href="https://github.com/acidanthera/VirtualSMC/releases" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 2. VirtualSMC Plugins -->
-            <h3
-                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
-                <i class="fas fa-plug"></i> <span data-i18n="kext-category-plugins">VirtualSMC Plugins</span>
-            </h3>
-            <div class="table-container">
-                <table style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th data-i18n="th-kext">Kext</th>
-                            <th data-i18n="th-function">Function</th>
-                            <th data-i18n="th-required">Usage</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>SMCProcessor.kext</strong></td>
-                            <td data-i18n="kext-desc-smcproc">CPU Temperature Monitoring.</td>
-                            <td data-i18n="req-intel-amd">Intel & AMD (Zen)</td>
-                        </tr>
-                        <tr>
-                            <td><strong>SMCSuperIO.kext</strong></td>
-                            <td data-i18n="kext-desc-smcio">Fan Speed Monitoring.</td>
-                            <td data-i18n="req-desktop-only">Desktops (Most)</td>
-                        </tr>
-                        <tr>
-                            <td><strong>SMCLightSensor.kext</strong></td>
-                            <td data-i18n="kext-desc-smclight">Ambient Light Sensor (ALS) for auto-brightness.</td>
-                            <td data-i18n="req-laptop-only">Laptops (w/ sensor)</td>
-                        </tr>
-                        <tr>
-                            <td><strong>SMCBatteryManager.kext</strong></td>
-                            <td data-i18n="kext-desc-smcbatt">Battery Monitoring.</td>
-                            <td data-i18n="req-laptop-proper">Laptops (if supported)</td>
-                        </tr>
-                        <tr>
-                            <td><strong>AMDRyzenCPUPowerManagement.kext</strong></td>
-                            <td data-i18n="kext-desc-amd-pm">Power Management for Ryzen APU/CPU.</td>
-                            <td data-i18n="req-amd-only">AMD Ryzen (Replaces SMCProcessor)</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 3. Graphics -->
-            <h3
-                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
-                <i class="fas fa-video"></i> <span data-i18n="kext-category-graphics">Graphics</span>
-            </h3>
-            <div class="table-container">
-                <table style="width: 100%;">
-                    <tbody>
-                        <tr>
-                            <td><strong>WhateverGreen.kext</strong></td>
-                            <td data-i18n="kext-desc-weg">Essential patches for Intel, AMD, NVIDIA GPUs. Fix DRM, port
-                                limits.</td>
-                            <td><a href="https://github.com/acidanthera/WhateverGreen/releases" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>NootRX.kext</strong></td>
-                            <td data-i18n="kext-desc-nootrx">Exclusive support for AMD RX 6000 (Navi 2x). **INCOMPATIBLE
-                                with WEG**.</td>
-                            <td><a href="https://github.com/ChefKissInc/NootRX" target="_blank"
-                                    style="color: var(--primary)">GitHub (NootRX)</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>NootedRed.kext</strong></td>
-                            <td data-i18n="kext-desc-nooted">Support for AMD Ryzen APUs (Vega iGPU).</td>
-                            <td><a href="https://github.com/ChefKissInc/NootedRed" target="_blank"
-                                    style="color: var(--primary)">GitHub</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 4. Audio & Network -->
-            <h3
-                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
-                <i class="fas fa-volume-up"></i> <span data-i18n="kext-category-audio-net">Audio & Network</span>
-            </h3>
-            <div class="table-container">
-                <table style="width: 100%;">
-                    <tbody>
-                        <tr>
-                            <td><strong>AppleALC.kext</strong></td>
-                            <td data-i18n="kext-desc-alc">Native audio patches for Realtek, CX codecs.</td>
-                            <td data-i18n="req-essential">Essential</td>
-                        </tr>
-                        <tr>
-                            <td><strong>IntelMausi.kext</strong></td>
-                            <td data-i18n="kext-desc-mausi">Drivers for Intel I217/I218/I219 Ethernet.</td>
-                            <td data-i18n="req-intel-lan">Intel LAN</td>
-                        </tr>
-                        <tr>
-                            <td><strong>RealtekRTL8111.kext</strong></td>
-                            <td data-i18n="kext-desc-8111">Drivers for Realtek Gigabit Ethernet.</td>
-                            <td data-i18n="req-realtek-lan">Realtek LAN</td>
-                        </tr>
-                        <tr>
-                            <td><strong>LucyRTL8125Ethernet.kext</strong></td>
-                            <td data-i18n="kext-desc-8125">Drivers for Realtek 2.5GbE Ethernet.</td>
-                            <td data-i18n="req-rtl8125">Realtek 2.5G</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 5. WiFi & Bluetooth -->
-            <h3
-                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
-                <i class="fas fa-wifi"></i> <span data-i18n="kext-category-wifi">Wi-Fi & Bluetooth</span>
-            </h3>
-            <div class="table-container">
-                <table style="width: 100%;">
-                    <thead>
-                        <tr>
-                            <th data-i18n="th-kext">Kext</th>
-                            <th data-i18n="th-desc">Description / Combo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>itlwm.kext / AirportItlwm.kext</strong></td>
-                            <td>
-                                <span data-i18n="kext-desc-itlwm-combo">Intel Wi-Fi. `itlwm` (stable, needs HeliPort) or
-                                    `AirportItlwm` (native, Apple features).</span><br>
-                                <span style="font-size: 0.8em; color: var(--text-secondary);">+
-                                    IntelBluetoothFirmware.kext (BT)</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>AirportBrcmFixup.kext</strong></td>
-                            <td>
-                                <span data-i18n="kext-desc-brcm">Patches for non-native Broadcom Wi-Fi or to force
-                                    loading.</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>BlueToolFixup.kext</strong></td>
-                            <td>
-                                <span data-i18n="kext-desc-bluetool">Fix Bluetooth Monterey/Ventura/Sonoma
-                                    (Broadcom/Intel).</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>BrcmPatchRAM3.kext</strong></td>
-                            <td>
-                                <span data-i18n="kext-desc-brcm-ram">Firmware uploader for Broadcom Bluetooth (requires
-                                    BrcmFirmwareData.kext).</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 6. USB & Extras -->
-            <h3
-                style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
-                <i class="fas fa-puzzle-piece"></i> <span data-i18n="kext-category-extras">USB & Extras</span>
-            </h3>
-            <div class="table-container">
-                <table style="width: 100%;">
-                    <tbody>
-                        <tr>
-                            <td><strong>USBToolBox.kext</strong></td>
-                            <td data-i18n="kext-desc-usbtb">Simple USB Mapping (Windows/macOS). Recommended.</td>
-                            <td data-i18n="req-rec">Recommended</td>
-                        </tr>
-                        <tr>
-                            <td><strong>USBInjectAll.kext</strong></td>
-                            <td data-i18n="kext-desc-uia">Injects all USB ports (Temporary for mapping).</td>
-                            <td data-i18n="req-temp">Temporary</td>
-                        </tr>
-                        <tr>
-                            <td><strong>ECEnabler.kext</strong></td>
-                            <td data-i18n="kext-desc-ece">Fixes Battery Status reading on many laptops.</td>
-                            <td data-i18n="req-laptop">Laptop</td>
-                        </tr>
-                        <tr>
-                            <td><strong>BrightnessKeys.kext</strong></td>
-                            <td data-i18n="kext-desc-brkeys">Enables Brightness Keys (Fn) automatically.</td>
-                            <td data-i18n="req-laptop">Laptop</td>
-                        </tr>
-                        <tr>
-                            <td><strong>RestrictEvents.kext</strong></td>
-                            <td data-i18n="kext-desc-restrict">Blocks unwanted processes. Essential for AMD (CPU Name)
-                                and MacPro7,1.</td>
-                            <td data-i18n="req-recommended">Recommended</td>
-                        </tr>
-                        <tr>
-                            <td><strong>NVMeFix.kext</strong></td>
-                            <td data-i18n="kext-desc-nvmefix">Improves power management for non-Apple NVMe SSDs.</td>
-                            <td data-i18n="req-recommended">Recommended</td>
-                        </tr>
-                        <tr>
-                            <td><strong>VoodooPS2Controller.kext</strong></td>
-                            <td data-i18n="kext-desc-ps2">PS2 Keyboards, old Synaptics/ELAN Trackpads.</td>
-                            <td data-i18n="req-legacy-input">Laptops/Legacy</td>
-                        </tr>
-                        <tr>
-                            <td><strong>VoodooI2C.kext</strong></td>
-                            <td data-i18n="kext-desc-i2c">Modern I2C Mouse/Trackpad (Dell XPS, etc). Requires satellite.
-                            </td>
-                            <td data-i18n="req-modern-input">Laptops I2C</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="alert alert-danger">
-                <i class="fas fa-times-circle"></i>
-                <div>
-                    <strong data-i18n="alert-nootrx">NEVER use NootRX.kext with WhateverGreen.kext! They are
-                        incompatible.</strong>
+                <!-- 1. Must-Haves -->
+                <h3
+                    style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                    <i class="fas fa-exclamation-circle"></i> <span data-i18n="kext-category-musthave">Essentials (Must
+                        Have)</span>
+                </h3>
+                <div class="table-container">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Kext</th>
+                                <th style="width: 45%;">Function</th>
+                                <th style="width: 30%;">Boot Args / Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Lilu.kext</strong></td>
+                                <td data-i18n="kext-desc-lilu">Essential base for kernel patching.</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>VirtualSMC.kext</strong></td>
+                                <td data-i18n="kext-desc-vsmc">SMC Emulator. <strong>Mandatory</strong> for booting.
+                                </td>
+                                <td data-i18n="kext-note-vsmc">Replaces FakeSMC.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>RestrictEvents.kext</strong></td>
+                                <td data-i18n="kext-desc-restrict">
+                                    <strong>Essential for Modern/Legacy Hardware</strong><br>
+                                    Fixes memory errors (MacPro7,1), unlocks OTA updates on unsupported CPUs
+                                    (Comet Lake+ on Ventura/Sonoma) and adjusts CPU names.
+                                </td>
+                                <td data-i18n="kext-note-restrict">
+                                    <code>revpatch=auto</code> (General/OTA)<br>
+                                    <code>revpatch=cpuname</code> (CPU Name)<br>
+                                    <code>revblock=media</code> (Fix Ventura+ crash)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>CpuTopologyRebuild.kext</strong></td>
+                                <td data-i18n="kext-desc-cpu">Optimizes performance on Hybrid CPUs (Alder Lake 12th+).
+                                </td>
+                                <td data-i18n="kext-note-cpu">
+                                    Use with <code>-ctrsmt</code> (if HyperThreading ON)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>NVMeFix.kext</strong></td>
+                                <td data-i18n="kext-desc-nvme">Power management for non-Apple NVMe SSDs. improves
+                                    stability.</td>
+                                <td data-i18n="kext-note-nvme"><code>-nvmefyas</code> (Force L1)<br>Essential for
+                                    Samsung/Phison.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>XHCI-unsupported.kext</strong></td>
+                                <td data-i18n="kext-desc-xhci">Enables non-native USB controllers (common on 400/500/600
+                                    series chipsets).</td>
+                                <td data-i18n="kext-note-xhci">Usually no boot-args.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+
+                <!-- 2. VirtualSMC Plugins -->
+                <h3
+                    style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                    <i class="fas fa-plug"></i> <span data-i18n="kext-category-plugins">VirtualSMC Plugins</span>
+                </h3>
+                <div class="table-container">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Kext</th>
+                                <th style="width: 45%;">Function</th>
+                                <th style="width: 30%;">Compatibility / Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SMCProcessor.kext</strong></td>
+                                <td data-i18n="kext-desc-smcproc">CPU Temperature Monitoring.</td>
+                                <td data-i18n="kext-note-smcproc">Intel Core & AMD (Some).<br>Requires VirtualSMC.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SMCSuperIO.kext</strong></td>
+                                <td data-i18n="kext-desc-smcio">Fan Speed Monitoring.</td>
+                                <td data-i18n="kext-note-smcio">Desktops. Requires compatible chips (Nuvoton/ITE).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SMCBatteryManager.kext</strong></td>
+                                <td data-i18n="kext-desc-smcbatt">Battery Monitoring.</td>
+                                <td data-i18n="kext-note-smcbatt">Laptops. Essential for battery status.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SMCLightSensor.kext</strong></td>
+                                <td data-i18n="kext-desc-smclight">Ambient Light Sensor (ALS) for auto-brightness.</td>
+                                <td data-i18n="kext-note-smclight">Laptops (requires ACPI sensor).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AMDRyzenCPUPowerManagement.kext</strong></td>
+                                <td data-i18n="kext-desc-amd-pm">Power Management and Monitoring for AMD Ryzen.</td>
+                                <td data-i18n="kext-note-amd-pm">AMD Ryzen (Replaces SMCProcessor in some cases).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 3. Graphics -->
+                <h3
+                    style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                    <i class="fas fa-video"></i> <span data-i18n="kext-category-graphics">Graphics</span>
+                </h3>
+                <div class="table-container">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Kext</th>
+                                <th style="width: 45%;">Function</th>
+                                <th style="width: 30%;">Boot Args / Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>WhateverGreen.kext</strong></td>
+                                <td data-i18n="kext-desc-weg">Essential patches for GPUs (Intel/AMD/NVIDIA). DRM,
+                                    Backlight, etc.
+                                    <strong>Standard.</strong>
+                                </td>
+                                <td data-i18n="kext-note-weg"><code>agdpmod=pikera</code> (RX
+                                    5000/6000)<br><code>-wegnoegpu</code> (Disable
+                                    dGPU)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>NootRX.kext</strong></td>
+                                <td data-i18n="kext-desc-nootrx">Exclusive support for AMD Navi 2x (non-native RX
+                                    6700/6900). <strong>INCOMPATIBLE
+                                        with
+                                        WhateverGreen</strong>.</td>
+                                <td data-i18n="kext-note-nootrx">Do not use <code>agdpmod=pikera</code> (automatic).
+                                    Remove WEG!</td>
+                            </tr>
+                            <tr>
+                                <td><strong>NootedRed.kext</strong></td>
+                                <td data-i18n="kext-desc-nooted">Support for AMD Ryzen APU iGPUs (Vega).</td>
+                                <td data-i18n="kext-note-nooted">Requires VRAM adjustments in BIOS.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 4. Audio & Network -->
+                <h3
+                    style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                    <i class="fas fa-volume-up"></i> <span data-i18n="kext-category-audio-net">Audio & Network</span>
+                </h3>
+                <div class="table-container">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Kext</th>
+                                <th style="width: 45%;">Function</th>
+                                <th style="width: 30%;">Boot Args / Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>AppleALC.kext</strong></td>
+                                <td data-i18n="kext-desc-alc">Native audio (Realtek/Synaptics).</td>
+                                <td data-i18n="kext-note-alc"><code>alcid=1</code> (Layout ID)<br><code>-alcdbg</code>
+                                    (Debug)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IntelMausi.kext</strong></td>
+                                <td data-i18n="kext-desc-mausi">Intel Ethernet (I219V, etc).</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>RealtekRTL8111.kext</strong></td>
+                                <td data-i18n="kext-desc-8111">Realtek Gigabit Ethernet.</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>LucyRTL8125Ethernet.kext</strong></td>
+                                <td data-i18n="kext-desc-8125">Realtek 2.5GbE Ethernet (RTL8125).</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>itlwm.kext</strong></td>
+                                <td data-i18n="kext-desc-itlwm">Intel Wi-Fi (OpenIntelWireless Works). Ethernet Mode
+                                    (stable).</td>
+                                <td data-i18n="kext-note-itlwm">Requires <strong>HeliPort</strong> App.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 5. WiFi & Bluetooth -->
+                <h3
+                    style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                    <i class="fas fa-wifi"></i> <span data-i18n="kext-category-wifi">Wi-Fi & Bluetooth</span>
+                </h3>
+                <div class="table-container">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Kext</th>
+                                <th style="width: 45%;">Function</th>
+                                <th style="width: 30%;">Boot Args / Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>itlwm.kext</strong></td>
+                                <td data-i18n="kext-desc-itlwm-wifi">Intel Wi-Fi (OpenIntelWireless). Ethernet Mode
+                                    (manual connection via App).
+                                </td>
+                                <td data-i18n="kext-note-itlwm-wifi">Requires <strong>HeliPort</strong> App. More
+                                    stable.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AirportItlwm.kext</strong></td>
+                                <td data-i18n="kext-desc-airport">Native Intel Wi-Fi (Apple Integration). Supports
+                                    Location Services, etc.</td>
+                                <td data-i18n="kext-note-airport"><strong>VERSION SENSITIVE</strong> (Use exact kext for
+                                    your macOS version).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>IntelBluetoothFirmware.kext</strong></td>
+                                <td data-i18n="kext-desc-ibt">Firmware for Intel Bluetooth.</td>
+                                <td data-i18n="kext-note-ibt">Accompanies <code>IntelBTPatcher.kext</code> and
+                                    <code>BlueToolFixup.kext</code> on
+                                    macOS
+                                    Monterey+.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>BlueToolFixup.kext</strong></td>
+                                <td data-i18n="kext-desc-btfixup">Fixes Bluetooth stack on macOS Monterey, Ventura and
+                                    Sonoma (Broken legacy
+                                    support).
+                                </td>
+                                <td data-i18n="kext-note-btfixup">Mandatory for Intel/Broadcom BT on macOS 12+.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>AirportBrcmFixup.kext</strong></td>
+                                <td data-i18n="kext-desc-brcm">Patches for non-native Broadcom Wi-Fi or to force
+                                    loading.</td>
+                                <td data-i18n="kext-note-brcm"><code>-brcmfxbeta</code>
+                                    (Sonoma)<br><code>brcmfx-country=BR</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 6. USB & Extras -->
+                <h3
+                    style="color: var(--primary); border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 20px;">
+                    <i class="fas fa-puzzle-piece"></i> <span data-i18n="kext-category-extras">USB & Extras</span>
+                </h3>
+                <div class="table-container">
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Kext</th>
+                                <th style="width: 45%;">Function</th>
+                                <th style="width: 30%;">Compatibility / Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>USBToolBox.kext</strong></td>
+                                <td>Easy USB mapping (Windows/macOS).</td>
+                                <td>Requires <strong>UTBMap.kext</strong> generated by the tool.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>USBInjectAll.kext</strong></td>
+                                <td>Injects all USB ports (Temporary for mapping).</td>
+                                <td>Remove after creating your USB Map!</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ECEnabler.kext</strong></td>
+                                <td>Fixes Battery reading (Status 0%) on many laptops without complex DSDT patches.
+                                </td>
+                                <td>Essential for Laptops.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>BrightnessKeys.kext</strong></td>
+                                <td>Enables brightness keys (Fn) automatically.</td>
+                                <td>Laptops.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>VoodooPS2Controller.kext</strong></td>
+                                <td>PS2 Keyboards, old Synaptics/ELAN Trackpads.</td>
+                                <td>Most Laptops.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>VoodooI2C.kext</strong></td>
+                                <td>Modern I2C Mouse/Trackpad (Dell XPS, new HP, etc).</td>
+                                <td>Requires satellite (e.g. <code>VoodooI2CHID</code>).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="alert alert-danger">
+                    <i class="fas fa-times-circle"></i>
+                    <div>
+                        <strong data-i18n="alert-nootrx">NEVER use NootRX.kext with WhateverGreen.kext! They are
+                            incompatible.</strong>
+                    </div>
+                </div>
         </section>
 
         <!-- SMBIOS -->
@@ -6538,18 +6606,63 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'th-bootarg': 'Boot-arg', 'th-usage': 'Quando usar',
 
                 // TABLES CONTENT
-                'kext-desc-lilu': 'Base essencial para outros kexts',
-                'kext-desc-vsmc': 'Emulação SMC (obrigatório para boot)',
-                'kext-desc-weg': 'Patches de GPU (Intel/AMD)',
-                'kext-desc-nootrx': 'Suporte AMD RX 6000 series',
-                'kext-desc-alc': 'Áudio nativo',
-                'kext-desc-mausi': 'Ethernet Intel',
-                'kext-desc-lucy': 'Ethernet Realtek RTL8125',
-                'kext-desc-itlwm': 'WiFi Intel',
-                'kext-desc-bt': 'Bluetooth Intel',
-                'kext-desc-cpu': 'Fix E-cores (Alder/Raptor Lake)',
-                'kext-desc-nvme': 'Otimização NVMe',
-                'kext-desc-restrict': 'Correções diversas',
+                'kext-desc-lilu': 'Base essencial para patches do kernel.',
+                'kext-desc-vsmc': 'Emulador SMC. <strong>Obrigatório</strong> para o boot.',
+                'kext-note-vsmc': 'Substitui FakeSMC.',
+                'kext-desc-restrict': '<strong>Essencial para Hardware Moderno/Legado</strong><br>Corrige erros de memória (MacPro7,1), desbloqueia atualizações OTA em CPUs não suportadas (Comet Lake+ no Ventura/Sonoma) e ajusta nomes de CPU.',
+                'kext-note-restrict': '<code>revpatch=auto</code> (Geral/OTA)<br><code>revpatch=cpuname</code> (Nome CPU)<br><code>revblock=media</code> (Corrige crash Ventura+)',
+                'kext-desc-cpu': 'Otimiza desempenho em CPUs Híbridas (Alder Lake 12th+).',
+                'kext-note-cpu': 'Use com <code>-ctrsmt</code> (se HyperThreading ON)',
+                'kext-desc-nvme': 'Gerenciamento de energia para SSDs NVMe não-Apple. Melhora estabilidade.',
+                'kext-note-nvme': '<code>-nvmefyas</code> (Forçar L1)<br>Essencial para Samsung/Phison.',
+                'kext-desc-xhci': 'Habilita controladores USB não nativos (comum em chipsets série 400/500/600).',
+                'kext-note-xhci': 'Geralmente sem boot-args.',
+                'kext-desc-smcproc': 'Monitoramento de temperatura da CPU.',
+                'kext-note-smcproc': 'Intel Core & AMD (Alguns).<br>Requer VirtualSMC.',
+                'kext-desc-smcio': 'Monitoramento de ventoinhas (Fan speed).',
+                'kext-note-smcio': 'Desktops. Requer chips compatíveis (Nuvoton/ITE).',
+                'kext-desc-smcbatt': 'Monitoramento de bateria.',
+                'kext-note-smcbatt': 'Laptops. Essencial para status da bateria.',
+                'kext-desc-smclight': 'Sensor de luz ambiente (ALS) para brilho automático.',
+                'kext-note-smclight': 'Laptops (requer sensor ACPI).',
+                'kext-desc-amd-pm': 'Gerenciamento de energia e monitoramento para AMD Ryzen.',
+                'kext-note-amd-pm': 'AMD Ryzen (Substitui SMCProcessor em alguns casos).',
+                'kext-desc-weg': 'Patches essenciais para GPUs (Intel/AMD/NVIDIA). DRM, Backlight, etc. <strong>Padrão.</strong>',
+                'kext-note-weg': '<code>agdpmod=pikera</code> (RX 5000/6000)<br><code>-wegnoegpu</code> (Desativar dGPU)',
+                'kext-desc-nootrx': 'Suporte exclusivo para AMD Navi 2x (RX 6700/6900 não nativas). <strong>INCOMPATÍVEL com WhateverGreen</strong>.',
+                'kext-note-nootrx': 'Não use <code>agdpmod=pikera</code> (automático). Remova WEG!',
+                'kext-desc-nooted': 'Suporte para iGPUs AMD Ryzen APU (Vega).',
+                'kext-note-nooted': 'Requer ajustes de VRAM na BIOS.',
+                'kext-desc-alc': 'Áudio nativo (Realtek/Synaptics).',
+                'kext-note-alc': '<code>alcid=1</code> (Layout ID)<br><code>-alcdbg</code> (Debug)',
+                'kext-desc-mausi': 'Ethernet Intel (I219V, etc).',
+                'kext-desc-8111': 'Ethernet Realtek Gigabit.',
+                'kext-desc-8125': 'Ethernet Realtek 2.5GbE (RTL8125).',
+                'kext-desc-itlwm': 'Wi-Fi Intel (OpenIntelWireless Works). Modo Ethernet (estável).',
+                'kext-note-itlwm': 'Requer App <strong>HeliPort</strong>.',
+                'kext-desc-itlwm-wifi': 'Wi-Fi Intel (OpenIntelWireless). Modo Ethernet (conexão manual via App).',
+                'kext-note-itlwm-wifi': 'Requer App <strong>HeliPort</strong>. Mais estável.',
+                'kext-desc-airport': 'Wi-Fi Intel Nativo (Integração Apple). Suporta Serviços de Localização, etc.',
+                'kext-note-airport': '<strong>SENSÍVEL À VERSÃO</strong> (Use kext exata para sua versão do macOS).',
+                'kext-desc-ibt': 'Firmware para Bluetooth Intel.',
+                'kext-note-ibt': 'Acompanha <code>IntelBTPatcher.kext</code> e <code>BlueToolFixup.kext</code> no macOS Monterey+.',
+                'kext-desc-btfixup': 'Corrige pilha Bluetooth no macOS Monterey, Ventura e Sonoma (Suporte legado quebrado).',
+                'kext-note-btfixup': 'Obrigatório para BT Intel/Broadcom no macOS 12+.',
+                'kext-desc-brcm': 'Patches para Wi-Fi Broadcom não nativo ou para forçar carregamento.',
+                'kext-note-brcm': '<code>-brcmfxbeta</code> (Sonoma)<br><code>brcmfx-country=BR</code>',
+                'kext-desc-usbtb': 'Mapeamento USB fácil (Windows/macOS).',
+                'kext-note-usbtb': 'Requer <strong>UTBMap.kext</strong> gerado pela ferramenta.',
+                'kext-desc-uia': 'Injeta todas as portas USB (Temporário para mapeamento).',
+                'kext-note-uia': 'Remova após criar seu USB Map!',
+                'kext-desc-ece': 'Corrige leitura de bateria (Status 0%) em muitos laptops sem patches DSDT complexos.',
+                'kext-note-ece': 'Essencial para Laptops.',
+                'kext-desc-brkeys': 'Habilita teclas de brilho (Fn) automaticamente.',
+                'kext-note-brkeys': 'Laptops.',
+                'kext-desc-ps2': 'Teclados PS2, Trackpads Synaptics/ELAN antigos.',
+                'kext-note-ps2': 'Maioria dos Laptops.',
+                'kext-desc-i2c': 'Mouse/Trackpad modernos I2C (Dell XPS, HP novo, etc).',
+                'kext-note-i2c': 'Requer satélite (ex: <code>VoodooI2CHID</code>).',
+
                 'req-yes': 'Sim', 'req-rx6000': 'Se RX 6000+', 'req-intel-lan': 'Se Intel LAN', 'req-rtl8125': 'Se RTL8125',
                 'req-intel-wifi': 'Se Intel WiFi', 'req-intel-bt': 'Se Intel BT', 'req-12-13-gen': 'Se 12ª/13ª gen', 'req-rec':
                     'Recomendado',
@@ -6565,6 +6678,7 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'boot-desc-agdp': 'Fix tela preta GPUs Navi', 'boot-usage-agdp': '⚠️ NÃO usar com NootRX!',
                 'boot-desc-igfx': 'Modo VESA para iGPU', 'boot-usage-igfx': 'Problemas com iGPU',
                 'boot-desc-npci': 'Fix PCI configuration', 'boot-usage-npci': 'Problemas de boot',
+                'alert-nootrx': 'NUNCA use NootRX.kext com WhateverGreen.kext! Eles são incompatíveis.',
 
                 // FAQ
                 'faq-q-1': '<i class="fas fa-question-circle" style="color: var(--primary)"></i> Qual SMBIOS devo usar?',
@@ -7415,18 +7529,63 @@ PciRoot(0x0)/Pci(0x2,0x0)
                 'th-hardware': 'Hardware', 'th-smbios-rec': 'Recommended SMBIOS', 'th-compat': 'Compatibility', 'th-notes': 'Notes',
                 'th-bootarg': 'Boot-arg', 'th-usage': 'Usage',
 
-                'kext-desc-lilu': 'Essential base for other kexts',
-                'kext-desc-vsmc': 'SMC Emulation (required for boot)',
-                'kext-desc-weg': 'GPU Patches (Intel/AMD)',
-                'kext-desc-nootrx': 'AMD RX 6000 series support',
-                'kext-desc-alc': 'Native Audio',
-                'kext-desc-mausi': 'Intel Ethernet',
-                'kext-desc-lucy': 'Realtek RTL8125 Ethernet',
-                'kext-desc-itlwm': 'Intel WiFi',
-                'kext-desc-bt': 'Intel Bluetooth',
-                'kext-desc-cpu': 'Fix E-cores (Alder/Raptor Lake)',
-                'kext-desc-nvme': 'NVMe Optimization',
-                'kext-desc-restrict': 'Various fixes',
+                'kext-desc-lilu': 'Essential base for kernel patching.',
+                'kext-desc-vsmc': 'SMC Emulator. <strong>Mandatory</strong> for booting.',
+                'kext-note-vsmc': 'Replaces FakeSMC.',
+                'kext-desc-restrict': '<strong>Essential for Modern/Legacy Hardware</strong><br>Fixes memory errors (MacPro7,1), unlocks OTA updates on unsupported CPUs (Comet Lake+ on Ventura/Sonoma) and adjusts CPU names.',
+                'kext-note-restrict': '<code>revpatch=auto</code> (General/OTA)<br><code>revpatch=cpuname</code> (CPU Name)<br><code>revblock=media</code> (Fix Ventura+ crash)',
+                'kext-desc-cpu': 'Optimizes performance on Hybrid CPUs (Alder Lake 12th+).',
+                'kext-note-cpu': 'Use with <code>-ctrsmt</code> (if HyperThreading ON)',
+                'kext-desc-nvme': 'Power management for non-Apple NVMe SSDs. improves stability.',
+                'kext-note-nvme': '<code>-nvmefyas</code> (Force L1)<br>Essential for Samsung/Phison.',
+                'kext-desc-xhci': 'Enables non-native USB controllers (common on 400/500/600 series chipsets).',
+                'kext-note-xhci': 'Usually no boot-args.',
+                'kext-desc-smcproc': 'CPU Temperature Monitoring.',
+                'kext-note-smcproc': 'Intel Core & AMD (Some).<br>Requires VirtualSMC.',
+                'kext-desc-smcio': 'Fan Speed Monitoring.',
+                'kext-note-smcio': 'Desktops. Requires compatible chips (Nuvoton/ITE).',
+                'kext-desc-smcbatt': 'Battery Monitoring.',
+                'kext-note-smcbatt': 'Laptops. Essential for battery status.',
+                'kext-desc-smclight': 'Ambient Light Sensor (ALS) for auto-brightness.',
+                'kext-note-smclight': 'Laptops (requires ACPI sensor).',
+                'kext-desc-amd-pm': 'Power Management and Monitoring for AMD Ryzen.',
+                'kext-note-amd-pm': 'AMD Ryzen (Replaces SMCProcessor in some cases).',
+                'kext-desc-weg': 'Essential patches for GPUs (Intel/AMD/NVIDIA). DRM, Backlight, etc. <strong>Standard.</strong>',
+                'kext-note-weg': '<code>agdpmod=pikera</code> (RX 5000/6000)<br><code>-wegnoegpu</code> (Disable dGPU)',
+                'kext-desc-nootrx': 'Exclusive support for AMD Navi 2x (non-native RX 6700/6900). <strong>INCOMPATIBLE with WhateverGreen</strong>.',
+                'kext-note-nootrx': 'Do not use <code>agdpmod=pikera</code> (automatic). Remove WEG!',
+                'kext-desc-nooted': 'Support for AMD Ryzen APU iGPUs (Vega).',
+                'kext-note-nooted': 'Requires VRAM adjustments in BIOS.',
+                'kext-desc-alc': 'Native audio (Realtek/Synaptics).',
+                'kext-note-alc': '<code>alcid=1</code> (Layout ID)<br><code>-alcdbg</code> (Debug)',
+                'kext-desc-mausi': 'Intel Ethernet (I219V, etc).',
+                'kext-desc-8111': 'Realtek Gigabit Ethernet.',
+                'kext-desc-8125': 'Realtek 2.5GbE Ethernet (RTL8125).',
+                'kext-desc-itlwm': 'Intel Wi-Fi (OpenIntelWireless Works). Ethernet Mode (stable).',
+                'kext-note-itlwm': 'Requires <strong>HeliPort</strong> App.',
+                'kext-desc-itlwm-wifi': 'Intel Wi-Fi (OpenIntelWireless). Ethernet Mode (manual connection via App).',
+                'kext-note-itlwm-wifi': 'Requires <strong>HeliPort</strong> App. More stable.',
+                'kext-desc-airport': 'Native Intel Wi-Fi (Apple Integration). Supports Location Services, etc.',
+                'kext-note-airport': '<strong>VERSION SENSITIVE</strong> (Use exact kext for your macOS version).',
+                'kext-desc-ibt': 'Firmware for Intel Bluetooth.',
+                'kext-note-ibt': 'Accompanies <code>IntelBTPatcher.kext</code> and <code>BlueToolFixup.kext</code> on macOS Monterey+.',
+                'kext-desc-btfixup': 'Fixes Bluetooth stack on macOS Monterey, Ventura and Sonoma (Broken legacy support).',
+                'kext-note-btfixup': 'Mandatory for Intel/Broadcom BT on macOS 12+.',
+                'kext-desc-brcm': 'Patches for non-native Broadcom Wi-Fi or to force loading.',
+                'kext-note-brcm': '<code>-brcmfxbeta</code> (Sonoma)<br><code>brcmfx-country=BR</code>',
+                'kext-desc-usbtb': 'Easy USB mapping (Windows/macOS).',
+                'kext-note-usbtb': 'Requires <strong>UTBMap.kext</strong> generated by the tool.',
+                'kext-desc-uia': 'Injects all USB ports (Temporary for mapping).',
+                'kext-note-uia': 'Remove after creating your USB Map!',
+                'kext-desc-ece': 'Fixes Battery reading (Status 0%) on many laptops without complex DSDT patches.',
+                'kext-note-ece': 'Essential for Laptops.',
+                'kext-desc-brkeys': 'Enables brightness keys (Fn) automatically.',
+                'kext-note-brkeys': 'Laptops.',
+                'kext-desc-ps2': 'PS2 Keyboards, old Synaptics/ELAN Trackpads.',
+                'kext-note-ps2': 'Most Laptops.',
+                'kext-desc-i2c': 'Modern I2C Mouse/Trackpad (Dell XPS, new HP, etc).',
+                'kext-note-i2c': 'Requires satellite (e.g. <code>VoodooI2CHID</code>).',
+
                 'req-yes': 'Yes', 'req-rx6000': 'If RX 6000+', 'req-intel-lan': 'If Intel LAN', 'req-rtl8125': 'If RTL8125',
                 'req-intel-wifi': 'If Intel WiFi', 'req-intel-bt': 'If Intel BT', 'req-12-13-gen': 'If 12th/13th gen', 'req-rec': 'Recommended',
                 'smbios-hw-amd-ded': 'Desktop + Dedicated AMD GPU', 'smbios-obs-amd-ded': 'Best for RX 6000',
@@ -7998,18 +8157,63 @@ PciRoot(0x0)/Pci(0x2,0x0)
                     'Observaciones',
                 'th-bootarg': 'Boot-arg', 'th-usage': 'Cuándo usar',
 
-                'kext-desc-lilu': 'Base esencial para otros kexts',
-                'kext-desc-vsmc': 'Emulación SMC (obligatorio para arranque)',
-                'kext-desc-weg': 'Parches GPU (Intel/AMD)',
-                'kext-desc-nootrx': 'Soporte AMD RX 6000 series',
-                'kext-desc-alc': 'Audio nativo',
-                'kext-desc-mausi': 'Ethernet Intel',
-                'kext-desc-lucy': 'Ethernet Realtek RTL8125',
-                'kext-desc-itlwm': 'WiFi Intel',
-                'kext-desc-bt': 'Bluetooth Intel',
-                'kext-desc-cpu': 'Corrección E-cores (Alder/Raptor Lake)',
-                'kext-desc-nvme': 'Optimización NVMe',
-                'kext-desc-restrict': 'Correcciones varias',
+                'kext-desc-lilu': 'Base esencial para parches del kernel.',
+                'kext-desc-vsmc': 'Emulador SMC. <strong>Obligatorio</strong> para el arranque.',
+                'kext-note-vsmc': 'Reemplaza FakeSMC.',
+                'kext-desc-restrict': '<strong>Esencial para Hardware Moderno/Legado</strong><br>Corrige errores de memoria (MacPro7,1), desbloquea actualizaciones OTA en CPUs no soportadas (Comet Lake+ en Ventura/Sonoma) y ajusta nombres de CPU.',
+                'kext-note-restrict': '<code>revpatch=auto</code> (General/OTA)<br><code>revpatch=cpuname</code> (Títulos de CPU)<br><code>revblock=media</code> (Corrige crash Ventura+)',
+                'kext-desc-cpu': 'Optimiza el rendimiento en CPUs Híbridos (Alder Lake 12th+).',
+                'kext-note-cpu': 'Use con <code>-ctrsmt</code> (si HyperThreading ON)',
+                'kext-desc-nvme': 'Gestión de energía para SSDs NVMe no Apple. Mejora estabilidad.',
+                'kext-note-nvme': '<code>-nvmefyas</code> (Forzar L1)<br>Esencial para Samsung/Phison.',
+                'kext-desc-xhci': 'Habilita controladores USB no nativos (común en chipsets serie 400/500/600).',
+                'kext-note-xhci': 'Generalmente sin boot-args.',
+                'kext-desc-smcproc': 'Monitorización de temperatura de CPU.',
+                'kext-note-smcproc': 'Intel Core & AMD (Algunos).<br>Requiere VirtualSMC.',
+                'kext-desc-smcio': 'Monitorización de velocidad de ventiladores.',
+                'kext-note-smcio': 'Escritorios. Requiere chips compatibles (Nuvoton/ITE).',
+                'kext-desc-smcbatt': 'Monitorización de batería.',
+                'kext-note-smcbatt': 'Portátiles. Esencial para estado de batería.',
+                'kext-desc-smclight': 'Sensor de luz ambiental (ALS) para brillo automático.',
+                'kext-note-smclight': 'Portátiles (requiere sensor ACPI).',
+                'kext-desc-amd-pm': 'Gestión de energía y monitorización para AMD Ryzen.',
+                'kext-note-amd-pm': 'AMD Ryzen (Reemplaza SMCProcessor en algunos casos).',
+                'kext-desc-weg': 'Parches esenciales para GPUs (Intel/AMD/NVIDIA). DRM, Backlight, etc. <strong>Estándar.</strong>',
+                'kext-note-weg': '<code>agdpmod=pikera</code> (RX 5000/6000)<br><code>-wegnoegpu</code> (Desactivar dGPU)',
+                'kext-desc-nootrx': 'Soporte exclusivo para AMD Navi 2x (RX 6700/6900 no nativas). <strong>INCOMPATIBLE con WhateverGreen</strong>.',
+                'kext-note-nootrx': 'No use <code>agdpmod=pikera</code> (automático). ¡Elimine WEG!',
+                'kext-desc-nooted': 'Soporte para iGPUs AMD Ryzen APU (Vega).',
+                'kext-note-nooted': 'Requiere ajustes de VRAM en BIOS.',
+                'kext-desc-alc': 'Audio nativo (Realtek/Synaptics).',
+                'kext-note-alc': '<code>alcid=1</code> (Layout ID)<br><code>-alcdbg</code> (Debug)',
+                'kext-desc-mausi': 'Ethernet Intel (I219V, etc).',
+                'kext-desc-8111': 'Ethernet Realtek Gigabit.',
+                'kext-desc-8125': 'Ethernet Realtek 2.5GbE (RTL8125).',
+                'kext-desc-itlwm': 'Wi-Fi Intel (OpenIntelWireless Works). Modo Ethernet (estable).',
+                'kext-note-itlwm': 'Requiere App <strong>HeliPort</strong>.',
+                'kext-desc-itlwm-wifi': 'Wi-Fi Intel (OpenIntelWireless). Modo Ethernet (conexión manual vía App).',
+                'kext-note-itlwm-wifi': 'Requiere App <strong>HeliPort</strong>. Más estable.',
+                'kext-desc-airport': 'Wi-Fi Intel Nativo (Integración Apple). Soporta Servicios de Ubicación, etc.',
+                'kext-note-airport': '<strong>SENSIBLE A VERSIÓN</strong> (Use kext exacta para su versión de macOS).',
+                'kext-desc-ibt': 'Firmware para Bluetooth Intel.',
+                'kext-note-ibt': 'Acompaña <code>IntelBTPatcher.kext</code> y <code>BlueToolFixup.kext</code> en macOS Monterey+.',
+                'kext-desc-btfixup': 'Corrige pila de Bluetooth en macOS Monterey, Ventura y Sonoma (Soporte legado roto).',
+                'kext-note-btfixup': 'Obligatorio para BT Intel/Broadcom en macOS 12+.',
+                'kext-desc-brcm': 'Parches para Wi-Fi Broadcom no nativos o para forzar carga.',
+                'kext-note-brcm': '<code>-brcmfxbeta</code> (Sonoma)<br><code>brcmfx-country=BR</code>',
+                'kext-desc-usbtb': 'Mapeo USB fácil (Windows/macOS).',
+                'kext-note-usbtb': 'Requiere <strong>UTBMap.kext</strong> generado por la herramienta.',
+                'kext-desc-uia': 'Inyecta todos los puertos USB (Temporal para mapeo).',
+                'kext-note-uia': '¡Elimine después de crear su USB Map!',
+                'kext-desc-ece': 'Corrige lectura de batería (Status 0%) en muchos portátiles sin parches DSDT complejos.',
+                'kext-note-ece': 'Esencial para Portátiles.',
+                'kext-desc-brkeys': 'Habilita teclas de brillo (Fn) automáticamente.',
+                'kext-note-brkeys': 'Portátiles.',
+                'kext-desc-ps2': 'Teclados PS2, Trackpads Synaptics/ELAN antiguos.',
+                'kext-note-ps2': 'Mayoría de Portátiles.',
+                'kext-desc-i2c': 'Mouse/Trackpad modernos I2C (Dell XPS, HP nuevo, etc).',
+                'kext-note-i2c': 'Requiere satélite (ej: <code>VoodooI2CHID</code>).',
+
                 'req-yes': 'Sí', 'req-rx6000': 'Si RX 6000+', 'req-intel-lan': 'Si Intel LAN', 'req-rtl8125': 'Si RTL8125',
                 'req-intel-wifi': 'Si Intel WiFi', 'req-intel-bt': 'Si Intel BT', 'req-12-13-gen': 'Si 12ª/13ª gen', 'req-rec':
                     'Recomendado',
