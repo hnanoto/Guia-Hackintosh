@@ -13920,30 +13920,57 @@ PciRoot(0x0)/Pci(0x2,0x0)
         return {...repo, data};
                     }
                 } catch (error) {
-            console.error(`Error fetching ${repo.nameKey}:`, error);
+            clearTimeout(id);
+        throw error;
                 }
-        return null;
-            });
+            };
 
-        const results = await Promise.all(promises);
+        // Process in batches to avoid choking Safari/Network
+        const batchSize = 3;
+        const results = [];
+
+        for (let i = 0; i < repos.length; i += batchSize) {
+                const batch = repos.slice(i, i + batchSize);
+                const batchPromises = batch.map(async (repo) => {
+                    try {
+                        const response = await fetchWithTimeout(`https://api.github.com/repos/${repo.owner}/${repo.repo}/releases/latest`);
+        if (response.ok) {
+                            const data = await response.json();
+        return {...repo, data};
+                        }
+                    } catch (error) {
+            console.error(`Error fetching ${repo.nameKey}:`, error);
+                    }
+        return null;
+                });
+
+        // Wait for current batch to finish before starting next
+        const batchResults = await Promise.all(batchPromises);
+        results.push(...batchResults);
+            }
+
             const freshData = results.filter(r => r !== null);
 
             if (freshData.length > 0) {
             allReposData = freshData;
-        localStorage.setItem(CACHE_KEY, JSON.stringify({
-            timestamp: Date.now(),
-        data: freshData
-                }));
+        // Safely try to save to localStorage (Safari Private Mode can block this)
+        try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+                timestamp: Date.now(),
+                data: freshData
+            }));
+                } catch (e) {
+            console.warn('Could not save to localStorage (Private Mode?):', e);
+                }
             } else if (cached) {
-            // Determine if we should fallback to expired cache
-            console.warn('API Rate Limit likely hit or network error. Using expired cache.');
+            console.warn('Using expired cache due to network errors.');
         try {
             allReposData = JSON.parse(cached).data;
                 } catch (e) { }
             }
         }
 
-        // Render Initial View (Active filter or 'all')
+        if (loadingIndicator) loadingIndicator.classList.remove('show');
         // Check if there is an active button currently (e.g. from previous state?)
         // Default to 'all'
         filterVersions('all');
