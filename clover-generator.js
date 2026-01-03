@@ -22,8 +22,17 @@ class CloverConfigGenerator extends ConfigGenerator {
         // Helper for audio layout
         const audioLayout = this.getAudioLayout(hardwareData);
 
-        // Build XML String directly
-        // Note: Clover uses a different structure than OpenCore
+        // User confirmed working configuration for Gigabyte Z690:
+        // SetupVirtualMap = true, EnableWriteUnprotector = true, RebuildAppleMemoryMap = false
+        // ACPI: DropOem=true. Boot: revcpu=1.
+        // FakeCPUID: 0x0706E5 (Comet Lake)
+
+        // Override Boot Args to include revcpu=1 if it's Raptor/Alder/Rocket Lake
+        let finalBootArgs = bootArgs;
+        if (hardwareData.CPU.Codename.includes("Raptor") || hardwareData.CPU.Codename.includes("Alder") || hardwareData.CPU.Codename.includes("Rocket")) {
+            if (!finalBootArgs.includes("revcpu=1")) finalBootArgs += " revcpu=1";
+        }
+
         const config = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -39,53 +48,53 @@ class CloverConfigGenerator extends ConfigGenerator {
             <key>Fixes</key>
             <dict>
                 <key>AddDTGP</key>
-                <true/>
+                <false/>
                 <key>AddHDMI</key>
-                <true/>
+                <false/>
                 <key>AddIMEI</key>
                 <false/>
                 <key>AddMCHC</key>
                 <false/>
                 <key>AddPNLF</key>
-                <true/>
+                <false/>
                 <key>DeleteUnused</key>
                 <true/>
                 <key>FakeLPC</key>
                 <false/>
                 <key>FixACST</key>
-                <true/>
+                <false/>
                 <key>FixADP1</key>
-                <true/>
+                <false/>
                 <key>FixAirport</key>
                 <false/>
                 <key>FixDarwin</key>
                 <false/>
                 <key>FixDarwin7</key>
-                <true/>
+                <false/>
                 <key>FixDisplay</key>
-                <true/>
+                <false/>
                 <key>FixFirewire</key>
                 <false/>
                 <key>FixHDA</key>
-                <true/>
+                <false/>
                 <key>FixHPET</key>
-                <true/>
+                <false/>
                 <key>FixIDE</key>
                 <false/>
                 <key>FixIPIC</key>
-                <true/>
+                <false/>
                 <key>FixIntelGfx</key>
                 <false/>
                 <key>FixLAN</key>
-                <true/>
-                <key>FixMutex</key>
                 <false/>
+                <key>FixMutex</key>
+                <true/>
                 <key>FixRTC</key>
-                <true/>
+                <false/>
                 <key>FixRegions</key>
-                <true/>
+                <false/>
                 <key>FixS3D</key>
-                <true/>
+                <false/>
                 <key>FixSATA</key>
                 <false/>
                 <key>FixSBUS</key>
@@ -93,11 +102,11 @@ class CloverConfigGenerator extends ConfigGenerator {
                 <key>FixShutdown</key>
                 <true/>
                 <key>FixTMR</key>
-                <true/>
+                <false/>
                 <key>FixUSB</key>
-                <true/>
+                <false/>
                 <key>FixWAK</key>
-                <true/>
+                <false/>
             </dict>
             <key>Name</key>
             <string>DSDT.aml</string>
@@ -150,14 +159,7 @@ class CloverConfigGenerator extends ConfigGenerator {
             <false/>
         </dict>
         <key>DisableASPM</key>
-        <false/>
-        <key>DropTables</key>
-        <array>
-            <dict>
-                <key>Signature</key>
-                <string>DMAR</string>
-            </dict>
-        </array>
+        <true/>
         <key>FixHeaders</key>
         <true/>
         <key>FixMCFG</key>
@@ -166,18 +168,16 @@ class CloverConfigGenerator extends ConfigGenerator {
         <true/>
         <key>SSDT</key>
         <dict>
-            <key>DoubleFirstState</key>
-            <true/>
             <key>DropOem</key>
-            <false/>
+            <true/>
             <key>Generate</key>
             <dict>
                 <key>CStates</key>
-                <true/>
+                <false/>
                 <key>PStates</key>
-                <true/>
+                <false/>
                 <key>PluginType</key>
-                <true/>
+                <false/>
             </dict>
             <key>NoDynamicExtract</key>
             <true/>
@@ -188,18 +188,20 @@ class CloverConfigGenerator extends ConfigGenerator {
     <key>Boot</key>
     <dict>
         <key>Arguments</key>
-        <string>${bootArgs}</string>
+        <string>${finalBootArgs}</string>
         <key>DefaultVolume</key>
         <string>LastBootedVolume</string>
         <key>Timeout</key>
         <integer>5</integer>
         <key>XMPDetection</key>
-        <string>Yes</string>
+        <integer>0</integer>
         <key>Legacy</key>
         <string>PBR</string>
         <key>NeverHibernate</key>
         <true/>
         <key>Secure</key>
+        <false/>
+        <key>SignatureFixup</key>
         <false/>
     </dict>
     <key>Devices</key>
@@ -226,6 +228,12 @@ class CloverConfigGenerator extends ConfigGenerator {
         </dict>
         <key>UseIntelHDMI</key>
         <false/>
+        <key>NoDefaultProperties</key>
+        <false/>
+        <key>HDMIInjection</key>
+        <false/>
+        <key>LANInjection</key>
+        <false/>
     </dict>
     <key>GUI</key>
     <dict>
@@ -242,6 +250,8 @@ class CloverConfigGenerator extends ConfigGenerator {
             <true/>
             <key>Legacy</key>
             <false/>
+            <key>Linux</key>
+            <true/>
         </dict>
         <key>Theme</key>
         <string>embedded</string>
@@ -339,18 +349,24 @@ class CloverConfigGenerator extends ConfigGenerator {
         <true/>
         <key>ProvideCustomSlide</key>
         <true/>
+        <key>RebuildAppleMemoryMap</key>
+        <false/>
         <key>SetupVirtualMap</key>
         <true/>
         <key>SyncRuntimePermissions</key>
         <true/>
         <key>XhciPortLimit</key>
-        <true/>
+        <false/>
         <key>ProvideCurrentCpuInfo</key>
         <true/>
         <key>ProtectUefiServices</key>
         <true/>
         <key>CustomSMBIOSGuid</key>
         <true/>
+        <key>ResizeAppleGpuBars</key>
+        <integer>-1</integer>
+        <key>ProvideMaxSlide</key>
+        <integer>0</integer>
     </dict>
     <key>RtVariables</key>
     <dict>
@@ -435,14 +451,19 @@ class CloverConfigGenerator extends ConfigGenerator {
         const cpuName = hardwareData.CPU["Processor Name"] || "";
         const codename = hardwareData.CPU.Codename || "";
 
-        // Comet Lake (10th Gen) - Common Spoof for macOS compatibility
-        if (codename.includes("Comet Lake") || cpuName.includes("10900") || cpuName.includes("10850") || cpuName.includes("10700") || cpuName.includes("10500") || cpuName.includes("10400")) {
-            return "0x0706E5"; // Matches user's working config for Comet Lake
+        // Alder Lake (12th Gen) and Raptor Lake (13th/14th Gen)
+        if (codename.includes("Alder") || codename.includes("Raptor") || cpuName.match(/i\d-1[234]\d{3}/)) {
+            return "0x0906EB"; // Comet Lake Spoof (i9-10900K) - Working for Clover on LGA1700
         }
 
-        // Rocket Lake (11th Gen) - Needs Comet Lake Spoof
+        // Comet Lake (10th Gen)
+        if (codename.includes("Comet Lake") || cpuName.includes("10900") || cpuName.includes("10850") || cpuName.includes("10700") || cpuName.includes("10500") || cpuName.includes("10400")) {
+            return "0x0906EB"; // Standard Comet Lake ID
+        }
+
+        // Rocket Lake (11th Gen)
         if (codename.includes("Rocket Lake") || cpuName.includes("11900") || cpuName.includes("11700") || cpuName.includes("11400")) {
-            return "0x0A0655"; // Or use Comet Lake 0x0906EB / 0x0706E5 depending on mobo
+            return "0x0906EB"; // Spoof as Comet Lake
         }
 
         // Kaby Lake (7th Gen) - If spoofing is needed for Pentium/Celeron
