@@ -116,9 +116,19 @@ class CloverConfigGenerator extends ConfigGenerator {
             <array>
                 <dict>
                     <key>Comment</key>
+                    <string>Add _SUN property for GIGE</string>
+                    <key>Disabled</key>
+                    <true/>
+                    <key>Find</key>
+                    <data>UFhTWAhfQURSAAhfUFJXEgYC</data>
+                    <key>Replace</key>
+                    <data>UFhTWAhfQURSAAhfU1VOCgQIX1BSVxIGAg==</data>
+                </dict>
+                <dict>
+                    <key>Comment</key>
                     <string>Rename GFX0 to IGPU</string>
                     <key>Disabled</key>
-                    <false/>
+                    <true/>
                     <key>Find</key>
                     <data>R0ZYMA==</data>
                     <key>Replace</key>
@@ -126,13 +136,23 @@ class CloverConfigGenerator extends ConfigGenerator {
                 </dict>
                 <dict>
                     <key>Comment</key>
-                    <string>Rename AZAL to HDAS</string>
+                    <string>Rename AZAL  to HDAS</string>
                     <key>Disabled</key>
-                    <false/>
+                    <true/>
                     <key>Find</key>
                     <data>QVpBTA==</data>
                     <key>Replace</key>
                     <data>SERBUw==</data>
+                </dict>
+                <dict>
+                    <key>Comment</key>
+                    <string>Rename oem _DSM to ZDSM</string>
+                    <key>Disabled</key>
+                    <false/>
+                    <key>Find</key>
+                    <data>X0RTTQ==</data>
+                    <key>Replace</key>
+                    <data>WkRTTQ==</data>
                 </dict>
                 <dict>
                     <key>Comment</key>
@@ -143,16 +163,10 @@ class CloverConfigGenerator extends ConfigGenerator {
                     <data>SEVDSQ==</data>
                     <key>Replace</key>
                     <data>SU1FSQ==</data>
-                </dict>
-                <dict>
-                    <key>Comment</key>
-                    <string>Rename SAT0 to SATA</string>
-                    <key>Disabled</key>
-                    <false/>
-                    <key>Find</key>
-                    <data>U0FUMA==</data>
-                    <key>Replace</key>
-                    <data>U0FUQQ==</data>
+                    <key>Skip</key>
+                    <integer>0</integer>
+                    <key>Count</key>
+                    <integer>0</integer>
                 </dict>
             </array>
             <key>ReuseFFFF</key>
@@ -239,8 +253,8 @@ class CloverConfigGenerator extends ConfigGenerator {
     <dict>
         <key>Hide</key>
         <array>
-            <string>Preboot</string>
-            <string>Recovery</string>
+            <string>Windows</string>
+            <string>BOOTX64.EFI</string>
         </array>
         <key>Scan</key>
         <dict>
@@ -303,31 +317,105 @@ class CloverConfigGenerator extends ConfigGenerator {
         <array>
             <dict>
                 <key>Comment</key>
-                <string>USB Port Limit Patch 1</string>
+                <string>Disable FileVault</string>
                 <key>Disabled</key>
                 <false/>
                 <key>Find</key>
-                <data>g/sPDw==</data>
+                <data>AAAAAAAA</data>
+                <key>InfoPlistPatch</key>
+                <false/>
+                <key>MaskFind</key>
+                <data>AAAAAAAA</data>
                 <key>MatchOS</key>
-                <string>10.15.x</string>
+                <string>26.x</string>
                 <key>Name</key>
-                <string>com.apple.iokit.IOUSBHostFamily</string>
+                <string>com.apple.filesystems.apfs</string>
+                <key>Procedure</key>
+                <string>_apfs_filevault_allowed</string>
                 <key>Replace</key>
-                <data>g/s/Dw==</data>
+                <data>uAAAAADD</data>
+            </dict>
+            <dict>
+                <key>Disabled</key>
+                <true/>
+                <key>Find</key>
+                <data>SGVhZHBob25lcwA=</data>
+                <key>MaskReplace</key>
+                <data>/////wAAAAAAAAA=</data>
+                <key>Name</key>
+                <string>VoodooHDA</string>
+                <key>Replace</key>
+                <data>VGVsZXBob25lcwA=</data>
             </dict>
             <dict>
                 <key>Comment</key>
-                <string>USB Port Limit Patch 2</string>
+                <string>Make all drives to be internal</string>
                 <key>Disabled</key>
-                <false/>
+                <true/>
                 <key>Find</key>
-                <data>g/kPDw==</data>
-                <key>MatchOS</key>
-                <string>10.15.x</string>
+                <data>RXh0ZXJuYWw=</data>
                 <key>Name</key>
-                <string>com.apple.driver.usb.AppleUSBXHCI</string>
+                <string>AppleAHCIPort</string>
                 <key>Replace</key>
-                <data>g/k/Dw==</data>
+                <data>SW50ZXJuYWw=</data>
+            </dict>
+            <dict>
+                <key>Comment</key>
+                <string>TRIM function for non-Apple SSDs</string>
+                <key>Disabled</key>
+                <true/>
+                <key>Find</key>
+                <data>QVBQTEUgU1NEAA==</data>
+                <key>Name</key>
+                <string>IOAHCIBlockStorage</string>
+                <key>Replace</key>
+                <data>AAAAAAAAAAAAAA==</data>
+            </dict>
+            <dict>
+                <key>Comment</key>
+                <string>ATI Connector patch new way</string>
+                <key>Disabled</key>
+                <true/>
+                <key>Find</key>
+                <data>AAQAAAQDAAAAAQAAIQMCBAQAAAAUAgAAAAEAAAAABAMQAAAAEAAAAAABAAAAAAAB</data>
+                <key>MatchOS</key>
+                <string>10.9,10.10,10.11</string>
+                <key>Name</key>
+                <string>AMD6000Controller</string>
+                <key>Replace</key>
+                <data>BAAAABQCAAAAAQAAAAAEBAAEAAAEAwAAAAEAABECAQUAAAAAAAAAAAAAAAAAAAAA</data>
+            </dict>
+            <dict>
+                <key>Comment</key>
+                <string>ATI name HD xxxx -> HD6450</string>
+                <key>Disabled</key>
+                <true/>
+                <key>Find</key>
+                <data>SEQgNnh4eA==</data>
+                <key>MatchOS</key>
+                <string>10.12,10.13</string>
+                <key>Name</key>
+                <string>AMD6000Controller</string>
+                <key>Replace</key>
+                <data>SEQgNjQ1MA==</data>
+            </dict>
+            <dict>
+                <key>Comment</key>
+                <string>Violet strips</string>
+                <key>Disabled</key>
+                <true/>
+                <key>Find</key>
+                <data>VUiJ</data>
+                <key>MaskFind</key>
+                <data>AAAA</data>
+                <key>Name</key>
+                <string>com.apple.kext.AMDSupport</string>
+                <key>Procedure</key>
+                <string>TestVRAM</string>
+                <key>RangeFind</key>
+                <integer>10</integer>
+                <key>Replace</key>
+                <data>sAHD</data>
             </dict>
         </array>
     </dict>
