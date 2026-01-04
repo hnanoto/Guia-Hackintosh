@@ -33,6 +33,30 @@ class CloverConfigGenerator extends ConfigGenerator {
             if (!finalBootArgs.includes("revcpu=1")) finalBootArgs += " revcpu=1";
         }
 
+        // Specific Patch for 13th Gen Core i9 (Raptor Lake) - core/thread count fix
+        let extraAcpiPatches = "";
+        const cpuName = hardwareData.CPU["Processor Name"] || "";
+        const cpuCodename = hardwareData.CPU.Codename || "";
+
+        // Check for i9 and (Raptor Lake or 13th Gen identifier in name)
+        if (cpuName.includes("i9") && (cpuCodename.includes("Raptor") || cpuName.includes("13"))) {
+            extraAcpiPatches = `
+                <dict>
+                    <key>Comment</key>
+                    <string>core/thread count = 24 for 8P+8E Core i9</string>
+                    <key>Count</key>
+                    <integer>2</integer>
+                    <key>Disabled</key>
+                    <false/>
+                    <key>Find</key>
+                    <data>uTUAAAAPMg==</data>
+                    <key>Replace</key>
+                    <data>uBgAGAAx0g==</data>
+                    <key>Skip</key>
+                    <integer>0</integer>
+                </dict>`;
+        }
+
         const config = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -167,7 +191,7 @@ class CloverConfigGenerator extends ConfigGenerator {
                     <integer>0</integer>
                     <key>Count</key>
                     <integer>0</integer>
-                </dict>
+                </dict>${extraAcpiPatches}
             </array>
             <key>ReuseFFFF</key>
             <false/>
