@@ -38,9 +38,9 @@ class CloverConfigGenerator extends ConfigGenerator {
         const cpuName = hardwareData.CPU["Processor Name"] || "";
         const cpuCodename = hardwareData.CPU.Codename || "";
 
-        // Check for Raptor Lake (13th/14th Gen)
-        if (cpuCodename.includes("Raptor") || cpuName.match(/i\d-1[34]\d{3}/)) {
-            // Basic Raptor Lake Patches (Applied to all Raptor Lake CPUs)
+        // Check for Raptor Lake (13th/14th Gen) - Apply patches ONLY for i9 as per user request
+        if ((cpuCodename.includes("Raptor") || cpuName.match(/i\d-1[34]\d{3}/)) && cpuName.includes("i9")) {
+            // Basic Raptor Lake Patches (Now restricted to i9)
             extraAcpiPatches += `
                 <dict>
                     <key>Comment</key>
@@ -128,8 +128,7 @@ class CloverConfigGenerator extends ConfigGenerator {
                 </dict>`;
 
             // Specific Patch for Core i9 (High Core Count / Topology Fix)
-            if (cpuName.includes("i9")) {
-                extraAcpiPatches += `
+            extraAcpiPatches += `
                 <dict>
                     <key>Comment</key>
                     <string>core/thread count = 24 for 8P+8E Core i9</string>
@@ -144,7 +143,6 @@ class CloverConfigGenerator extends ConfigGenerator {
                     <key>Skip</key>
                     <integer>0</integer>
                 </dict>`;
-            }
         }
 
         const config = `<?xml version="1.0" encoding="UTF-8"?>
