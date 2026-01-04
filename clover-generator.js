@@ -38,8 +38,10 @@ class CloverConfigGenerator extends ConfigGenerator {
         const cpuName = hardwareData.CPU["Processor Name"] || "";
         const cpuCodename = hardwareData.CPU.Codename || "";
 
-        if (cpuCodename.includes("Raptor") || cpuName.includes("13900") || cpuName.includes("13700") || cpuName.includes("13600")) {
-            extraAcpiPatches = `
+        // Check for Raptor Lake (13th/14th Gen)
+        if (cpuCodename.includes("Raptor") || cpuName.match(/i\d-1[34]\d{3}/)) {
+            // Basic Raptor Lake Patches (Applied to all Raptor Lake CPUs)
+            extraAcpiPatches += `
                 <dict>
                     <key>Comment</key>
                     <string>Rename XHCI to XHC_</string>
@@ -51,20 +53,6 @@ class CloverConfigGenerator extends ConfigGenerator {
                     <data>WEhDSQ==</data>
                     <key>Replace</key>
                     <data>WEhDXw==</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
-                </dict>
-                <dict>
-                    <key>Comment</key>
-                    <string>core/thread count = 24 for 8P+8E Core i9</string>
-                    <key>Count</key>
-                    <integer>2</integer>
-                    <key>Disabled</key>
-                    <false/>
-                    <key>Find</key>
-                    <data>uTUAAAAPMg==</data>
-                    <key>Replace</key>
-                    <data>uBgAGAAx0g==</data>
                     <key>Skip</key>
                     <integer>0</integer>
                 </dict>
@@ -138,6 +126,25 @@ class CloverConfigGenerator extends ConfigGenerator {
                     <key>Skip</key>
                     <integer>0</integer>
                 </dict>`;
+
+            // Specific Patch for Core i9 (High Core Count / Topology Fix)
+            if (cpuName.includes("i9")) {
+                extraAcpiPatches += `
+                <dict>
+                    <key>Comment</key>
+                    <string>core/thread count = 24 for 8P+8E Core i9</string>
+                    <key>Count</key>
+                    <integer>2</integer>
+                    <key>Disabled</key>
+                    <false/>
+                    <key>Find</key>
+                    <data>uTUAAAAPMg==</data>
+                    <key>Replace</key>
+                    <data>uBgAGAAx0g==</data>
+                    <key>Skip</key>
+                    <integer>0</integer>
+                </dict>`;
+            }
         }
 
         const config = `<?xml version="1.0" encoding="UTF-8"?>
