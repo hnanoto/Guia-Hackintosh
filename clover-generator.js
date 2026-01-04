@@ -361,6 +361,10 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>LANInjection</key>
         <false/>
     </dict>
+    <key>DisableDrivers</key>
+    <array>
+        <string>Nothing</string>
+    </array>
     <key>GUI</key>
     <dict>
         <key>Hide</key>
@@ -400,6 +404,13 @@ class CloverConfigGenerator extends ConfigGenerator {
             <key>NVidia</key>
             <false/>
         </dict>
+        <key>NvidiaSingle</key>
+        <false/>
+    </dict>
+    <key>CPU</key>
+    <dict>
+        <key>UseARTFrequency</key>
+        <false/>
     </dict>
     <key>KernelAndKextPatches</key>
     <dict>
