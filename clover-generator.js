@@ -33,14 +33,27 @@ class CloverConfigGenerator extends ConfigGenerator {
             if (!finalBootArgs.includes("revcpu=1")) finalBootArgs += " revcpu=1";
         }
 
-        // Specific Patch for 13th Gen Core i9 (Raptor Lake) - core/thread count fix
+        // Specific Patches for Raptor Lake (13th Gen)
         let extraAcpiPatches = "";
         const cpuName = hardwareData.CPU["Processor Name"] || "";
         const cpuCodename = hardwareData.CPU.Codename || "";
 
-        // Check for i9 and (Raptor Lake or 13th Gen identifier in name)
-        if (cpuName.includes("i9") && (cpuCodename.includes("Raptor") || cpuName.includes("13"))) {
+        if (cpuCodename.includes("Raptor") || cpuName.includes("13900") || cpuName.includes("13700") || cpuName.includes("13600")) {
             extraAcpiPatches = `
+                <dict>
+                    <key>Comment</key>
+                    <string>Rename XHCI to XHC_</string>
+                    <key>Count</key>
+                    <integer>0</integer>
+                    <key>Disabled</key>
+                    <false/>
+                    <key>Find</key>
+                    <data>WEhDSQ==</data>
+                    <key>Replace</key>
+                    <data>WEhDXw==</data>
+                    <key>Skip</key>
+                    <integer>0</integer>
+                </dict>
                 <dict>
                     <key>Comment</key>
                     <string>core/thread count = 24 for 8P+8E Core i9</string>
@@ -52,6 +65,76 @@ class CloverConfigGenerator extends ConfigGenerator {
                     <data>uTUAAAAPMg==</data>
                     <key>Replace</key>
                     <data>uBgAGAAx0g==</data>
+                    <key>Skip</key>
+                    <integer>0</integer>
+                </dict>
+                <dict>
+                    <key>Comment</key>
+                    <string>RTC._STA Rename</string>
+                    <key>Count</key>
+                    <integer>0</integer>
+                    <key>Disabled</key>
+                    <false/>
+                    <key>Find</key>
+                    <data>eQAUFV9TVEE=</data>
+                    <key>Replace</key>
+                    <data>eQAUFVhTVEE=</data>
+                    <key>Skip</key>
+                    <integer>0</integer>
+                </dict>
+                <dict>
+                    <key>Comment</key>
+                    <string>TIMR IRQ 0</string>
+                    <key>Count</key>
+                    <integer>0</integer>
+                    <key>Disabled</key>
+                    <false/>
+                    <key>Find</key>
+                    <data>IgEAeQA=</data>
+                    <key>Replace</key>
+                    <data>IgAAeQA=</data>
+                    <key>Skip</key>
+                    <integer>0</integer>
+                </dict>
+                <dict>
+                    <key>Comment</key>
+                    <string>IPIC IRQ 2</string>
+                    <key>Count</key>
+                    <integer>0</integer>
+                    <key>Disabled</key>
+                    <false/>
+                    <key>Find</key>
+                    <data>IgQAeQA=</data>
+                    <key>Replace</key>
+                    <data>IgAAeQA=</data>
+                    <key>Skip</key>
+                    <integer>0</integer>
+                </dict>
+                <dict>
+                    <key>Comment</key>
+                    <string>RTC IRQ 8</string>
+                    <key>Count</key>
+                    <integer>0</integer>
+                    <key>Disabled</key>
+                    <false/>
+                    <key>Find</key>
+                    <data>IgABeQA=</data>
+                    <key>Replace</key>
+                    <data>IgAAeQA=</data>
+                    <key>Skip</key>
+                    <integer>0</integer>
+                </dict>
+                <dict>
+                    <key>Comment</key>
+                    <string>ADBG to XDBG</string>
+                    <key>Count</key>
+                    <integer>0</integer>
+                    <key>Disabled</key>
+                    <false/>
+                    <key>Find</key>
+                    <data>QwMUGUFEQkc=</data>
+                    <key>Replace</key>
+                    <data>QwMUGVhEQkc=</data>
                     <key>Skip</key>
                     <integer>0</integer>
                 </dict>`;
@@ -563,27 +646,40 @@ class CloverConfigGenerator extends ConfigGenerator {
         const cpuName = hardwareData.CPU["Processor Name"] || "";
         const codename = hardwareData.CPU.Codename || "";
 
-        // Alder Lake (12th Gen) and Raptor Lake (13th/14th Gen)
-        if (codename.includes("Alder") || codename.includes("Raptor") || cpuName.match(/i\d-1[234]\d{3}/)) {
-            return "0x0906EB"; // Comet Lake Spoof (i9-10900K) - Working for Clover on LGA1700
+        // Raptor Lake (13th/14th Gen)
+        if (codename.includes("Raptor") || cpuName.match(/i\d-1[34]\d{3}/)) {
+            return "0x0906EB"; // Spoof as Comet Lake (i9-10900K)
         }
 
-        // Comet Lake (10th Gen)
-        if (codename.includes("Comet Lake") || cpuName.includes("10900") || cpuName.includes("10850") || cpuName.includes("10700") || cpuName.includes("10500") || cpuName.includes("10400")) {
-            return "0x0906EB"; // Standard Comet Lake ID
-        }
-
-        // Rocket Lake (11th Gen)
-        if (codename.includes("Rocket Lake") || cpuName.includes("11900") || cpuName.includes("11700") || cpuName.includes("11400")) {
+        // Alder Lake (12th Gen)
+        if (codename.includes("Alder") || cpuName.match(/i\d-12\d{3}/)) {
             return "0x0906EB"; // Spoof as Comet Lake
         }
 
-        // Kaby Lake (7th Gen) - If spoofing is needed for Pentium/Celeron
-        if (cpuName.includes("Pentium") || cpuName.includes("Celeron")) {
-            return "0x0506E3"; // Skylake Spoof
+        // Rocket Lake (11th Gen)
+        if (codename.includes("Rocket") || cpuName.match(/i\d-11\d{3}/)) {
+            return "0x0906EB"; // Spoof as Comet Lake
         }
 
-        return "0x000000"; // Disabled by default
+        // Comet Lake (10th Gen)
+        if (codename.includes("Comet") || cpuName.match(/i\d-10\d{3}/)) {
+            return "0x0906EB"; // Native Comet Lake ID
+        }
+
+        // Coffee Lake (8th/9th Gen)
+        if (codename.includes("Coffee") || cpuName.match(/i\d-[89]\d{3}/)) {
+            return "0x0906EA"; // Coffee Lake ID
+        }
+
+        // Kaby Lake (7th Gen)
+        if (codename.includes("Kaby") || cpuName.match(/i\d-7\d{3}/)) {
+            if (cpuName.includes("Pentium") || cpuName.includes("Celeron")) {
+                return "0x0306A9"; // Ivy Bridge Spoof
+            }
+            return "0x0506E3"; // Kaby Lake ID
+        }
+
+        return "0x000000"; // No FakeCPUID
     }
 
     downloadConfigPlist() {
