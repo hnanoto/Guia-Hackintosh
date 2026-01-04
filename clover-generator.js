@@ -330,7 +330,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>SignatureFixup</key>
         <false/>
     </dict>
-    </dict>
+
     <key>Devices</key>
     <dict>
         <key>Audio</key>
