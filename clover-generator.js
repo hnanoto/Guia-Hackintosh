@@ -330,14 +330,6 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>SignatureFixup</key>
         <false/>
     </dict>
-    <key>BootGraphics</key>
-    <dict>
-        <key>DefaultBackgroundColor</key>
-        <string>0xBFBFBF</string>
-        <key>EFILoginHiDPI</key>
-        <integer>1</integer>
-        <key>UIScale</key>
-        <integer>1</integer>
     </dict>
     <key>Devices</key>
     <dict>
@@ -370,10 +362,9 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>LANInjection</key>
         <false/>
     </dict>
-    <key>DisableDrivers?</key>
+    <key>DisableDrivers</key>
     <array>
-        <string>CsmVideoDxe</string>
-        <string>VBoxExt2</string>
+        <string>Nothing</string>
     </array>
     <key>GUI</key>
     <dict>
@@ -405,86 +396,40 @@ class CloverConfigGenerator extends ConfigGenerator {
     </dict>
     <key>Graphics</key>
     <dict>
-        <key>DualLink?</key>
-        <integer>0</integer>
-        <key>EDID</key>
-        <dict>
-            <key>Custom?</key>
-            <data>AP///////wAGECGSAAAAAAASAQOAIRV4CunVmVlTjigmUFQAAAABAQEBAQEBAQEBAQEBAQEB3iGgcFCEHzAgIFYAS88QAAAY3iGgcFCEHzAgIFYAS88QAAAAAAAA/gBXNjU3RwAxNTRXUDEKAAAA/gAjMz1IZYSq/wIBCiAgAJo=</data>
-            <key>HorizontalSyncPulseWidth?</key>
-            <string>0x11</string>
-            <key>Inject?</key>
-            <true/>
-            <key>ProductID?</key>
-            <string>0x9221</string>
-            <key>VendorID?</key>
-            <string>0x1006</string>
-            <key>VideoInputSignal?</key>
-            <string>0xA1</string>
-        </dict>
-        <key>FBName?</key>
-        <string>Makakakakala</string>
-        <key>Inject?</key>
+        <key>Inject</key>
         <dict>
             <key>ATI</key>
-            <true/>
+            <false/>
             <key>Intel</key>
-            <true/>
+            <false/>
             <key>NVidia</key>
-            <true/>
+            <false/>
         </dict>
-        <key>LoadVBios?</key>
-        <true/>
-        <key>NVCAP?</key>
-        <string>04000000000003000C0000000000000A00000000</string>
-        <key>NvidiaGeneric?</key>
-        <true/>
-        <key>NvidiaNoEFI?</key>
+        <key>NvidiaSingle</key>
         <false/>
-        <key>NvidiaSingle?</key>
-        <false/>
-        <key>PatchVBios?</key>
-        <false/>
-        <key>PatchVBiosBytes?</key>
-        <array>
-            <dict>
-                <key>Find</key>
-                <data>gAeoAqAF</data>
-                <key>Replace</key>
-                <data>gAeoAjgE</data>
-            </dict>
-        </array>
-        <key>RadeonDeInit?</key>
-        <true/>
-        <key>VRAM?</key>
-        <integer>1024</integer>
-        <key>VideoPorts?</key>
-        <integer>2</integer>
-        <key>display-cfg?</key>
-        <string>03010300FFFF0001</string>
-        <key>ig-platform-id?</key>
-        <string>0x01620005</string>
     </dict>
     <key>CPU</key>
     <dict>
-        <key>BusSpeedkHz?</key>
+        <key>BusSpeedkHz</key>
         <integer>133330</integer>
-        <key>FrequencyMHz?</key>
+        <key>FrequencyMHz</key>
         <integer>3140</integer>
-        <key>HWPEnable?</key>
+        <key>HWPEnable</key>
         <true/>
-        <key>HWPValue?</key>
+        <key>HWPValue</key>
         <string>0x30002a01</string>
         <key>QPI?</key>
         <integer>4800</integer>
-        <key>SavingMode?</key>
+        <key>SavingMode</key>
         <integer>7</integer>
         <key>TDP?</key>
         <integer>95</integer>
-        <key>TurboDisable?</key>
-        <false/>
-        <key>Type?</key>
+        <key>TurboDisable</key>
+        <true/>
+        <key>#Type</key>
         <string>0x0201</string>
+        <key>Type</key>
+        <string>3841</string>
         <key>UseARTFrequency</key>
         <true/>
     </dict>
