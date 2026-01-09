@@ -846,20 +846,20 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>CsrActiveConfig</key>
         <string>0x0A87</string>
         <key>MLB</key>
-        <string>C02713300QXJG368C</string>
+        <string>BOARDSERIALNEEDED</string>
         <key>ROM</key>
-        <data>BNtWnDys</data>
+        <string>UseMacAddr0</string>
     </dict>
     <key>SMBIOS</key>
     <dict>
         <key>BoardSerialNumber</key>
-        <string>C02713300QXJG368C</string>
+        <string>BOARDSERIALNEEDED</string>
         <key>ProductName</key>
         <string>${smbiosModel}</string>
         <key>SerialNumber</key>
-        <string>C02THPZGHX87</string>
+        <string>SERIALNEEDED</string>
         <key>SmUUID</key>
-        <string>9DE1AE37-8697-435A-8EB7-8EE4994E569C</string>
+        <string>UUIDNEEDED</string>
         <key>Trust</key>
         <true/>
         <key>Mobile</key>
