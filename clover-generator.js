@@ -238,149 +238,47 @@ class CloverConfigGenerator extends ConfigGenerator {
             <array>
                 <dict>
                     <key>Comment</key>
-                    <string>TIMR IRQ 0 Patch</string>
-                    <key>Count</key>
-                    <integer>0</integer>
-                    <key>Disabled</key>
-                    <false/>
-                    <key>Find</key>
-                    <data>IgEAeQA=</data>
-                    <key>Replace</key>
-                    <data>IgAAeQA=</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
-                </dict>
-                <dict>
-                    <key>Comment</key>
-                    <string>RTC IRQ 8 Patch</string>
-                    <key>Count</key>
-                    <integer>0</integer>
-                    <key>Disabled</key>
-                    <false/>
-                    <key>Find</key>
-                    <data>IgABeQA=</data>
-                    <key>Replace</key>
-                    <data>IgAAeQA=</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
-                </dict>
-                <dict>
-                    <key>Comment</key>
-                    <string>IPIC IRQ 2 Patch</string>
-                    <key>Count</key>
-                    <integer>0</integer>
-                    <key>Disabled</key>
-                    <false/>
-                    <key>Find</key>
-                    <data>IgQAeQA=</data>
-                    <key>Replace</key>
-                    <data>IgAAeQA=</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
-                </dict>
-                <dict>
-                    <key>Comment</key>
-                    <string>HPET _CRS to XCRS Rename</string>
-                    <key>Count</key>
-                    <integer>0</integer>
-                    <key>Disabled</key>
-                    <false/>
-                    <key>Find</key>
-                    <data>JV9DUlM=</data>
-                    <key>Replace</key>
-                    <data>JVhDUlM=</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
-                </dict>
-                <dict>
-                    <key>Comment</key>
-                    <string>HPET _STA to XSTA Rename</string>
-                    <key>Count</key>
-                    <integer>0</integer>
-                    <key>Disabled</key>
-                    <false/>
-                    <key>Find</key>
-                    <data>EV9TVEE=</data>
-                    <key>Replace</key>
-                    <data>EVhTVEE=</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
-                </dict>
-                <dict>
-                    <key>Comment</key>
-                    <string>change Method(GPRW,2,N) to XPRW, pair with SSDT-GPRW.aml</string>
-                    <key>Count</key>
-                    <integer>0</integer>
-                    <key>Disabled</key>
-                    <false/>
-                    <key>Find</key>
-                    <data>R1BSVw==</data>
-                    <key>Replace</key>
-                    <data>WFBSVw==</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
-                </dict>
-                <dict>
-                    <key>Comment</key>
                     <string>Add _SUN property for GIGE</string>
-                    <key>Count</key>
-                    <integer>0</integer>
                     <key>Disabled</key>
                     <true/>
                     <key>Find</key>
                     <data>UFhTWAhfQURSAAhfUFJXEgYC</data>
                     <key>Replace</key>
                     <data>UFhTWAhfQURSAAhfU1VOCgQIX1BSVxIGAg==</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
                 </dict>
                 <dict>
                     <key>Comment</key>
                     <string>Rename GFX0 to IGPU</string>
-                    <key>Count</key>
-                    <integer>0</integer>
                     <key>Disabled</key>
                     <true/>
                     <key>Find</key>
                     <data>R0ZYMA==</data>
                     <key>Replace</key>
                     <data>SUdQVQ==</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
                 </dict>
                 <dict>
                     <key>Comment</key>
                     <string>Rename AZAL  to HDAS</string>
-                    <key>Count</key>
-                    <integer>0</integer>
                     <key>Disabled</key>
                     <true/>
                     <key>Find</key>
                     <data>QVpBTA==</data>
                     <key>Replace</key>
                     <data>SERBUw==</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
                 </dict>
                 <dict>
                     <key>Comment</key>
                     <string>Rename oem _DSM to ZDSM</string>
-                    <key>Count</key>
-                    <integer>0</integer>
                     <key>Disabled</key>
                     <false/>
                     <key>Find</key>
                     <data>X0RTTQ==</data>
                     <key>Replace</key>
                     <data>WkRTTQ==</data>
-                    <key>Skip</key>
-                    <integer>0</integer>
                 </dict>
                 <dict>
                     <key>Comment</key>
                     <string>Rename HECI to IMEI</string>
-                    <key>Count</key>
-                    <integer>0</integer>
                     <key>Disabled</key>
                     <false/>
                     <key>Find</key>
@@ -388,6 +286,8 @@ class CloverConfigGenerator extends ConfigGenerator {
                     <key>Replace</key>
                     <data>SU1FSQ==</data>
                     <key>Skip</key>
+                    <integer>0</integer>
+                    <key>Count</key>
                     <integer>0</integer>
                 </dict>${extraAcpiPatches}
             </array>
