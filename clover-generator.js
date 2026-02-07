@@ -50,6 +50,15 @@ class CloverConfigGenerator extends ConfigGenerator {
         // AMD 500+ series chipset detection
         const isAMDNewer = chipset.match(/X570|B550|A520|TRX40|B650|X670/) !== null;
 
+        // Platform detection
+        const platform = hardwareData.Motherboard.Platform || "Desktop";
+        const isLaptop = platform === "Laptop" || platform === "NUC";
+
+        // Dynamic config generation
+        const dsdtFixes = this.generateDSDTFixes(hardwareData);
+        const gfxConfig = this.generateGraphicsConfig(hardwareData);
+        const kernelPatches = this.generateKernelPatches(hardwareData);
+
         // Check for Raptor Lake (13th/14th Gen) - Apply patches ONLY for i9 as per user request
         if ((cpuCodename.includes("Raptor") || cpuName.match(/i\d-1[34]\d{3}/)) && cpuName.includes("i9")) {
             // Basic Raptor Lake Patches (Now restricted to i9)
@@ -172,65 +181,65 @@ class CloverConfigGenerator extends ConfigGenerator {
             <key>Fixes</key>
             <dict>
                 <key>AddDTGP</key>
-                <true/>
+                <${dsdtFixes.AddDTGP}/>
                 <key>AddHDMI</key>
-                <true/>
+                <${dsdtFixes.AddHDMI}/>
                 <key>AddIMEI</key>
-                <false/>
+                <${dsdtFixes.AddIMEI}/>
                 <key>AddMCHC</key>
-                <false/>
+                <${dsdtFixes.AddMCHC}/>
                 <key>AddPNLF</key>
-                <true/>
+                <${dsdtFixes.AddPNLF}/>
                 <key>DeleteUnused</key>
-                <true/>
+                <${dsdtFixes.DeleteUnused}/>
                 <key>FakeLPC</key>
-                <false/>
+                <${dsdtFixes.FakeLPC}/>
                 <key>FixACST</key>
-                <true/>
+                <${dsdtFixes.FixACST}/>
                 <key>FixADP1</key>
-                <true/>
+                <${dsdtFixes.FixADP1}/>
                 <key>FixAirport</key>
-                <false/>
+                <${dsdtFixes.FixAirport}/>
                 <key>FixDarwin</key>
-                <false/>
+                <${dsdtFixes.FixDarwin}/>
                 <key>FixDarwin7</key>
-                <true/>
+                <${dsdtFixes.FixDarwin7}/>
                 <key>FixDisplay</key>
-                <true/>
+                <${dsdtFixes.FixDisplay}/>
                 <key>FixFirewire</key>
-                <false/>
+                <${dsdtFixes.FixFirewire}/>
                 <key>FixHDA</key>
-                <true/>
+                <${dsdtFixes.FixHDA}/>
                 <key>FixHPET</key>
-                <true/>
+                <${dsdtFixes.FixHPET}/>
                 <key>FixIDE</key>
-                <false/>
+                <${dsdtFixes.FixIDE}/>
                 <key>FixIPIC</key>
-                <true/>
+                <${dsdtFixes.FixIPIC}/>
                 <key>FixIntelGfx</key>
-                <false/>
+                <${dsdtFixes.FixIntelGfx}/>
                 <key>FixLAN</key>
-                <true/>
+                <${dsdtFixes.FixLAN}/>
                 <key>FixMutex</key>
-                <false/>
+                <${dsdtFixes.FixMutex}/>
                 <key>FixRTC</key>
-                <true/>
+                <${dsdtFixes.FixRTC}/>
                 <key>FixRegions</key>
-                <true/>
+                <${dsdtFixes.FixRegions}/>
                 <key>FixS3D</key>
-                <true/>
+                <${dsdtFixes.FixS3D}/>
                 <key>FixSATA</key>
-                <false/>
+                <${dsdtFixes.FixSATA}/>
                 <key>FixSBUS</key>
-                <true/>
+                <${dsdtFixes.FixSBUS}/>
                 <key>FixShutdown</key>
-                <true/>
+                <${dsdtFixes.FixShutdown}/>
                 <key>FixTMR</key>
-                <true/>
+                <${dsdtFixes.FixTMR}/>
                 <key>FixUSB</key>
-                <true/>
+                <${dsdtFixes.FixUSB}/>
                 <key>FixWAK</key>
-                <true/>
+                <${dsdtFixes.FixWAK}/>
             </dict>
             <key>Name</key>
             <string>DSDT.aml</string>
@@ -642,14 +651,14 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>Inject?</key>
         <dict>
             <key>ATI</key>
-            <true/>
+            <${gfxConfig.InjectATI}/>
             <key>Intel</key>
-            <true/>
+            <${gfxConfig.InjectIntel}/>
             <key>NVidia</key>
-            <true/>
+            <${gfxConfig.InjectNVidia}/>
         </dict>
         <key>LoadVBios?</key>
-        <true/>
+        <${gfxConfig.LoadVBios}/>
         <key>NVCAP?</key>
         <string>04000000000003000C0000000000000A00000000</string>
         <key>NvidiaGeneric?</key>
@@ -670,7 +679,7 @@ class CloverConfigGenerator extends ConfigGenerator {
             </dict>
         </array>
         <key>RadeonDeInit?</key>
-        <true/>
+        <${gfxConfig.RadeonDeInit}/>
         <key>VRAM?</key>
         <integer>1024</integer>
         <key>VideoPorts?</key>
@@ -678,7 +687,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>display-cfg?</key>
         <string>03010300FFFF0001</string>
         <key>ig-platform-id?</key>
-        <string>0x01620005</string>
+        <string>${gfxConfig.igPlatformId || "0x00000000"}</string>
     </dict>
     <key>KernelAndKextPatches</key>
     <dict>
@@ -711,27 +720,27 @@ class CloverConfigGenerator extends ConfigGenerator {
             <string>\\System\\Library\\Extensions\\AMDFramebuffer.kext</string>
         </array>
         <key>AppleIntelCPUPM</key>
-        <false/>
+        <${kernelPatches.AppleIntelCPUPM}/>
         <key>AppleRTC</key>
-        <true/>
+        <${kernelPatches.AppleRTC}/>
         <key>BlockSkywalk</key>
-        <true/>
+        <${kernelPatches.BlockSkywalk}/>
         <key>Debug</key>
         <false/>
         <key>DellSMBIOSPatch</key>
-        <false/>
+        <${kernelPatches.DellSMBIOSPatch}/>
         <key>EightApple</key>
         <true/>
         <key>FakeCPUID</key>
         <string>${this.calculateFakeCPUID(hardwareData)}</string>
         <key>KernelLapic</key>
-        <false/>
+        <${kernelPatches.KernelLapic}/>
         <key>KernelPm</key>
-        <true/>
+        <${kernelPatches.KernelPm}/>
         <key>KernelXCPM</key>
-        <false/>
+        <${kernelPatches.KernelXcpm}/>
         <key>PanicNoKextDump</key>
-        <true/>
+        <${kernelPatches.PanicNoKextDump}/>
         <key>KextsToPatch</key>
         <array>
             <dict>
@@ -1155,6 +1164,153 @@ class CloverConfigGenerator extends ConfigGenerator {
             return "";
         }
     }
+
+    // ========================================================================
+    // DYNAMIC CONFIG GENERATION HELPERS
+    // ========================================================================
+
+    // Generate DSDT Fixes based on platform (Desktop/Laptop)
+    generateDSDTFixes(hw) {
+        const platform = hw.Motherboard.Platform || "Desktop";
+        const isLaptop = platform === "Laptop" || platform === "NUC";
+        const cpuMan = hw.CPU.Manufacturer || "Intel";
+
+        return {
+            AddDTGP: true,
+            AddHDMI: !isLaptop,
+            AddIMEI: false,
+            AddMCHC: false,
+            AddPNLF: isLaptop, // Backlight for laptops
+            DeleteUnused: true,
+            FakeLPC: false,
+            FixACST: true,
+            FixADP1: isLaptop, // Power adapter for laptops
+            FixAirport: false,
+            FixDarwin: false,
+            FixDarwin7: true,
+            FixDisplay: true,
+            FixFirewire: false,
+            FixHDA: true,
+            FixHPET: true,
+            FixIDE: false,
+            FixIPIC: true,
+            FixIntelGfx: false,
+            FixLAN: true,
+            FixMutex: false,
+            FixRTC: true,
+            FixRegions: true,
+            FixS3D: !isLaptop,
+            FixSATA: false,
+            FixSBUS: true,
+            FixShutdown: true,
+            FixTMR: true,
+            FixUSB: true,
+            FixWAK: true
+        };
+    }
+
+    // Generate Graphics config based on detected GPU
+    generateGraphicsConfig(hw) {
+        const gpu = Object.values(hw.GPU || {})[0] || {};
+        const gpuName = gpu["Device Name"] || gpu.Manufacturer || "";
+        const cpuCodename = hw.CPU.Codename || "";
+        const platform = hw.Motherboard.Platform || "Desktop";
+        const isLaptop = platform === "Laptop";
+
+        let config = {
+            InjectATI: false,
+            InjectIntel: false,
+            InjectNVidia: false,
+            igPlatformId: "",
+            RadeonDeInit: false,
+            LoadVBios: false
+        };
+
+        // Detect GPU type
+        if (gpuName.match(/Radeon|RX|AMD/i) || gpu.Manufacturer === "AMD") {
+            config.InjectATI = true;
+            config.RadeonDeInit = true;
+            // Navi cards (RX 5000/6000/7000)
+            if (gpuName.match(/RX\s*[567]\d{3}/i)) {
+                config.RadeonDeInit = false; // Navi doesn't need DeInit
+            }
+        } else if (gpuName.match(/NVIDIA|GeForce|GTX|RTX/i) || gpu.Manufacturer === "NVIDIA") {
+            config.InjectNVidia = true;
+            config.LoadVBios = true;
+        } else if (gpuName.match(/Intel|UHD|HD\s*\d{3}/i) || gpu["Device Type"] === "Integrated GPU") {
+            config.InjectIntel = true;
+
+            // ig-platform-id based on CPU generation
+            if (cpuCodename.includes("Coffee") || cpuCodename.includes("Comet")) {
+                config.igPlatformId = isLaptop ? "0x3EA50009" : "0x3E9B0007"; // UHD 630
+            } else if (cpuCodename.includes("Kaby")) {
+                config.igPlatformId = isLaptop ? "0x59160000" : "0x59120000"; // HD 630
+            } else if (cpuCodename.includes("Skylake")) {
+                config.igPlatformId = isLaptop ? "0x19160000" : "0x19120000"; // HD 530
+            } else if (cpuCodename.includes("Haswell")) {
+                config.igPlatformId = isLaptop ? "0x0A260006" : "0x0D220003"; // HD 4600
+            } else if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor")) {
+                config.igPlatformId = "0x46A60003"; // UHD 770 (usually headless)
+                config.InjectIntel = false; // 12th+ gen iGPU usually disabled for dGPU
+            }
+        }
+
+        return config;
+    }
+
+    // Generate KernelAndKextPatches based on CPU
+    generateKernelPatches(hw) {
+        const cpuMan = hw.CPU.Manufacturer || "Intel";
+        const cpuCodename = hw.CPU.Codename || "";
+        const cpuName = hw.CPU["Processor Name"] || "";
+
+        return {
+            AppleIntelCPUPM: cpuCodename.includes("Sandy") || cpuCodename.includes("Ivy"),
+            AppleRTC: true,
+            BlockSkywalk: true, // Sonoma+ needs this
+            DellSMBIOSPatch: (hw.Motherboard.Name || "").includes("Dell"),
+            KernelCpu: false,
+            KernelLapic: cpuCodename.includes("Sandy") || cpuCodename.includes("Ivy"),
+            KernelPm: cpuCodename.includes("Haswell") || cpuCodename.includes("Broadwell"),
+            KernelXcpm: cpuMan === "Intel" && !cpuCodename.includes("Sandy") && !cpuCodename.includes("Ivy"),
+            PanicNoKextDump: true
+        };
+    }
+
+    // Generate ig-platform-id for Intel iGPU
+    getIgPlatformId(hw) {
+        const gfx = this.generateGraphicsConfig(hw);
+        return gfx.igPlatformId || "0x00000000";
+    }
+
+    // Get Audio Layout ID
+    getAudioLayout(hw) {
+        if (!hw.Sound) return 1;
+
+        const codecMap = {
+            "10EC-1220": 1,  // Realtek ALC1220
+            "10EC-1200": 1,  // Realtek ALC1200
+            "10EC-0892": 1,  // Realtek ALC892
+            "10EC-0887": 1,  // Realtek ALC887
+            "10EC-0256": 11, // Realtek ALC256
+            "10EC-0295": 3,  // Realtek ALC295
+            "10EC-0298": 3,  // Realtek ALC298
+            "10EC-0897": 66, // Realtek ALC897
+            "10EC-0700": 11  // Realtek ALC700
+        };
+
+        for (const [name, props] of Object.entries(hw.Sound)) {
+            const deviceId = props["Device ID"];
+            if (deviceId && codecMap[deviceId]) {
+                return codecMap[deviceId];
+            }
+        }
+        return 1; // Default layout
+    }
+
+    // ========================================================================
+    // END DYNAMIC CONFIG GENERATION HELPERS
+    // ========================================================================
 
     // Override downloadConfigPlist to handle XML string
     calculateFakeCPUID(hardwareData) {
