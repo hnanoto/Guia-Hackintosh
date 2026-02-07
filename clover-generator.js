@@ -837,7 +837,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>ClearTaskSwitchBit</key>
         <false/>
         <key>DevirtualiseMmio</key>
-        <false/>
+        <true/>
         <key>DisableIoMapper</key>
         <true/>
         <key>DisableIoMapperMapping</key>
@@ -898,16 +898,16 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>ProtectSecureBoot</key>
         <false/>
         <key>ProtectUefiServices</key>
-        <false/>
+        <true/>
         <key>ProvideCurrentCpuInfo</key>
-        <false/>
+        <true/>
         <!-- AutoModernCPUQuirks: Auto-detect and apply quirks for modern CPUs -->
         <!-- Supports Intel 12th-14th Gen and AMD Zen3-Zen5 processors -->
         <!-- Requires ENABLE_MODERN_CPU_QUIRKS build flag -->
         <key>AutoModernCPUQuirks</key>
         <false/>
         <key>ProvideCustomSlide</key>
-        <false/>
+        <true/>
         <key>ProvideMaxSlide</key>
         <integer>0</integer>
         <key>RebuildAppleMemoryMap</key>
