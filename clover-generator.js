@@ -38,6 +38,18 @@ class CloverConfigGenerator extends ConfigGenerator {
         const cpuName = hardwareData.CPU["Processor Name"] || "";
         const cpuCodename = hardwareData.CPU.Codename || "";
 
+        // Hardware detection for dynamic Quirks (same logic as OpenCore)
+        const chipset = hardwareData.Motherboard.Chipset || "";
+        const firmware = hardwareData.BIOS["Firmware Type"] || "UEFI";
+        const cpuMan = hardwareData.CPU.Manufacturer || "Intel";
+
+        // Intel 12th Gen+ detection (Alder/Raptor/Arrow Lake)
+        const isIntel12Plus = cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") ||
+            cpuCodename.includes("Meteor") || cpuCodename.includes("Arrow");
+
+        // AMD 500+ series chipset detection
+        const isAMDNewer = chipset.match(/X570|B550|A520|TRX40|B650|X670/) !== null;
+
         // Check for Raptor Lake (13th/14th Gen) - Apply patches ONLY for i9 as per user request
         if ((cpuCodename.includes("Raptor") || cpuName.match(/i\d-1[34]\d{3}/)) && cpuName.includes("i9")) {
             // Basic Raptor Lake Patches (Now restricted to i9)
@@ -833,11 +845,11 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>AppleXcpmForceBoost</key>
         <false/>
         <key>AvoidRuntimeDefrag</key>
-        <true/>
+        <${firmware === "UEFI" ? "true" : "false"}/>
         <key>ClearTaskSwitchBit</key>
         <false/>
         <key>DevirtualiseMmio</key>
-        <true/>
+        <${this.needsDevirtualiseMmio(chipset, cpuCodename) ? "true" : "false"}/>
         <key>DisableIoMapper</key>
         <true/>
         <key>DisableIoMapperMapping</key>
@@ -851,11 +863,11 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>DiscardHibernateMap</key>
         <false/>
         <key>DummyPowerManagement</key>
-        <false/>
+        <${cpuMan === "AMD" ? "true" : "false"}/>
         <key>EnableSafeModeSlide</key>
-        <false/>
+        <${firmware === "UEFI" ? "true" : "false"}/>
         <key>EnableWriteUnprotector</key>
-        <true/>
+        <${this.needsWriteUnprotector(hardwareData) ? "true" : "false"}/>
         <key>ExtendBTFeatureFlags</key>
         <false/>
         <key>ExternalDiskIcons</key>
@@ -892,36 +904,33 @@ class CloverConfigGenerator extends ConfigGenerator {
             </dict>
         </array>
         <key>PowerTimeoutKernelPanic</key>
-        <false/>
+        <true/>
         <key>ProtectMemoryRegions</key>
         <false/>
         <key>ProtectSecureBoot</key>
         <false/>
         <key>ProtectUefiServices</key>
-        <true/>
+        <${this.needsProtectUefiServices(chipset) ? "true" : "false"}/>
         <key>ProvideCurrentCpuInfo</key>
-        <true/>
-        <!-- AutoModernCPUQuirks: Auto-detect and apply quirks for modern CPUs -->
-        <!-- Supports Intel 12th-14th Gen and AMD Zen3-Zen5 processors -->
-        <!-- Requires ENABLE_MODERN_CPU_QUIRKS build flag -->
+        <${(cpuMan === "AMD" || isIntel12Plus) ? "true" : "false"}/>
         <key>AutoModernCPUQuirks</key>
         <false/>
         <key>ProvideCustomSlide</key>
-        <true/>
+        <${firmware === "UEFI" ? "true" : "false"}/>
         <key>ProvideMaxSlide</key>
         <integer>0</integer>
         <key>RebuildAppleMemoryMap</key>
-        <false/>
+        <${!this.needsWriteUnprotector(hardwareData) ? "true" : "false"}/>
         <key>ResizeAppleGpuBars</key>
         <integer>-1</integer>
         <key>ResizeGpuBars</key>
         <integer>-1</integer>
         <key>SetupVirtualMap</key>
-        <true/>
+        <${(firmware === "UEFI" && !isAMDNewer) ? "true" : "false"}/>
         <key>SignalAppleOS</key>
         <false/>
         <key>SyncRuntimePermissions</key>
-        <true/>
+        <${!this.needsWriteUnprotector(hardwareData) ? "true" : "false"}/>
         <key>ThirdPartyDrives</key>
         <false/>
         <key>TscSyncTimeout</key>
