@@ -54,8 +54,12 @@ class CloverConfigGenerator extends ConfigGenerator {
         const platform = hardwareData.Motherboard.Platform || "Desktop";
         const isLaptop = platform === "Laptop" || platform === "NUC";
 
-        // Dynamic config generation
-        const dsdtFixes = this.generateDSDTFixes(hardwareData);
+        // Special configuration for MacPro7,1 and iMacPro1,1
+        // Uses validated working configuration from user testing
+        const isMacPro = smbiosModel.includes("MacPro") || smbiosModel.includes("iMacPro");
+
+        // Dynamic config generation (isMacPro affects the generated config)
+        const dsdtFixes = this.generateDSDTFixes(hardwareData, isMacPro);
         const gfxConfig = this.generateGraphicsConfig(hardwareData);
         const kernelPatches = this.generateKernelPatches(hardwareData);
 
@@ -173,7 +177,7 @@ class CloverConfigGenerator extends ConfigGenerator {
     <key>ACPI</key>
     <dict>
         <key>AutoMerge</key>
-        <false/>
+        <${isMacPro}/>
         <key>DSDT</key>
         <dict>
             <key>Debug</key>
@@ -310,7 +314,7 @@ class CloverConfigGenerator extends ConfigGenerator {
             <false/>
         </dict>
         <key>DisableASPM</key>
-        <false/>
+        <${isMacPro}/>
         <key>DisabledAML</key>
         <array>
             <string>SSDT-PLUG.aml</string>
@@ -377,9 +381,9 @@ class CloverConfigGenerator extends ConfigGenerator {
             <key>MinMultiplier?</key>
             <integer>8</integer>
             <key>NoDynamicExtract?</key>
-            <false/>
+            <${isMacPro}/>
             <key>NoOemTableId?</key>
-            <false/>
+            <${isMacPro}/>
             <key>PLimitDict?</key>
             <integer>1</integer>
             <key>UnderVoltStep?</key>
@@ -395,9 +399,9 @@ class CloverConfigGenerator extends ConfigGenerator {
                 <key>PluginType?</key>
                 <false/>
                 <key>CStates</key>
-                <true/>
+                <${!isMacPro}/>
                 <key>PStates</key>
-                <true/>
+                <${!isMacPro}/>
             </dict>
         </dict>
         <key>SortedOrder?</key>
@@ -412,7 +416,7 @@ class CloverConfigGenerator extends ConfigGenerator {
     <key>Boot</key>
     <dict>
         <key>Arguments?</key>
-        <string>${finalBootArgs}</string>
+        <string>${isMacPro ? "ctrsmt=full revpatch=sbvmm revcpu=1" : finalBootArgs}</string>
         <key>CustomLogo</key>
         <false/>
         <key>Debug</key>
@@ -432,7 +436,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>NeverDoRecovery</key>
         <true/>
         <key>NeverHibernate</key>
-        <false/>
+        <${isMacPro}/>
         <key>NoEarlyProgress</key>
         <false/>
         <key>RtcHibernateAware</key>
@@ -446,7 +450,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>Timeout</key>
         <integer>5</integer>
         <key>XMPDetection?</key>
-        <string>-1</string>
+        <${isMacPro ? "integer>0" : "string>-1"}/>
     </dict>
     <key>BootGraphics</key>
     <dict>
@@ -651,7 +655,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>Inject?</key>
         <dict>
             <key>ATI</key>
-            <${gfxConfig.InjectATI}/>
+            <${isMacPro ? "false" : gfxConfig.InjectATI}/>
             <key>Intel</key>
             <${gfxConfig.InjectIntel}/>
             <key>NVidia</key>
@@ -732,13 +736,13 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>EightApple</key>
         <true/>
         <key>FakeCPUID</key>
-        <string>${this.calculateFakeCPUID(hardwareData)}</string>
+        <string>${isMacPro ? "0x0706E5" : this.calculateFakeCPUID(hardwareData)}</string>
         <key>KernelLapic</key>
         <${kernelPatches.KernelLapic}/>
         <key>KernelPm</key>
-        <${kernelPatches.KernelPm}/>
+        <${isMacPro ? "true" : kernelPatches.KernelPm}/>
         <key>KernelXCPM</key>
-        <${kernelPatches.KernelXcpm}/>
+        <${isMacPro ? "false" : kernelPatches.KernelXcpm}/>
         <key>PanicNoKextDump</key>
         <${kernelPatches.PanicNoKextDump}/>
         <key>KextsToPatch</key>
@@ -923,7 +927,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>ProvideCurrentCpuInfo</key>
         <${(cpuMan === "AMD" || isIntel12Plus) ? "true" : "false"}/>
         <key>AutoModernCPUQuirks</key>
-        <false/>
+        <${isMacPro ? "true" : "false"}/>
         <key>ProvideCustomSlide</key>
         <${firmware === "UEFI" ? "true" : "false"}/>
         <key>ProvideMaxSlide</key>
@@ -933,13 +937,13 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>ResizeAppleGpuBars</key>
         <integer>-1</integer>
         <key>ResizeGpuBars</key>
-        <integer>-1</integer>
+        <integer>${isMacPro ? "0" : "-1"}</integer>
         <key>SetupVirtualMap</key>
         <${(firmware === "UEFI" && !isAMDNewer) ? "true" : "false"}/>
         <key>SignalAppleOS</key>
         <false/>
         <key>SyncRuntimePermissions</key>
-        <${!this.needsWriteUnprotector(hardwareData) ? "true" : "false"}/>
+        <${isMacPro ? "true" : (!this.needsWriteUnprotector(hardwareData) ? "true" : "false")}/>
         <key>ThirdPartyDrives</key>
         <false/>
         <key>TscSyncTimeout</key>
@@ -1215,22 +1219,58 @@ class CloverConfigGenerator extends ConfigGenerator {
     // DYNAMIC CONFIG GENERATION HELPERS
     // ========================================================================
 
-    // Generate DSDT Fixes based on platform (Desktop/Laptop)
-    generateDSDTFixes(hw) {
+    // Generate DSDT Fixes based on platform (Desktop/Laptop) and SMBIOS
+    generateDSDTFixes(hw, isMacPro = false) {
         const platform = hw.Motherboard.Platform || "Desktop";
         const isLaptop = platform === "Laptop" || platform === "NUC";
-        const cpuMan = hw.CPU.Manufacturer || "Intel";
 
+        // For MacPro7,1 and iMacPro1,1, use minimal fixes (validated working config)
+        if (isMacPro) {
+            return {
+                AddDTGP: false,
+                AddHDMI: false,
+                AddIMEI: false,
+                AddMCHC: false,
+                AddPNLF: false,
+                DeleteUnused: true,
+                FakeLPC: false,
+                FixACST: false,
+                FixADP1: false,
+                FixAirport: false,
+                FixDarwin: false,
+                FixDarwin7: false,
+                FixDisplay: false,
+                FixFirewire: false,
+                FixHDA: false,
+                FixHPET: false,
+                FixIDE: false,
+                FixIPIC: false,
+                FixIntelGfx: false,
+                FixLAN: false,
+                FixMutex: true,
+                FixRTC: false,
+                FixRegions: false,
+                FixS3D: false,
+                FixSATA: false,
+                FixSBUS: true,
+                FixShutdown: true,
+                FixTMR: false,
+                FixUSB: false,
+                FixWAK: false
+            };
+        }
+
+        // Standard configuration for other SMBIOS models
         return {
             AddDTGP: true,
             AddHDMI: !isLaptop,
             AddIMEI: false,
             AddMCHC: false,
-            AddPNLF: isLaptop, // Backlight for laptops
+            AddPNLF: isLaptop,
             DeleteUnused: true,
             FakeLPC: false,
             FixACST: true,
-            FixADP1: isLaptop, // Power adapter for laptops
+            FixADP1: isLaptop,
             FixAirport: false,
             FixDarwin: false,
             FixDarwin7: true,
