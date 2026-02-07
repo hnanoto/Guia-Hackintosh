@@ -450,7 +450,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>Timeout</key>
         <integer>5</integer>
         <key>XMPDetection?</key>
-        <${isMacPro ? "integer>0" : "string>-1"}/>
+        ${isMacPro ? "<integer>0</integer>" : "<string>-1</string>"}
     </dict>
     <key>BootGraphics</key>
     <dict>
