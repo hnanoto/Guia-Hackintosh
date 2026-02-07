@@ -1006,7 +1006,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>FakeCPUID</key>
         <string>0x0406E1</string>
         <key>Family?</key>
-        <string>iMac</string>
+        <string>${smbiosModel.includes("MacPro") ? "Mac Pro" : smbiosModel.includes("MacBook") ? "MacBook Pro" : smbiosModel.includes("Macmini") ? "Mac mini" : smbiosModel.includes("iMacPro") ? "iMac Pro" : "iMac"}</string>
         <key>FirmwareFeatures?</key>
         <string>0xC0001403</string>
         <key>FirmwareFeaturesMask?</key>
@@ -1060,7 +1060,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>MemoryRank?</key>
         <integer>2</integer>
         <key>Mobile?</key>
-        <true/>
+        <${isLaptop}/>
         <key>NoRomInfo</key>
         <false/>
         <key>PlatformFeature?</key>
