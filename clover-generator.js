@@ -1166,6 +1166,52 @@ class CloverConfigGenerator extends ConfigGenerator {
     }
 
     // ========================================================================
+    // CLOVER-SPECIFIC QUIRKS OVERRIDES
+    // Note: Clover handles memory differently than OpenCore. User testing on
+    // Gigabyte Z690 confirmed that EnableWriteUnprotector=true works better.
+    // ========================================================================
+
+    // Override: For Clover, Z690/Z790 needs EnableWriteUnprotector=TRUE
+    // This is OPPOSITE to OpenCore where these chipsets use RebuildAppleMemoryMap
+    needsWriteUnprotector(hw) {
+        const cpuManufacturer = hw.CPU.Manufacturer;
+        const chipset = hw.Motherboard.Chipset || "";
+
+        // AMD uses RebuildAppleMemoryMap instead
+        if (cpuManufacturer === "AMD") return false;
+
+        // For Clover on Intel Z690/Z790, EnableWriteUnprotector works better
+        // (Opposite of OpenCore logic - validated on Gigabyte Z690)
+        if (chipset.match(/Z[6-7]90/)) return true; // Z690, Z790 for Clover
+        if (chipset.match(/B[6-7]60/)) return true; // B660, B760 for Clover
+
+        // Z390, Z490, Z590 follow standard Clover logic
+        if (chipset.match(/Z[345]90/)) return false;
+        if (chipset.match(/B[45]60/)) return false;
+
+        // Default for older systems
+        return true;
+    }
+
+    // Override: DevirtualiseMmio needed for Z490+ and AMD 500+
+    needsDevirtualiseMmio(chipset, cpuCodename) {
+        // Intel Z490+ and AMD X570/B550+ need DevirtualiseMmio
+        if (chipset.match(/Z[4-7]90|B[4-7]60|X570|B550|A520|TRX40|B650|X670/)) {
+            return true;
+        }
+        // Also for Alder Lake and newer
+        if (cpuCodename.match(/Alder|Raptor|Meteor|Arrow/)) {
+            return true;
+        }
+        return false;
+    }
+
+    // Override: ProtectUefiServices for Z390+
+    needsProtectUefiServices(chipset) {
+        return chipset.match(/Z[3-7]90|B[4-7]60/) !== null;
+    }
+
+    // ========================================================================
     // DYNAMIC CONFIG GENERATION HELPERS
     // ========================================================================
 
