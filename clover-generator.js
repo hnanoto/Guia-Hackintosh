@@ -310,7 +310,7 @@ class CloverConfigGenerator extends ConfigGenerator {
             <false/>
             <key>Rtc8Allowed</key>
             <true/>
-            <key>SuspendOverride?</key>
+            <key>SuspendOverride</key>
             <false/>
         </dict>
         <key>DisableASPM</key>
@@ -334,7 +334,7 @@ class CloverConfigGenerator extends ConfigGenerator {
                 <string>CpuPm</string>
             </dict>
             <dict>
-                <key>Length?</key>
+                <key>Length</key>
                 <integer>720</integer>
                 <key>Signature</key>
                 <string>SSDT</string>
@@ -356,47 +356,47 @@ class CloverConfigGenerator extends ConfigGenerator {
         <true/>
         <key>PatchAPIC</key>
         <false/>
-        <key>ResetAddress?</key>
+        <key>ResetAddress</key>
         <string>0x64</string>
-        <key>ResetValue?</key>
+        <key>ResetValue</key>
         <string>0xFE</string>
         <key>SSDT</key>
         <dict>
-            <key>C3Latency?</key>
+            <key>C3Latency</key>
             <string>0x03E7</string>
-            <key>DoubleFirstState?</key>
+            <key>DoubleFirstState</key>
             <true/>
-            <key>DropOem?</key>
+            <key>DropOem</key>
             <true/>
-            <key>EnableC2?</key>
+            <key>EnableC2</key>
             <false/>
-            <key>EnableC4?</key>
+            <key>EnableC4</key>
             <false/>
-            <key>EnableC6?</key>
+            <key>EnableC6</key>
             <true/>
-            <key>EnableC7?</key>
+            <key>EnableC7</key>
             <false/>
-            <key>MaxMultiplier?</key>
+            <key>MaxMultiplier</key>
             <integer>12</integer>
-            <key>MinMultiplier?</key>
+            <key>MinMultiplier</key>
             <integer>8</integer>
-            <key>NoDynamicExtract?</key>
+            <key>NoDynamicExtract</key>
             <${isMacPro}/>
-            <key>NoOemTableId?</key>
+            <key>NoOemTableId</key>
             <${isMacPro}/>
-            <key>PLimitDict?</key>
+            <key>PLimitDict</key>
             <integer>1</integer>
-            <key>UnderVoltStep?</key>
+            <key>UnderVoltStep</key>
             <integer>1</integer>
-            <key>UseSystemIO?</key>
+            <key>UseSystemIO</key>
             <false/>
             <key>Generate</key>
             <dict>
-                <key>APLF?</key>
+                <key>APLF</key>
                 <false/>
-                <key>APSN?</key>
+                <key>APSN</key>
                 <false/>
-                <key>PluginType?</key>
+                <key>PluginType</key>
                 <false/>
                 <key>CStates</key>
                 <${!isMacPro}/>
@@ -404,7 +404,7 @@ class CloverConfigGenerator extends ConfigGenerator {
                 <${!isMacPro}/>
             </dict>
         </dict>
-        <key>SortedOrder?</key>
+        <key>SortedOrder</key>
         <array>
             <string>SSDT-3.aml</string>
             <string>SSDT-1.aml</string>
@@ -415,13 +415,13 @@ class CloverConfigGenerator extends ConfigGenerator {
     </dict>
     <key>Boot</key>
     <dict>
-        <key>Arguments?</key>
+        <key>Arguments</key>
         <string>${isMacPro ? "ctrsmt=full revpatch=sbvmm revcpu=1" : finalBootArgs}</string>
         <key>CustomLogo</key>
         <false/>
         <key>Debug</key>
         <false/>
-        <key>DefaultLoader?</key>
+        <key>DefaultLoader</key>
         <string>boot.efi</string>
         <key>DefaultVolume</key>
         <string>LastBootedVolume</string>
@@ -449,7 +449,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <false/>
         <key>Timeout</key>
         <integer>5</integer>
-        <key>XMPDetection?</key>
+        <key>XMPDetection</key>
         ${isMacPro ? "<integer>0</integer>" : "<string>-1</string>"}
     </dict>
     <key>BootGraphics</key>
@@ -463,70 +463,70 @@ class CloverConfigGenerator extends ConfigGenerator {
     </dict>
     <key>CPU</key>
     <dict>
-        <key>BusSpeedkHz?</key>
+        <key>BusSpeedkHz</key>
         <integer>133330</integer>
-        <key>FrequencyMHz?</key>
+        <key>FrequencyMHz</key>
         <integer>3140</integer>
-        <key>HWPEnable?</key>
+        <key>HWPEnable</key>
         <true/>
-        <key>HWPValue?</key>
+        <key>HWPValue</key>
         <string>0x30002a01</string>
-        <key>QPI?</key>
+        <key>QPI</key>
         <integer>4800</integer>
-        <key>SavingMode?</key>
+        <key>SavingMode</key>
         <integer>7</integer>
-        <key>TDP?</key>
+        <key>TDP</key>
         <integer>95</integer>
-        <key>TurboDisable?</key>
+        <key>TurboDisable</key>
         <false/>
-        <key>Type?</key>
+        <key>Type</key>
         <string>0x0201</string>
         <key>UseARTFrequency</key>
         <true/>
     </dict>
     <key>Devices</key>
     <dict>
-        <key>Audio?</key>
+        <key>Audio</key>
         <dict>
             <key>AFGLowPowerState</key>
             <true/>
-            <key>Inject?</key>
+            <key>Inject</key>
             <string>12</string>
             <key>ResetHDA</key>
             <true/>
         </dict>
-        <key>DisableFunctions?</key>
+        <key>DisableFunctions</key>
         <string>0x18F6</string>
         <key>FakeID</key>
         <dict>
-            <key>ATI?</key>
+            <key>ATI</key>
             <string>0x67501002</string>
-            <key>IMEI?</key>
+            <key>IMEI</key>
             <string>0x1e208086</string>
-            <key>IntelGFX?</key>
+            <key>IntelGFX</key>
             <string>0x59168086</string>
-            <key>LAN?</key>
+            <key>LAN</key>
             <string>0x100E8086</string>
-            <key>NVidia?</key>
+            <key>NVidia</key>
             <string>0x11de10de</string>
-            <key>SATA?</key>
+            <key>SATA</key>
             <string>0x26818086</string>
-            <key>WIFI?</key>
+            <key>WIFI</key>
             <string>0x0030168C</string>
-            <key>XHCI?</key>
+            <key>XHCI</key>
             <string>0xA12F8086</string>
         </dict>
-        <key>ForceHPET?</key>
+        <key>ForceHPET</key>
         <false/>
-        <key>HDMIInjection?</key>
+        <key>HDMIInjection</key>
         <false/>
-        <key>IntelMaxValue?</key>
+        <key>IntelMaxValue</key>
         <string>0x710</string>
-        <key>LANInjection?</key>
+        <key>LANInjection</key>
         <false/>
-        <key>NoDefaultProperties?</key>
+        <key>NoDefaultProperties</key>
         <false/>
-        <key>Properties?</key>
+        <key>Properties</key>
         <dict>
             <key>PciRoot(0x0)/Pci(0x14,0x0)</key>
             <dict>
@@ -556,17 +556,17 @@ class CloverConfigGenerator extends ConfigGenerator {
                 <string>onboard-1</string>
             </dict>
         </dict>
-        <key>SetIntelBacklight?</key>
+        <key>SetIntelBacklight</key>
         <false/>
-        <key>SetIntelMaxBacklight?</key>
+        <key>SetIntelMaxBacklight</key>
         <true/>
         <key>USB</key>
         <dict>
-            <key>AddClockID?</key>
+            <key>AddClockID</key>
             <true/>
             <key>FixOwnership</key>
             <true/>
-            <key>HighCurrent?</key>
+            <key>HighCurrent</key>
             <false/>
             <key>Inject</key>
             <false/>
@@ -574,7 +574,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>UseIntelHDMI</key>
         <false/>
     </dict>
-    <key>DisableDrivers?</key>
+    <key>DisableDrivers</key>
     <array>
         <string>CsmVideoDxe</string>
         <string>VBoxExt2</string>
@@ -583,26 +583,26 @@ class CloverConfigGenerator extends ConfigGenerator {
     <dict>
         <key>ConsoleMode</key>
         <string>0</string>
-        <key>CustomIcons?</key>
+        <key>CustomIcons</key>
         <false/>
         <key>EmbeddedThemeType</key>
         <string>Daytime</string>
-        <key>Hide?</key>
+        <key>Hide</key>
         <array>
             <string>Windows</string>
             <string>BOOTX64.EFI</string>
         </array>
-        <key>KbdPrevLang?</key>
+        <key>KbdPrevLang</key>
         <false/>
-        <key>Language?</key>
+        <key>Language</key>
         <string>en:0</string>
-        <key>Mouse?</key>
+        <key>Mouse</key>
         <dict>
-            <key>DoubleClickTime?</key>
+            <key>DoubleClickTime</key>
             <integer>500</integer>
             <key>Enabled</key>
             <true/>
-            <key>Mirror?</key>
+            <key>Mirror</key>
             <false/>
             <key>Speed</key>
             <integer>2</integer>
@@ -611,7 +611,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <false/>
         <key>ProvideConsoleGop</key>
         <true/>
-        <key>Scan?</key>
+        <key>Scan</key>
         <dict>
             <key>Entries</key>
             <true/>
@@ -622,7 +622,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         </dict>
         <key>ScreenResolution</key>
         <string>1600x900</string>
-        <key>ShowOptimus?</key>
+        <key>ShowOptimus</key>
         <false/>
         <key>TextOnly</key>
         <false/>
@@ -633,26 +633,26 @@ class CloverConfigGenerator extends ConfigGenerator {
     </dict>
     <key>Graphics</key>
     <dict>
-        <key>DualLink?</key>
+        <key>DualLink</key>
         <integer>0</integer>
         <key>EDID</key>
         <dict>
-            <key>Custom?</key>
+            <key>Custom</key>
             <data>AP///////wAGECGSAAAAAAASAQOAIRV4CunVmVlTjigmUFQAAAABAQEBAQEBAQEBAQEBAQEB3iGgcFCEHzAgIFYAS88QAAAY3iGgcFCEHzAgIFYAS88QAAAAAAAA/gBXNjU3RwAxNTRXUDEKAAAA/gAjMz1IZYSq/wIBCiAgAJo=</data>
-            <key>HorizontalSyncPulseWidth?</key>
+            <key>HorizontalSyncPulseWidth</key>
             <string>0x11</string>
-            <key>Inject?</key>
+            <key>Inject</key>
             <true/>
-            <key>ProductID?</key>
+            <key>ProductID</key>
             <string>0x9221</string>
-            <key>VendorID?</key>
+            <key>VendorID</key>
             <string>0x1006</string>
-            <key>VideoInputSignal?</key>
+            <key>VideoInputSignal</key>
             <string>0xA1</string>
         </dict>
-        <key>FBName?</key>
+        <key>FBName</key>
         <string>Makakakakala</string>
-        <key>Inject?</key>
+        <key>Inject</key>
         <dict>
             <key>ATI</key>
             <${isMacPro ? "false" : gfxConfig.InjectATI}/>
@@ -661,19 +661,19 @@ class CloverConfigGenerator extends ConfigGenerator {
             <key>NVidia</key>
             <${gfxConfig.InjectNVidia}/>
         </dict>
-        <key>LoadVBios?</key>
+        <key>LoadVBios</key>
         <${gfxConfig.LoadVBios}/>
-        <key>NVCAP?</key>
+        <key>NVCAP</key>
         <string>04000000000003000C0000000000000A00000000</string>
-        <key>NvidiaGeneric?</key>
+        <key>NvidiaGeneric</key>
         <true/>
-        <key>NvidiaNoEFI?</key>
+        <key>NvidiaNoEFI</key>
         <false/>
-        <key>NvidiaSingle?</key>
+        <key>NvidiaSingle</key>
         <false/>
-        <key>PatchVBios?</key>
+        <key>PatchVBios</key>
         <false/>
-        <key>PatchVBiosBytes?</key>
+        <key>PatchVBiosBytes</key>
         <array>
             <dict>
                 <key>Find</key>
@@ -682,15 +682,15 @@ class CloverConfigGenerator extends ConfigGenerator {
                 <data>gAeoAjgE</data>
             </dict>
         </array>
-        <key>RadeonDeInit?</key>
+        <key>RadeonDeInit</key>
         <${gfxConfig.RadeonDeInit}/>
-        <key>VRAM?</key>
+        <key>VRAM</key>
         <integer>1024</integer>
-        <key>VideoPorts?</key>
+        <key>VideoPorts</key>
         <integer>2</integer>
-        <key>display-cfg?</key>
+        <key>display-cfg</key>
         <string>03010300FFFF0001</string>
-        <key>ig-platform-id?</key>
+        <key>ig-platform-id</key>
         <string>${gfxConfig.igPlatformId || "0x00000000"}</string>
     </dict>
     <key>KernelAndKextPatches</key>
@@ -970,7 +970,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <string>0x68</string>
         <key>CsrActiveConfig</key>
         <string>0x0A87</string>
-        <key>HWTarget?</key>
+        <key>HWTarget</key>
         <string>J160AP</string>
         <key>MLB</key>
         <string>C02032109R6DC771H</string>
@@ -979,51 +979,51 @@ class CloverConfigGenerator extends ConfigGenerator {
     </dict>
     <key>SMBIOS</key>
     <dict>
-        <key>BiosReleaseDate?</key>
+        <key>BiosReleaseDate</key>
         <string>05/03/10</string>
-        <key>BiosVendor?</key>
+        <key>BiosVendor</key>
         <string>Apple Inc.</string>
-        <key>BiosVersion?</key>
+        <key>BiosVersion</key>
         <string>IM131.88Z.F000.B00.1907241303</string>
-        <key>Board-ID?</key>
+        <key>Board-ID</key>
         <string>Mac-FC02E91DDD3FA6A4</string>
-        <key>BoardManufacturer?</key>
+        <key>BoardManufacturer</key>
         <string>Apple Inc.</string>
-        <key>BoardSerialNumber?</key>
+        <key>BoardSerialNumber</key>
         <string>C0225060SAMF651AX</string>
-        <key>BoardType?</key>
+        <key>BoardType</key>
         <integer>10</integer>
-        <key>BoardVersion?</key>
+        <key>BoardVersion</key>
         <string>Proto1</string>
-        <key>ChassisAssetTag?</key>
+        <key>ChassisAssetTag</key>
         <string>Desktop</string>
-        <key>ChassisManufacturer?</key>
+        <key>ChassisManufacturer</key>
         <string>Apple Inc.</string>
-        <key>ChassisType?</key>
+        <key>ChassisType</key>
         <integer>16</integer>
-        <key>EfiVersion?</key>
+        <key>EfiVersion</key>
         <string>288.0.0.0.0</string>
-        <key>ExtendedFirmwareFeatures?</key>
+        <key>ExtendedFirmwareFeatures</key>
         <string>0x8FE001403</string>
-        <key>ExtendedFirmwareFeaturesMask?</key>
+        <key>ExtendedFirmwareFeaturesMask</key>
         <string>0xFFFFFFFFFF</string>
         <key>FakeCPUID</key>
         <string>0x0406E1</string>
-        <key>Family?</key>
+        <key>Family</key>
         <string>${smbiosModel.includes("MacPro") ? "Mac Pro" : smbiosModel.includes("MacBook") ? "MacBook Pro" : smbiosModel.includes("Macmini") ? "Mac mini" : smbiosModel.includes("iMacPro") ? "iMac Pro" : "iMac"}</string>
-        <key>FirmwareFeatures?</key>
+        <key>FirmwareFeatures</key>
         <string>0xC0001403</string>
-        <key>FirmwareFeaturesMask?</key>
+        <key>FirmwareFeaturesMask</key>
         <string>0xFFFFFFFF</string>
-        <key>LocationInChassis?</key>
+        <key>LocationInChassis</key>
         <string>Part Component</string>
-        <key>Manufacturer?</key>
+        <key>Manufacturer</key>
         <string>Apple Inc.</string>
         <key>Memory</key>
         <dict>
             <key>Channels</key>
             <integer>2</integer>
-            <key>Modules?</key>
+            <key>Modules</key>
             <array>
                 <dict>
                     <key>Frequency</key>
@@ -1058,22 +1058,22 @@ class CloverConfigGenerator extends ConfigGenerator {
                     <string>Kingston</string>
                 </dict>
             </array>
-            <key>SlotCount?</key>
+            <key>SlotCount</key>
             <integer>4</integer>
         </dict>
-        <key>MemoryRank?</key>
+        <key>MemoryRank</key>
         <integer>2</integer>
-        <key>Mobile?</key>
+        <key>Mobile</key>
         <${isLaptop}/>
         <key>NoRomInfo</key>
         <false/>
-        <key>PlatformFeature?</key>
+        <key>PlatformFeature</key>
         <string>0x00</string>
-        <key>ProductName?</key>
+        <key>ProductName</key>
         <string>${smbiosModel}</string>
-        <key>SerialNumber?</key>
+        <key>SerialNumber</key>
         <string>C02JBSAMDNCW</string>
-        <key>Slots?</key>
+        <key>Slots</key>
         <array>
             <dict>
                 <key>Device</key>
@@ -1096,20 +1096,20 @@ class CloverConfigGenerator extends ConfigGenerator {
                 <integer>1</integer>
             </dict>
         </array>
-        <key>SmUUID?</key>
+        <key>SmUUID</key>
         <string>00000000-0000-1000-8000-010203040506</string>
-        <key>SmbiosVersion?</key>
+        <key>SmbiosVersion</key>
         <string>0x0300</string>
-        <key>Trust?</key>
+        <key>Trust</key>
         <true/>
-        <key>Version?</key>
+        <key>Version</key>
         <string>1.0</string>
     </dict>
     <key>SystemParameters</key>
     <dict>
-        <key>BacklightLevel?</key>
+        <key>BacklightLevel</key>
         <string>0x0501</string>
-        <key>CustomUUID?</key>
+        <key>CustomUUID</key>
         <string>511CE201-1000-4000-9999-010203040506</string>
         <key>InjectKexts</key>
         <true/>
@@ -1117,7 +1117,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <true/>
         <key>NoCaches</key>
         <false/>
-        <key>NvidiaWeb?</key>
+        <key>NvidiaWeb</key>
         <false/>
     </dict>
 </dict>
