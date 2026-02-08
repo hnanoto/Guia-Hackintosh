@@ -499,6 +499,226 @@ const CloverTemplates = {
     },
 
     // ========================================================================
+    // AMD TEMPLATES (Ryzen AM4/AM5, Threadripper)
+    // ========================================================================
+
+    // AMD Ryzen 7000 Series (AM5 - Zen 4)
+    "amd_am5_zen4": {
+        platform: "Desktop",
+        chipsets: ["X670", "X670E", "B650", "B650E"],
+        cpuGenerations: ["Zen 4", "Raphael"],
+        smbios: "MacPro7,1",
+        boot: {
+            args: "alcid=1 npci=0x3000 agdpmod=pikera",
+            timeout: 5
+        },
+        acpi: {
+            autoMerge: true,
+            fixHeaders: true,
+            fixMCFG: true,
+            dsdt: {
+                fixes: {
+                    FixIPIC: true,
+                    FixRTC: true,
+                    FixTMR: true
+                }
+            }
+        },
+        kernel: {
+            appleIntelCPUPM: false,
+            appleRTC: true,
+            kernelPm: false,
+            kernelXCPM: false,
+            panicNoKextDump: true
+        },
+        quirks: {
+            avoidRuntimeDefrag: true,
+            devirtualiseMmio: true,
+            disableIoMapper: true,
+            disableLinkeditJettison: true,
+            dummyPowerManagement: true,
+            enableSafeModeSlide: true,
+            enableWriteUnprotector: false,
+            powerTimeoutKernelPanic: true,
+            protectUefiServices: true,
+            provideCurrentCpuInfo: true,
+            provideCustomSlide: true,
+            rebuildAppleMemoryMap: true,
+            setupVirtualMap: false,
+            syncRuntimePermissions: true,
+            xhciPortLimit: false
+        },
+        graphics: {
+            injectATI: false,
+            injectIntel: false,
+            injectNVidia: false
+        },
+        rtVariables: {
+            booterConfig: "0x28",
+            csrActiveConfig: "0x803"
+        }
+    },
+
+    // AMD Ryzen 5000/3000/2000/1000 Series (AM4 - Zen 3/2/1)
+    "amd_am4_zen": {
+        platform: "Desktop",
+        chipsets: ["X570", "B550", "A520", "X470", "B450", "X370", "B350", "A320"],
+        cpuGenerations: ["Zen 3", "Zen 2", "Zen+", "Zen", "Vermeer", "Matisse", "Pinnacle Ridge", "Summit Ridge"],
+        smbios: "MacPro7,1",
+        boot: {
+            args: "alcid=1 npci=0x2000 agdpmod=pikera",
+            timeout: 5
+        },
+        acpi: {
+            autoMerge: true,
+            fixHeaders: true,
+            dsdt: {
+                fixes: {
+                    FixIPIC: true,
+                    FixRTC: true,
+                    FixTMR: true,
+                    FixHPET: true
+                }
+            }
+        },
+        kernel: {
+            appleIntelCPUPM: false,
+            appleRTC: true,
+            kernelPm: false,
+            kernelXCPM: false,
+            panicNoKextDump: true
+        },
+        quirks: {
+            avoidRuntimeDefrag: true,
+            devirtualiseMmio: true,
+            disableIoMapper: true,
+            disableLinkeditJettison: true,
+            dummyPowerManagement: true,
+            enableSafeModeSlide: true,
+            enableWriteUnprotector: false,
+            powerTimeoutKernelPanic: true,
+            protectUefiServices: true,
+            provideCurrentCpuInfo: true,
+            provideCustomSlide: true,
+            rebuildAppleMemoryMap: true,
+            setupVirtualMap: false, // AMD needs false
+            syncRuntimePermissions: true,
+            xhciPortLimit: false
+        },
+        graphics: {
+            injectATI: false,
+            injectIntel: false,
+            injectNVidia: false
+        },
+        rtVariables: {
+            booterConfig: "0x28",
+            csrActiveConfig: "0x803"
+        }
+    },
+
+    // AMD Threadripper (TRX40 / WRX80)
+    "amd_threadripper": {
+        platform: "HEDT",
+        chipsets: ["TRX40", "WRX80", "TRX50", "WRX90"],
+        cpuGenerations: ["Threadripper", "Threadripper PRO"],
+        smbios: "MacPro7,1",
+        boot: {
+            args: "alcid=1 npci=0x3000 agdpmod=pikera",
+            timeout: 5
+        },
+        acpi: {
+            autoMerge: true,
+            fixHeaders: true,
+            dsdt: {
+                fixes: {
+                    FixIPIC: true,
+                    FixRTC: true,
+                    FixTMR: true
+                }
+            }
+        },
+        kernel: {
+            appleIntelCPUPM: false,
+            appleRTC: true,
+            kernelPm: false,
+            kernelXCPM: false,
+            panicNoKextDump: true
+        },
+        quirks: {
+            avoidRuntimeDefrag: true,
+            devirtualiseMmio: true,
+            disableIoMapper: true,
+            disableLinkeditJettison: true,
+            dummyPowerManagement: true,
+            enableSafeModeSlide: true,
+            enableWriteUnprotector: false,
+            powerTimeoutKernelPanic: true,
+            protectUefiServices: true,
+            provideCurrentCpuInfo: true,
+            provideCustomSlide: true,
+            rebuildAppleMemoryMap: true,
+            setupVirtualMap: false,
+            syncRuntimePermissions: true,
+            xhciPortLimit: false
+        },
+        graphics: {
+            injectATI: false,
+            injectIntel: false,
+            injectNVidia: false
+        },
+        rtVariables: {
+            booterConfig: "0x28",
+            csrActiveConfig: "0x803"
+        }
+    },
+
+    // AMD FX Series (AM3+ - Bulldozer/Piledriver)
+    "amd_fx": {
+        platform: "Desktop",
+        chipsets: ["990FX", "990X", "970"],
+        cpuGenerations: ["Bulldozer", "Piledriver", "Vishera", "Zambezi"],
+        smbios: "MacPro6,1",
+        boot: {
+            args: "alcid=1 npci=0x2000 -no_compat_check",
+            timeout: 5
+        },
+        acpi: {
+            fixHeaders: true,
+            dsdt: {
+                fixes: {
+                    AddDTGP: true,
+                    FixIPIC: true,
+                    FixRTC: true,
+                    FixHPET: true,
+                    FixUSB: true,
+                    FixLAN: true
+                }
+            }
+        },
+        kernel: {
+            appleIntelCPUPM: false,
+            appleRTC: true,
+            kernelPm: false,
+            kernelXCPM: false,
+            panicNoKextDump: true
+        },
+        quirks: {
+            avoidRuntimeDefrag: true,
+            dummyPowerManagement: true,
+            enableWriteUnprotector: true,
+            setupVirtualMap: true
+        },
+        graphics: {
+            injectATI: false,
+            injectIntel: false,
+            injectNVidia: false
+        },
+        rtVariables: {
+            csrActiveConfig: "0x67"
+        }
+    },
+
+    // ========================================================================
     // NOTEBOOK TEMPLATES
     // ========================================================================
 
@@ -759,6 +979,8 @@ const CloverTemplates = {
 // Helper function to select template based on hardware
 function selectCloverTemplate(hardwareData) {
     const cpuCodename = hardwareData.CPU.Codename || "";
+    const cpuName = hardwareData.CPU["Processor Name"] || "";
+    const cpuMan = hardwareData.CPU.Manufacturer || "";
     const platform = hardwareData.Motherboard.Platform || "Desktop";
     const chipset = hardwareData.Motherboard.Chipset || "";
 
@@ -775,19 +997,51 @@ function selectCloverTemplate(hardwareData) {
         return CloverTemplates["notebook_5_9_gen"];
     }
 
-    // HEDT detection
+    // AMD detection - check manufacturer and CPU name
+    const isAMD = cpuMan === "AMD" || cpuName.match(/Ryzen|Threadripper|FX-|Phenom/i);
+
+    if (isAMD) {
+        // AMD Threadripper detection
+        if (cpuName.match(/Threadripper/i) || chipset.match(/TRX40|WRX80|TRX50|WRX90/)) {
+            return CloverTemplates["amd_threadripper"];
+        }
+
+        // AMD AM5 (Zen 4 - Ryzen 7000+)
+        if (chipset.match(/X670|B650/) || cpuName.match(/Ryzen\s*[579]\s*7[0-9]{3}/i) ||
+            cpuCodename.includes("Zen 4") || cpuCodename.includes("Raphael")) {
+            return CloverTemplates["amd_am5_zen4"];
+        }
+
+        // AMD AM4 (Zen 1-3 - Ryzen 1000-5000)
+        if (chipset.match(/X570|B550|A520|X470|B450|X370|B350|A320/) ||
+            cpuName.match(/Ryzen\s*[3579]\s*[1-5][0-9]{3}/i) ||
+            cpuCodename.match(/Zen\s*[123+]|Vermeer|Matisse|Summit|Pinnacle/i)) {
+            return CloverTemplates["amd_am4_zen"];
+        }
+
+        // AMD FX (AM3+ legacy)
+        if (cpuName.match(/FX-|Vishera|Bulldozer|Piledriver/i) ||
+            chipset.match(/990FX|990X|970/)) {
+            return CloverTemplates["amd_fx"];
+        }
+
+        // Default AMD to AM4 template
+        return CloverTemplates["amd_am4_zen"];
+    }
+
+    // Intel HEDT detection
     if (chipset.includes("X299")) return CloverTemplates["hedt_x299"];
     if (chipset.includes("X99")) return CloverTemplates["hedt_x99"];
     if (chipset.includes("X79")) return CloverTemplates["hedt_x79"];
     if (chipset.includes("X58")) return CloverTemplates["legacy_lga1366"];
 
-    // Desktop by chipset
+    // Intel Desktop by chipset
     if (chipset.match(/Z[67]90|B[67]60|H[67]70/)) return CloverTemplates["desktop_600_700"];
     if (chipset.match(/Z590|B560|H570|H510/)) return CloverTemplates["desktop_500"];
     if (chipset.match(/Z[34]90|Z370|B[34]60|B365|H[34]70/)) return CloverTemplates["desktop_300_400"];
     if (chipset.match(/Z[12]70|B[12]50|H[12][17]0/)) return CloverTemplates["desktop_100_200"];
 
-    // Desktop by CPU generation fallback
+    // Intel Desktop by CPU generation fallback
     if (cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") ||
         cpuCodename.includes("Arrow") || cpuCodename.includes("Meteor")) {
         return CloverTemplates["desktop_600_700"];
