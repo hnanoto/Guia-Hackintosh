@@ -1,6 +1,7 @@
 // ============================================================================
 // CLOVER CONFIG GENERATOR - Extension for Legacy/Alternative Support
 // Extends the main ConfigGenerator to produce Clover-compatible config.plist
+// Uses templates based on Olarila EFIs for accurate configuration
 // ============================================================================
 
 class CloverConfigGenerator extends ConfigGenerator {
@@ -13,37 +14,30 @@ class CloverConfigGenerator extends ConfigGenerator {
         this.hardwareData = hardwareData;
         this.selectedMacOS = macOSVersion;
 
-        const smbiosModel = this.selectSMBIOS(hardwareData, macOSVersion);
+        // Select appropriate template based on hardware
+        const template = this.selectTemplate(hardwareData);
+        console.log(`Selected Clover template: ${template ? template.platform : 'default'}`);
+
+        // Use template SMBIOS if available, otherwise fall back to parent method
+        const smbiosModel = template?.smbios || this.selectSMBIOS(hardwareData, macOSVersion);
         console.log(`Generating Clover config for ${smbiosModel}`);
 
-        // Helper to get boot args from parent
-        const bootArgs = this.generateBootArgs(hardwareData, macOSVersion);
+        // Get boot args - merge template args with dynamic ones
+        let bootArgs = template?.boot?.args || this.generateBootArgs(hardwareData, macOSVersion);
 
         // Helper for audio layout
         const audioLayout = this.getAudioLayout(hardwareData);
 
-        // User confirmed working configuration for Gigabyte Z690:
-        // SetupVirtualMap = true, EnableWriteUnprotector = true, RebuildAppleMemoryMap = false
-        // ACPI: DropOem=true. Boot: revcpu=1.
-        // FakeCPUID: 0x0706E5 (Comet Lake)
-
-        // Override Boot Args to include revcpu=1 if it's Raptor/Alder/Rocket Lake
-        let finalBootArgs = bootArgs;
-        if (hardwareData.CPU.Codename.includes("Raptor") || hardwareData.CPU.Codename.includes("Alder") || hardwareData.CPU.Codename.includes("Rocket")) {
-            if (!finalBootArgs.includes("revcpu=1")) finalBootArgs += " revcpu=1";
-        }
-
-        // Specific Patches for Raptor Lake (13th Gen)
-        let extraAcpiPatches = "";
+        // CPU and chipset detection
         const cpuName = hardwareData.CPU["Processor Name"] || "";
         const cpuCodename = hardwareData.CPU.Codename || "";
-
-        // Hardware detection for dynamic Quirks (same logic as OpenCore)
         const chipset = hardwareData.Motherboard.Chipset || "";
         const firmware = hardwareData.BIOS["Firmware Type"] || "UEFI";
         const cpuMan = hardwareData.CPU.Manufacturer || "Intel";
+        const platform = hardwareData.Motherboard.Platform || "Desktop";
+        const isLaptop = platform === "Laptop" || platform === "NUC";
 
-        // Intel 12th Gen+ detection (Alder/Raptor/Arrow/Meteor Lake)
+        // Intel 12th Gen+ detection
         const isIntel12Plus = cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") ||
             cpuCodename.includes("Meteor") || cpuCodename.includes("Arrow") ||
             cpuName.match(/i\d-1[2-5]\d{3}/) || cpuName.match(/Ultra\s*[579]/i);
@@ -51,18 +45,23 @@ class CloverConfigGenerator extends ConfigGenerator {
         // AMD 500+ series chipset detection
         const isAMDNewer = chipset.match(/X570|B550|A520|TRX40|B650|X670/) !== null;
 
-        // Platform detection
-        const platform = hardwareData.Motherboard.Platform || "Desktop";
-        const isLaptop = platform === "Laptop" || platform === "NUC";
+        // Add revcpu=1 for 12th Gen+ if not already present
+        if (isIntel12Plus && !bootArgs.includes("revcpu=1")) {
+            bootArgs += " revcpu=1 revcpuname=Intel®Core™Processor revpatch=cpuname,sbvmm,diskread,pci";
+        }
 
         // Special configuration for MacPro7,1 and iMacPro1,1
-        // Uses validated working configuration from user testing
         const isMacPro = smbiosModel.includes("MacPro") || smbiosModel.includes("iMacPro");
 
-        // Dynamic config generation (isMacPro affects the generated config)
-        const dsdtFixes = this.generateDSDTFixes(hardwareData, isMacPro);
-        const gfxConfig = this.generateGraphicsConfig(hardwareData);
-        const kernelPatches = this.generateKernelPatches(hardwareData);
+        // Generate dynamic configurations using template as base
+        const dsdtFixes = this.generateDSDTFixesFromTemplate(hardwareData, template, isMacPro);
+        const gfxConfig = this.generateGraphicsConfigFromTemplate(hardwareData, template);
+        const kernelPatches = this.generateKernelPatchesFromTemplate(hardwareData, template);
+        const quirksConfig = this.generateQuirksFromTemplate(hardwareData, template, macOSVersion);
+        const rtVariables = this.generateRtVariablesFromTemplate(template, macOSVersion);
+
+        // Specific Patches for Raptor Lake (13th Gen)
+        let extraAcpiPatches = "";
 
         // Check for Raptor Lake (13th/14th Gen) - Apply patches ONLY for i9 as per user request
         if ((cpuCodename.includes("Raptor") || cpuName.match(/i\d-1[34]\d{3}/)) && cpuName.includes("i9")) {
@@ -417,7 +416,7 @@ class CloverConfigGenerator extends ConfigGenerator {
     <key>Boot</key>
     <dict>
         <key>Arguments</key>
-        <string>${isMacPro ? "ctrsmt=full revpatch=sbvmm revcpu=1" : finalBootArgs}</string>
+        <string>${bootArgs}</string>
         <key>CustomLogo</key>
         <false/>
         <key>Debug</key>
@@ -859,45 +858,45 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>AppleXcpmForceBoost</key>
         <false/>
         <key>AvoidRuntimeDefrag</key>
-        <${firmware === "UEFI" ? "true" : "false"}/>
+        <${quirksConfig.AvoidRuntimeDefrag}/>
         <key>ClearTaskSwitchBit</key>
         <false/>
         <key>DevirtualiseMmio</key>
-        <${this.needsDevirtualiseMmio(chipset, cpuCodename) ? "true" : "false"}/>
+        <${quirksConfig.DevirtualiseMmio}/>
         <key>DisableIoMapper</key>
-        <true/>
+        <${quirksConfig.DisableIoMapper}/>
         <key>DisableIoMapperMapping</key>
         <false/>
         <key>DisableLinkeditJettison</key>
-        <true/>
+        <${quirksConfig.DisableLinkeditJettison}/>
         <key>DisableSingleUser</key>
-        <false/>
+        <${quirksConfig.DisableSingleUser}/>
         <key>DisableVariableWrite</key>
-        <false/>
+        <${quirksConfig.DisableVariableWrite}/>
         <key>DiscardHibernateMap</key>
-        <false/>
+        <${quirksConfig.DiscardHibernateMap}/>
         <key>DummyPowerManagement</key>
-        <${cpuMan === "AMD" ? "true" : "false"}/>
+        <${quirksConfig.DummyPowerManagement}/>
         <key>EnableSafeModeSlide</key>
-        <${firmware === "UEFI" ? "true" : "false"}/>
+        <${quirksConfig.EnableSafeModeSlide}/>
         <key>EnableWriteUnprotector</key>
-        <${this.needsWriteUnprotector(hardwareData) ? "true" : "false"}/>
+        <${quirksConfig.EnableWriteUnprotector}/>
         <key>ExtendBTFeatureFlags</key>
         <false/>
         <key>ExternalDiskIcons</key>
-        <false/>
+        <${quirksConfig.ExternalDiskIcons}/>
         <key>ForceAquantiaEthernet</key>
         <false/>
         <key>ForceExitBootServices</key>
-        <false/>
+        <${quirksConfig.ForceExitBootServices}/>
         <key>ForceOcWriteFlash</key>
-        <false/>
+        <${quirksConfig.ForceOcWriteFlash}/>
         <key>FuzzyMatch</key>
-        <false/>
+        <${quirksConfig.FuzzyMatch}/>
         <key>IncreasePciBarSize</key>
-        <false/>
+        <${quirksConfig.IncreasePciBarSize}/>
         <key>KernelCache</key>
-        <string>Auto</string>
+        <string>${quirksConfig.KernelCache}</string>
         <key>MmioWhitelist</key>
         <array>
             <dict>
@@ -918,39 +917,39 @@ class CloverConfigGenerator extends ConfigGenerator {
             </dict>
         </array>
         <key>PowerTimeoutKernelPanic</key>
-        <true/>
+        <${quirksConfig.PowerTimeoutKernelPanic}/>
         <key>ProtectMemoryRegions</key>
-        <false/>
+        <${quirksConfig.ProtectMemoryRegions}/>
         <key>ProtectSecureBoot</key>
-        <false/>
+        <${quirksConfig.ProtectSecureBoot}/>
         <key>ProtectUefiServices</key>
-        <${this.needsProtectUefiServices(chipset) ? "true" : "false"}/>
+        <${quirksConfig.ProtectUefiServices}/>
         <key>ProvideCurrentCpuInfo</key>
-        <${(cpuMan === "AMD" || isIntel12Plus) ? "true" : "false"}/>
+        <${quirksConfig.ProvideCurrentCpuInfo}/>
         <key>AutoModernCPUQuirks</key>
-        <${isMacPro ? "true" : "false"}/>
+        <${isMacPro}/>
         <key>ProvideCustomSlide</key>
-        <${firmware === "UEFI" ? "true" : "false"}/>
+        <${quirksConfig.ProvideCustomSlide}/>
         <key>ProvideMaxSlide</key>
-        <integer>0</integer>
+        <integer>${quirksConfig.ProvideMaxSlide}</integer>
         <key>RebuildAppleMemoryMap</key>
-        <${!this.needsWriteUnprotector(hardwareData) ? "true" : "false"}/>
+        <${quirksConfig.RebuildAppleMemoryMap}/>
         <key>ResizeAppleGpuBars</key>
-        <integer>-1</integer>
+        <integer>${quirksConfig.ResizeAppleGpuBars}</integer>
         <key>ResizeGpuBars</key>
         <integer>${isMacPro ? "0" : "-1"}</integer>
         <key>SetupVirtualMap</key>
-        <${(firmware === "UEFI" && !isAMDNewer) ? "true" : "false"}/>
+        <${quirksConfig.SetupVirtualMap}/>
         <key>SignalAppleOS</key>
-        <false/>
+        <${quirksConfig.SignalAppleOS}/>
         <key>SyncRuntimePermissions</key>
-        <${isMacPro ? "true" : (!this.needsWriteUnprotector(hardwareData) ? "true" : "false")}/>
+        <${quirksConfig.SyncRuntimePermissions}/>
         <key>ThirdPartyDrives</key>
-        <false/>
+        <${quirksConfig.ThirdPartyDrives}/>
         <key>TscSyncTimeout</key>
         <integer>0</integer>
         <key>XhciPortLimit</key>
-        <false/>
+        <${quirksConfig.XhciPortLimit}/>
     </dict>
     <key>RtVariables</key>
     <dict>
@@ -968,15 +967,15 @@ class CloverConfigGenerator extends ConfigGenerator {
             </dict>
         </array>
         <key>BooterConfig</key>
-        <string>0x68</string>
+        <string>${rtVariables.BooterConfig}</string>
         <key>CsrActiveConfig</key>
-        <string>${this.getCsrActiveConfig(macOSVersion)}</string>
+        <string>${rtVariables.CsrActiveConfig}</string>
         <key>HWTarget</key>
         <string>${this.getHWTarget(smbiosModel)}</string>
         <key>MLB</key>
         <string>${this.generateRandomMLB()}</string>
         <key>ROM</key>
-        <string>UseMacAddr0</string>
+        <string>${rtVariables.ROM}</string>
     </dict>
     <key>SMBIOS</key>
     <dict>
@@ -1521,6 +1520,204 @@ class CloverConfigGenerator extends ConfigGenerator {
             return v.toString(16).toUpperCase();
         });
     }
+
+    // ========================================================================
+    // TEMPLATE-BASED CONFIG GENERATION
+    // ========================================================================
+
+    // Select the appropriate template based on hardware
+    selectTemplate(hw) {
+        // Use global selectCloverTemplate if available
+        if (typeof selectCloverTemplate === 'function') {
+            return selectCloverTemplate(hw);
+        }
+        return null; // Fall back to dynamic generation
+    }
+
+    // Generate DSDT fixes from template or fallback to dynamic
+    generateDSDTFixesFromTemplate(hw, template, isMacPro) {
+        if (!template?.acpi?.dsdt?.fixes) {
+            return this.generateDSDTFixes(hw, isMacPro);
+        }
+
+        const templateFixes = template.acpi.dsdt.fixes;
+        const platform = hw.Motherboard.Platform || "Desktop";
+        const isLaptop = platform === "Laptop" || platform === "NUC";
+
+        // Start with template fixes and merge with dynamic ones
+        return {
+            AddDTGP: templateFixes.AddDTGP || false,
+            AddHDMI: templateFixes.AddHDMI || false,
+            AddIMEI: templateFixes.AddIMEI || false,
+            AddPNLF: templateFixes.AddPNLF || isLaptop, // Brightness for laptops
+            FixADP1: templateFixes.FixADP1 || isLaptop, // AC adapter for laptops
+            FixACST: templateFixes.FixACST || false,
+            FixDarwin: templateFixes.FixDarwin || false,
+            FixDisplay: templateFixes.FixDisplay || false,
+            FixHDA: templateFixes.FixHDA || false,
+            FixHPET: templateFixes.FixHPET || false,
+            FixIDE: templateFixes.FixIDE || false,
+            FixIPIC: templateFixes.FixIPIC || true,
+            FixIntelGfx: templateFixes.FixIntelGfx || false,
+            FixLAN: templateFixes.FixLAN || false,
+            FixMutex: templateFixes.FixMutex || false,
+            FixRTC: templateFixes.FixRTC || true,
+            FixRegions: templateFixes.FixRegions || true,
+            FixS3D: templateFixes.FixS3D || !isLaptop,
+            FixSATA: templateFixes.FixSATA || false,
+            FixSBUS: templateFixes.FixSBUS || false,
+            FixShutdown: templateFixes.FixShutdown || false,
+            FixTMR: templateFixes.FixTMR || true,
+            FixUSB: templateFixes.FixUSB || false,
+            FixWAK: templateFixes.FixWAK || false,
+            FakeLPC: templateFixes.FakeLPC || false
+        };
+    }
+
+    // Generate Graphics config from template or fallback to dynamic
+    generateGraphicsConfigFromTemplate(hw, template) {
+        if (!template?.graphics) {
+            return this.generateGraphicsConfig(hw);
+        }
+
+        const tGfx = template.graphics;
+        const dynamicGfx = this.generateGraphicsConfig(hw);
+
+        return {
+            InjectATI: tGfx.injectATI ?? dynamicGfx.InjectATI,
+            InjectIntel: tGfx.injectIntel ?? dynamicGfx.InjectIntel,
+            InjectNVidia: tGfx.injectNVidia ?? dynamicGfx.InjectNVidia,
+            igPlatformId: tGfx.igPlatformId || dynamicGfx.igPlatformId,
+            RadeonDeInit: tGfx.radeonDeInit ?? dynamicGfx.RadeonDeInit,
+            LoadVBios: dynamicGfx.LoadVBios || false,
+            EDID: { Inject: tGfx.backlight ?? false }
+        };
+    }
+
+    // Generate Kernel patches from template or fallback to dynamic
+    generateKernelPatchesFromTemplate(hw, template) {
+        if (!template?.kernel) {
+            return this.generateKernelPatches(hw);
+        }
+
+        const tKernel = template.kernel;
+        const dynamicPatches = this.generateKernelPatches(hw);
+        const cpuCodename = hw.CPU.Codename || "";
+        const moboName = hw.Motherboard.Name || "";
+
+        return {
+            AppleIntelCPUPM: tKernel.appleIntelCPUPM ?? dynamicPatches.AppleIntelCPUPM,
+            AppleRTC: tKernel.appleRTC ?? dynamicPatches.AppleRTC,
+            BlockSkywalk: true, // Sonoma+ needs this
+            DellSMBIOSPatch: moboName.includes("Dell"),
+            KernelCpu: tKernel.kernelCpu ?? false,
+            KernelLapic: tKernel.kernelLapic ?? dynamicPatches.KernelLapic,
+            KernelPm: tKernel.kernelPm ?? dynamicPatches.KernelPm,
+            KernelXcpm: tKernel.kernelXCPM ?? dynamicPatches.KernelXcpm,
+            PanicNoKextDump: tKernel.panicNoKextDump ?? true,
+            EightApple: tKernel.eightApple ?? false,
+            FakeCPUID: tKernel.fakeCPUID || this.calculateFakeCPUID(hw)
+        };
+    }
+
+    // Generate Quirks from template or fallback to dynamic
+    generateQuirksFromTemplate(hw, template, macOS) {
+        const chipset = hw.Motherboard.Chipset || "";
+        const cpuCodename = hw.CPU.Codename || "";
+        const cpuMan = hw.CPU.Manufacturer || "Intel";
+
+        // Determine XhciPortLimit based on macOS version
+        const darwinMajor = macOS ? parseInt(macOS.darwin.split('.')[0]) : 24;
+        const needsXhciPortLimit = darwinMajor < 20 || (darwinMajor === 20 && parseInt(macOS.darwin.split('.')[1] || '0') < 4);
+
+        if (!template?.quirks) {
+            // Fallback to dynamic quirks
+            const isIntel12Plus = cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") ||
+                cpuCodename.includes("Meteor") || cpuCodename.includes("Arrow");
+            const isAMDNewer = chipset.match(/X570|B550|A520|TRX40|B650|X670/) !== null;
+
+            return {
+                AvoidRuntimeDefrag: true,
+                DevirtualiseMmio: isIntel12Plus || isAMDNewer,
+                DisableIoMapper: true,
+                DisableLinkeditJettison: true,
+                DisableSingleUser: false,
+                DisableVariableWrite: false,
+                DiscardHibernateMap: false,
+                DummyPowerManagement: cpuMan === "AMD",
+                EnableSafeModeSlide: true,
+                EnableWriteUnprotector: !isIntel12Plus,
+                ExternalDiskIcons: false,
+                ForceExitBootServices: false,
+                FuzzyMatch: true,
+                IncreasePciBarSize: false,
+                PowerTimeoutKernelPanic: true,
+                ProtectMemoryRegions: isIntel12Plus,
+                ProtectSecureBoot: false,
+                ProtectUefiServices: isIntel12Plus || isAMDNewer,
+                ProvideCurrentCpuInfo: isIntel12Plus,
+                ProvideCustomSlide: true,
+                ProvideMaxSlide: 0,
+                RebuildAppleMemoryMap: isIntel12Plus,
+                ResizeAppleGpuBars: -1,
+                SetupVirtualMap: true,
+                SignalAppleOS: false,
+                SyncRuntimePermissions: isIntel12Plus,
+                ThirdPartyDrives: false,
+                XhciPortLimit: needsXhciPortLimit
+            };
+        }
+
+        const tQuirks = template.quirks;
+        return {
+            AvoidRuntimeDefrag: tQuirks.avoidRuntimeDefrag ?? true,
+            DevirtualiseMmio: tQuirks.devirtualiseMmio ?? false,
+            DisableIoMapper: tQuirks.disableIoMapper ?? true,
+            DisableLinkeditJettison: tQuirks.disableLinkeditJettison ?? true,
+            DisableSingleUser: tQuirks.disableSingleUser ?? false,
+            DisableVariableWrite: tQuirks.disableVariableWrite ?? false,
+            DiscardHibernateMap: tQuirks.discardHibernateMap ?? false,
+            DummyPowerManagement: tQuirks.dummyPowerManagement ?? (cpuMan === "AMD"),
+            EnableSafeModeSlide: tQuirks.enableSafeModeSlide ?? true,
+            EnableWriteUnprotector: tQuirks.enableWriteUnprotector ?? false,
+            ExternalDiskIcons: tQuirks.externalDiskIcons ?? false,
+            ForceExitBootServices: tQuirks.forceExitBootServices ?? false,
+            ForceOcWriteFlash: false,
+            FuzzyMatch: tQuirks.fuzzyMatch ?? true,
+            IncreasePciBarSize: tQuirks.increasePciBarSize ?? false,
+            KernelCache: "Auto",
+            PowerTimeoutKernelPanic: tQuirks.powerTimeoutKernelPanic ?? true,
+            ProtectMemoryRegions: tQuirks.protectMemoryRegions ?? false,
+            ProtectSecureBoot: tQuirks.protectSecureBoot ?? false,
+            ProtectUefiServices: tQuirks.protectUefiServices ?? false,
+            ProvideCurrentCpuInfo: tQuirks.provideCurrentCpuInfo ?? false,
+            ProvideCustomSlide: tQuirks.provideCustomSlide ?? true,
+            ProvideMaxSlide: tQuirks.provideMaxSlide ?? 0,
+            RebuildAppleMemoryMap: tQuirks.rebuildAppleMemoryMap ?? false,
+            ResizeAppleGpuBars: tQuirks.resizeAppleGpuBars ?? -1,
+            SetupVirtualMap: tQuirks.setupVirtualMap ?? true,
+            SignalAppleOS: tQuirks.signalAppleOS ?? false,
+            SyncRuntimePermissions: tQuirks.syncRuntimePermissions ?? false,
+            ThirdPartyDrives: tQuirks.thirdPartyDrives ?? false,
+            XhciPortLimit: tQuirks.xhciPortLimit ?? needsXhciPortLimit
+        };
+    }
+
+    // Generate RtVariables from template
+    generateRtVariablesFromTemplate(template, macOS) {
+        const csrActiveConfig = template?.rtVariables?.csrActiveConfig || this.getCsrActiveConfig(macOS);
+        const booterConfig = template?.rtVariables?.booterConfig || "0x28";
+
+        return {
+            BooterConfig: booterConfig,
+            CsrActiveConfig: csrActiveConfig,
+            ROM: "UseMacAddr0"
+        };
+    }
+
+    // ========================================================================
+    // END TEMPLATE-BASED CONFIG GENERATION
+    // ========================================================================
 
     // ========================================================================
     // END DYNAMIC CONFIG GENERATION HELPERS
