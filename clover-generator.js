@@ -4,6 +4,8 @@
 // Uses templates based on Olarila EFIs for accurate configuration
 // ============================================================================
 
+console.log("Clover Generator v18 Loaded");
+
 class CloverConfigGenerator extends ConfigGenerator {
     constructor() {
         super();
