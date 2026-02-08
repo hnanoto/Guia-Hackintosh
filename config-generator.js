@@ -240,7 +240,7 @@ class ConfigGenerator {
 
         // === 4. Platform Detection ===
         let platform = "Desktop";
-        if (cpuName.match(/i\d-\d+[UHYM]|HQ|HK|G[147]/)) platform = "Laptop";
+        if (cpuName.match(/i\d-\d+[UHYMP]|HQ|HK|G[147]/)) platform = "Laptop"; // Added P suffix for Performance laptops
         if (platform === "Desktop" && htmlContent.match(/Bateria|Battery/i) && htmlContent.match(/Nível de carga|Charge Level/i)) platform = "Laptop";
 
         // === 5. GPU Parsing ===
@@ -365,12 +365,29 @@ class ConfigGenerator {
             return coreMatch[1];
         }
 
-        // Fallback baseado no nome da CPU
-        if (cpuName.includes("13600")) return "14";
-        if (cpuName.includes("13700")) return "16";
-        if (cpuName.includes("13900")) return "24";
+        // Fallback baseado no nome da CPU - Expandido para 12th, 13th, 14th Gen
+        const coreCountMap = {
+            // 14th Gen
+            "14900": "24", "14700": "20", "14600": "14", "14500": "14", "14400": "10",
+            // 13th Gen
+            "13900": "24", "13700": "16", "13600": "14", "13500": "14", "13400": "10",
+            // 12th Gen
+            "12900": "16", "12700": "12", "12600": "10", "12500": "6", "12400": "6",
+            // 11th Gen
+            "11900": "8", "11700": "8", "11600": "6", "11500": "6", "11400": "6",
+            // 10th Gen
+            "10900": "10", "10850": "10", "10700": "8", "10600": "6", "10400": "6",
+            // AMD Ryzen
+            "9950": "16", "9900": "12", "9700": "8", "9600": "6",
+            "7950": "16", "7900": "12", "7800": "8", "7700": "8", "7600": "6",
+            "5950": "16", "5900": "12", "5800": "8", "5700": "8", "5600": "6"
+        };
 
-        return "4";
+        for (const [model, cores] of Object.entries(coreCountMap)) {
+            if (cpuName.includes(model)) return cores;
+        }
+
+        return "6"; // More reasonable fallback for modern CPUs
     }
 
 
@@ -445,10 +462,11 @@ class ConfigGenerator {
     detectCPUCodenameFromName(cpuName) {
         // Mapeamento por texto explícito
         const codenameMap = {
+            "15th Gen": "Arrow Lake",
             "14th Gen": "Raptor Lake Refresh",
             "13th Gen": "Raptor Lake",
             "12th Gen": "Alder Lake",
-            "11th Gen": "Rocket Lake",
+            "11th Gen": "Rocket Lake", // Desktop
             "10th Gen": "Comet Lake",
             "9th Gen": "Coffee Lake Refresh",
             "8th Gen": "Coffee Lake",
@@ -456,9 +474,15 @@ class ConfigGenerator {
             "6th Gen": "Skylake",
             "5th Gen": "Broadwell",
             "4th Gen": "Haswell",
+            // AMD Ryzen 9000 (Granite Ridge)
+            "Ryzen 9 9": "Granite Ridge",
+            "Ryzen 7 9": "Granite Ridge",
+            "Ryzen 5 9": "Granite Ridge",
+            // AMD Ryzen 7000 (Raphael)
             "Ryzen 9 7": "Raphael",
             "Ryzen 7 7": "Raphael",
             "Ryzen 5 7": "Raphael",
+            // AMD Ryzen 5000 (Vermeer)
             "Ryzen 9 5": "Vermeer",
             "Ryzen 7 5": "Vermeer",
             "Ryzen 5 5": "Vermeer"
@@ -471,19 +495,52 @@ class ConfigGenerator {
         }
 
         // Detecção por número do modelo (Regex)
-        // Intel Core
+        // Intel Core Ultra (Arrow Lake / Meteor Lake)
+        if (cpuName.match(/Ultra\s*[579]/i)) return "Arrow Lake";
+        if (cpuName.match(/i\d-1[56]\d{2}/)) return "Arrow Lake"; // 15xxx, 16xxx series if they come out
+
+        // Intel Core 14th Gen (Raptor Lake Refresh)
         if (cpuName.match(/i\d-14\d{3}/)) return "Raptor Lake Refresh";
+
+        // Intel Core 13th Gen (Raptor Lake)
         if (cpuName.match(/i\d-13\d{3}/)) return "Raptor Lake";
+
+        // Intel Core 12th Gen (Alder Lake)
         if (cpuName.match(/i\d-12\d{3}/)) return "Alder Lake";
-        if (cpuName.match(/i\d-11\d{3}/)) return "Tiger Lake"; // Mobile 11th é Tiger, Desktop é Rocket. Assumindo Tiger para mobile/geral.
-        if (cpuName.match(/i\d-10\d{3}/)) return "Comet Lake"; // ou Ice Lake (com G7), mas Comet é bom default
+
+        // Intel Core 11th Gen - CRITICAL: Differentiate Mobile (Tiger Lake) vs Desktop (Rocket Lake)
+        if (cpuName.match(/i\d-11\d{2}[UHYP]/i)) return "Tiger Lake"; // Mobile suffixes
+        if (cpuName.match(/i\d-11\d{2}[KFT]?$/i)) return "Rocket Lake"; // Desktop: K, KF, F, T, or no suffix
+        if (cpuName.match(/i\d-11\d{3}/)) return "Rocket Lake"; // Default to Rocket Lake for 11th Gen
+
+        // Intel Core 10th Gen - Differentiate Ice Lake (G7) vs Comet Lake
+        if (cpuName.match(/i\d-10\d{2}G[147]/i)) return "Ice Lake"; // G1, G4, G7 suffix = Ice Lake
+        if (cpuName.match(/i\d-10\d{3}/)) return "Comet Lake";
+
+        // Intel Core 9th Gen (Coffee Lake Refresh)
         if (cpuName.match(/i\d-9\d{3}/)) return "Coffee Lake Refresh";
-        if (cpuName.match(/i\d-8\d{3}/)) return "Coffee Lake"; // Inclui Kaby Lake-R (8250U/8550U) tratados como Coffee/Kaby para fins de Hackintosh
+
+        // Intel Core 8th Gen - Differentiate Kaby Lake Refresh vs Coffee Lake
+        // U suffix CPUs (8250U, 8550U, 8650U) are Kaby Lake Refresh with UHD 620
+        if (cpuName.match(/i\d-8\d{2}0U/i)) return "Kaby Lake Refresh";
+        if (cpuName.match(/i\d-8\d{3}/)) return "Coffee Lake";
+
+        // Intel Core 7th Gen (Kaby Lake)
         if (cpuName.match(/i\d-7\d{3}/)) return "Kaby Lake";
+
+        // Intel Core 6th Gen (Skylake)
         if (cpuName.match(/i\d-6\d{3}/)) return "Skylake";
+
+        // Intel Core 5th Gen (Broadwell)
         if (cpuName.match(/i\d-5\d{3}/)) return "Broadwell";
+
+        // Intel Core 4th Gen (Haswell)
         if (cpuName.match(/i\d-4\d{3}/)) return "Haswell";
+
+        // Intel Core 3rd Gen (Ivy Bridge)
         if (cpuName.match(/i\d-3\d{3}/)) return "Ivy Bridge";
+
+        // Intel Core 2nd Gen (Sandy Bridge)
         if (cpuName.match(/i\d-2\d{3}/)) return "Sandy Bridge";
 
         return "Unknown";
@@ -1356,9 +1413,18 @@ class ConfigGenerator {
                 layoutBytes = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
             }
 
+            // Determine correct audio PCI path based on CPU generation
+            // Haswell and earlier use Pci(0x1B,0x0), Skylake+ use Pci(0x1F,0x3)
+            let defaultAudioPath = "PciRoot(0x0)/Pci(0x1F,0x3)"; // Skylake+ default
+            const cpuCodename = hw.CPU.Codename || "";
+            if (cpuCodename.includes("Sandy") || cpuCodename.includes("Ivy") ||
+                cpuCodename.includes("Haswell") || cpuCodename.includes("Broadwell")) {
+                defaultAudioPath = "PciRoot(0x0)/Pci(0x1B,0x0)"; // Pre-Skylake path
+            }
+
             // Retornar propriedades
             return {
-                pciPath: props["PCI Path"] || "PciRoot(0x0)/Pci(0x1F,0x3)",
+                pciPath: props["PCI Path"] || defaultAudioPath,
                 properties: {
                     "layout-id": { _isData: true, value: layoutBytes }
                 },
@@ -1509,15 +1575,25 @@ class ConfigGenerator {
         const cpuMan = hw.CPU.Manufacturer;
         const chipset = hw.Motherboard.Chipset || "";
 
-        // Determine if CPU is 12th Gen+ (Alder/Raptor/Arrow)
-        const isIntel12Plus = cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") || cpuCodename.includes("Meteor") || cpuCodename.includes("Arrow");
+        // Determine if CPU is 12th Gen+ (Alder/Raptor/Arrow/Meteor)
+        const isIntel12Plus = cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") ||
+            cpuCodename.includes("Meteor") || cpuCodename.includes("Arrow");
+
+        // XhciPortLimit: Only enable for macOS versions < 11.3 (Darwin 20.4)
+        // It's broken in Big Sur 11.3+ and can cause boot loops
+        const darwinMajor = macOS ? parseInt(macOS.darwin.split('.')[0]) : 24;
+        const darwinMinor = macOS ? parseInt(macOS.darwin.split('.')[1] || '0') : 0;
+        const needsXhciPortLimit = (darwinMajor < 20) || (darwinMajor === 20 && darwinMinor < 4);
+
+        // Generate AMD Kernel Patches if needed
+        const amdPatches = cpuMan === "AMD" ? this.generateAMDKernelPatches(hw, macOS) : [];
 
         return {
             "Add": this.generateKernelAdd(hw, macOS),
             "Block": [],
             "Emulate": this.generateKernelEmulate(hw, macOS),
             "Force": [],
-            "Patch": [],
+            "Patch": amdPatches, // Now includes AMD patches when applicable
             "Quirks": {
                 "AppleCpuPmCfgLock": cpuCodename.includes("Ivy Bridge") || cpuCodename.includes("Sandy Bridge"),
                 "AppleXcpmCfgLock": cpuMan === "Intel" && !cpuCodename.includes("Ivy Bridge") && !cpuCodename.includes("Sandy Bridge"), // CFG Lock
@@ -1534,9 +1610,59 @@ class ConfigGenerator {
                 "PowerTimeoutKernelPanic": true,
                 "ProvideCurrentCpuInfo": cpuMan === "AMD" || isIntel12Plus, // Critical for 12th+ and AMD
                 "SetApfsTrimTimeout": -1,
-                "XhciPortLimit": false // Broken in 11.3+, default false
+                "XhciPortLimit": needsXhciPortLimit // Dynamic based on macOS version
             }
         };
+    }
+
+    // AMD Kernel Patches - Essential for AMD Ryzen/Threadripper systems
+    generateAMDKernelPatches(hw, macOS) {
+        const patches = [];
+        const cpuName = hw.CPU["Processor Name"] || "";
+
+        // Only apply for AMD CPUs
+        if (hw.CPU.Manufacturer !== "AMD") return patches;
+
+        // Get core count for the patch
+        const coreCount = parseInt(hw.CPU["Core Count"] || "8");
+        const coreHex = coreCount.toString(16).padStart(2, '0').toUpperCase();
+
+        // Algrey's AMD Vanilla Patches - Adapted for OpenCore
+        patches.push({
+            "Arch": "x86_64",
+            "Base": "_cpu_topology_sort",
+            "Comment": "algrey - Force cpuid_cores_per_package - " + coreCount + " cores",
+            "Count": 1,
+            "Enabled": true,
+            "Find": { _isData: true, value: "" },
+            "Identifier": "kernel",
+            "Limit": 0,
+            "Mask": { _isData: true, value: "" },
+            "MaxKernel": "",
+            "MinKernel": "20.0.0",
+            "Replace": { _isData: true, value: "B8" + coreHex + "000000C3" },
+            "ReplaceMask": { _isData: true, value: "" },
+            "Skip": 0
+        });
+
+        patches.push({
+            "Arch": "x86_64",
+            "Base": "",
+            "Comment": "algrey - cpuid_set_cpufamily - force CPUFAMILY_INTEL_PENRYN",
+            "Count": 1,
+            "Enabled": true,
+            "Find": { _isData: true, value: "31DB803D00000000007419" },
+            "Identifier": "kernel",
+            "Limit": 0,
+            "Mask": { _isData: true, value: "FFFF00000000000000FFFF" },
+            "MaxKernel": "",
+            "MinKernel": "20.0.0",
+            "Replace": { _isData: true, value: "BBCDFB6E78EB1C90909090" },
+            "ReplaceMask": { _isData: true, value: "" },
+            "Skip": 0
+        });
+
+        return patches;
     }
 
     generateKernelEmulate(hw, macOS) {
@@ -1793,9 +1919,12 @@ class ConfigGenerator {
 
     selectSecureBootModel(macOS) {
         const version = parseInt(macOS.darwin.split('.')[0]);
+        // Pre-Big Sur: Disabled (no support)
         if (version < 20) return "Disabled";
-        if (version < 23) return "Default";
-        return "Disabled";
+        // Big Sur through Sonoma (20-23): Default is recommended
+        // Sonoma 14.0+ (Darwin 23+): Default is still fine, only disable if having issues
+        // Note: "j137" is fallback for older hardware, "Default" auto-selects based on SMBIOS
+        return "Default";
     }
 
     // Download
@@ -2052,13 +2181,41 @@ class ConfigGenerator {
 
         // 5. WiFi (Intel/Broadcom)
         // Basic heuristics
-        if (JSON.stringify(hw.Network).toLowerCase().includes("ax200") || JSON.stringify(hw.Network).toLowerCase().includes("ax210") || JSON.stringify(hw.Network).toLowerCase().includes("intel wi-fi")) {
+        if (JSON.stringify(hw.Network).toLowerCase().includes("ax200") || JSON.stringify(hw.Network).toLowerCase().includes("ax210") || JSON.stringify(hw.Network).toLowerCase().includes("ax211") || JSON.stringify(hw.Network).toLowerCase().includes("intel wi-fi")) {
             // AirportItlwm depends on macOS version!
-            const version = macOS.name.split(' ')[1]; // "Sonoma", "Ventura", etc.
-            addKext(`AirportItlwm`, true, false, `AirportItlwm-${version}.kext`);
+            // Map macOS name to proper bundle suffix
+            const macOSVersionMap = {
+                "Tahoe": "Tahoe",
+                "Sequoia": "Sequoia",
+                "Sonoma": "Sonoma",
+                "Ventura": "Ventura",
+                "Monterey": "Monterey",
+                "Big Sur": "Big_Sur",
+                "Catalina": "Catalina"
+            };
+
+            // Extract version name from macOS object
+            let versionName = "Sonoma"; // Default
+            for (const [key, bundleSuffix] of Object.entries(macOSVersionMap)) {
+                if (macOS.name.includes(key)) {
+                    versionName = bundleSuffix;
+                    break;
+                }
+            }
+
+            // AirportItlwm kext naming convention: AirportItlwm_v2.3.0_stable_Sonoma.kext
+            // But user typically renames to: AirportItlwm.kext with version in Comments
+            // For simplicity, we use the standard naming and add comment
+            addKext("AirportItlwm", true, false, `AirportItlwm.kext`);
+
             addKext("IntelBluetoothFirmware");
-            addKext("IntelBTPatcher"); // Required for Monterey+
-            addKext("BlueToolFixup"); // Required for Monterey+
+
+            // Monterey+ requires additional Bluetooth kexts
+            const darwinMajor = parseInt(macOS.darwin.split('.')[0]);
+            if (darwinMajor >= 21) { // Monterey = Darwin 21+
+                addKext("IntelBTPatcher"); // Required for Monterey+
+                addKext("BlueToolFixup"); // Required for Monterey+
+            }
         }
 
         // 6. USB

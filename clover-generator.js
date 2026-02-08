@@ -43,9 +43,10 @@ class CloverConfigGenerator extends ConfigGenerator {
         const firmware = hardwareData.BIOS["Firmware Type"] || "UEFI";
         const cpuMan = hardwareData.CPU.Manufacturer || "Intel";
 
-        // Intel 12th Gen+ detection (Alder/Raptor/Arrow Lake)
+        // Intel 12th Gen+ detection (Alder/Raptor/Arrow/Meteor Lake)
         const isIntel12Plus = cpuCodename.includes("Alder") || cpuCodename.includes("Raptor") ||
-            cpuCodename.includes("Meteor") || cpuCodename.includes("Arrow");
+            cpuCodename.includes("Meteor") || cpuCodename.includes("Arrow") ||
+            cpuName.match(/i\d-1[2-5]\d{3}/) || cpuName.match(/Ultra\s*[579]/i);
 
         // AMD 500+ series chipset detection
         const isAMDNewer = chipset.match(/X570|B550|A520|TRX40|B650|X670/) !== null;
@@ -491,7 +492,7 @@ class CloverConfigGenerator extends ConfigGenerator {
             <key>AFGLowPowerState</key>
             <true/>
             <key>Inject</key>
-            <string>12</string>
+            <string>${audioLayout}</string>
             <key>ResetHDA</key>
             <true/>
         </dict>
@@ -969,11 +970,11 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>BooterConfig</key>
         <string>0x68</string>
         <key>CsrActiveConfig</key>
-        <string>0x0A87</string>
+        <string>${this.getCsrActiveConfig(macOSVersion)}</string>
         <key>HWTarget</key>
-        <string>J160AP</string>
+        <string>${this.getHWTarget(smbiosModel)}</string>
         <key>MLB</key>
-        <string>C02032109R6DC771H</string>
+        <string>${this.generateRandomMLB()}</string>
         <key>ROM</key>
         <string>UseMacAddr0</string>
     </dict>
@@ -986,11 +987,11 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>BiosVersion</key>
         <string>IM131.88Z.F000.B00.1907241303</string>
         <key>Board-ID</key>
-        <string>Mac-FC02E91DDD3FA6A4</string>
+        <string>${this.getBoardId(smbiosModel)}</string>
         <key>BoardManufacturer</key>
         <string>Apple Inc.</string>
         <key>BoardSerialNumber</key>
-        <string>C0225060SAMF651AX</string>
+        <string>${this.generateRandomBoardSerial()}</string>
         <key>BoardType</key>
         <integer>10</integer>
         <key>BoardVersion</key>
@@ -1072,7 +1073,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>ProductName</key>
         <string>${smbiosModel}</string>
         <key>SerialNumber</key>
-        <string>C02JBSAMDNCW</string>
+        <string>${this.generateRandomSerial(smbiosModel)}</string>
         <key>Slots</key>
         <array>
             <dict>
@@ -1097,7 +1098,7 @@ class CloverConfigGenerator extends ConfigGenerator {
             </dict>
         </array>
         <key>SmUUID</key>
-        <string>00000000-0000-1000-8000-010203040506</string>
+        <string>${this.generateRandomUUID()}</string>
         <key>SmbiosVersion</key>
         <string>0x0300</string>
         <key>Trust</key>
@@ -1110,7 +1111,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>BacklightLevel</key>
         <string>0x0501</string>
         <key>CustomUUID</key>
-        <string>511CE201-1000-4000-9999-010203040506</string>
+        <string>${this.generateRandomUUID()}</string>
         <key>InjectKexts</key>
         <true/>
         <key>InjectSystemID</key>
@@ -1395,6 +1396,133 @@ class CloverConfigGenerator extends ConfigGenerator {
     }
 
     // ========================================================================
+    // SMBIOS & CSR HELPER FUNCTIONS
+    // ========================================================================
+
+    // CSR (SIP) values by macOS version
+    getCsrActiveConfig(macOS) {
+        if (!macOS) return "0x803"; // Safe default for Monterey+
+
+        const darwinMajor = parseInt(macOS.darwin.split('.')[0]);
+
+        // Catalina (10.15) and earlier: 0x67 (full SIP disable)
+        if (darwinMajor < 20) return "0x67";
+
+        // Big Sur (11.0) Darwin 20: 0x803
+        if (darwinMajor < 21) return "0x803";
+
+        // Monterey (12.0) Darwin 21: 0x803
+        if (darwinMajor < 22) return "0x803";
+
+        // Ventura (13.0) Darwin 22: 0xFEF (includes more flags)
+        if (darwinMajor < 23) return "0xFEF";
+
+        // Sonoma (14.0) Darwin 23+: 0xFEF
+        // Sequoia (15.0) Darwin 24+: 0xFEF
+        return "0xFEF";
+    }
+
+    // HWTarget based on SMBIOS model
+    getHWTarget(smbiosModel) {
+        const hwTargetMap = {
+            "MacPro7,1": "J160",
+            "iMacPro1,1": "J137",
+            "iMac20,1": "J185",
+            "iMac20,2": "J185F",
+            "iMac19,1": "J132",
+            "iMac19,2": "J133",
+            "MacBookPro16,1": "J152F",
+            "MacBookPro16,2": "J215",
+            "MacBookPro15,1": "J132",
+            "MacBookPro15,2": "J133",
+            "Macmini8,1": "J174"
+        };
+        return hwTargetMap[smbiosModel] || "J160";
+    }
+
+    // Board-ID based on SMBIOS model
+    getBoardId(smbiosModel) {
+        const boardIdMap = {
+            "MacPro7,1": "Mac-27AD2F918AE68F61",
+            "iMacPro1,1": "Mac-7BA5B2D9E42DDD94",
+            "iMac20,1": "Mac-CFF7D910A743CAAF",
+            "iMac20,2": "Mac-AF89B6D9451A490B",
+            "iMac19,1": "Mac-AA95B1DDAB278B95",
+            "iMac19,2": "Mac-63001698E7A34814",
+            "MacBookPro16,1": "Mac-E1008331FDC96864",
+            "MacBookPro16,2": "Mac-5F9802EFE386AA28",
+            "MacBookPro15,1": "Mac-937A206F2EE63C01",
+            "MacBookPro15,2": "Mac-827FB448E656EC26",
+            "Macmini8,1": "Mac-7BA5B2DFE22DDD8C"
+        };
+        return boardIdMap[smbiosModel] || "Mac-27AD2F918AE68F61";
+    }
+
+    // Generate random serial number (12 characters)
+    generateRandomSerial(smbiosModel) {
+        // Serial format: PPPPYWWSSSSS (PPP=model, Y=year, WW=week, SSSSS=random)
+        const chars = "CDFGHJKLMNPQRSTVWXYZ0123456789";
+
+        // Model prefixes
+        const prefixMap = {
+            "MacPro7,1": "F5K",
+            "iMacPro1,1": "C02",
+            "iMac20,1": "C02",
+            "iMac20,2": "C02",
+            "iMac19,1": "C02",
+            "iMac19,2": "C02",
+            "MacBookPro16,1": "C02",
+            "MacBookPro16,2": "C02",
+            "MacBookPro15,1": "C02",
+            "MacBookPro15,2": "C02",
+            "Macmini8,1": "C07"
+        };
+
+        const prefix = prefixMap[smbiosModel] || "C02";
+        let serial = prefix;
+
+        // Add random suffix (9 more chars for 12 total)
+        for (let i = 0; i < 9; i++) {
+            serial += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        return serial;
+    }
+
+    // Generate random board serial (17 characters)
+    generateRandomBoardSerial() {
+        const chars = "CDFGHJKLMNPQRSTVWXYZ0123456789";
+        let serial = "C02";
+
+        for (let i = 0; i < 14; i++) {
+            serial += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        return serial;
+    }
+
+    // Generate random MLB (17 characters)
+    generateRandomMLB() {
+        const chars = "CDFGHJKLMNPQRSTVWXYZ0123456789";
+        let mlb = "C02";
+
+        for (let i = 0; i < 14; i++) {
+            mlb += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        return mlb;
+    }
+
+    // Generate random UUID (v4 format)
+    generateRandomUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16).toUpperCase();
+        });
+    }
+
+    // ========================================================================
     // END DYNAMIC CONFIG GENERATION HELPERS
     // ========================================================================
 
@@ -1403,8 +1531,23 @@ class CloverConfigGenerator extends ConfigGenerator {
         const cpuName = hardwareData.CPU["Processor Name"] || "";
         const codename = hardwareData.CPU.Codename || "";
 
-        // Raptor Lake (13th/14th Gen)
-        if (codename.includes("Raptor") || cpuName.match(/i\d-1[34]\d{3}/)) {
+        // Arrow Lake (Core Ultra) - Spoof as Comet Lake
+        if (codename.includes("Arrow") || cpuName.match(/Ultra\s*[579]/i)) {
+            return "0x0906EB"; // Spoof as Comet Lake (i9-10900K)
+        }
+
+        // Meteor Lake - Spoof as Comet Lake
+        if (codename.includes("Meteor") || cpuName.match(/i\d-1[56]\d{2}/)) {
+            return "0x0906EB"; // Spoof as Comet Lake
+        }
+
+        // Raptor Lake Refresh (14th Gen) - Spoof as Comet Lake
+        if (codename.includes("Raptor Lake Refresh") || cpuName.match(/i\d-14\d{3}/)) {
+            return "0x0906EB"; // Spoof as Comet Lake (i9-10900K)
+        }
+
+        // Raptor Lake (13th Gen)
+        if (codename.includes("Raptor") || cpuName.match(/i\d-13\d{3}/)) {
             return "0x0906EB"; // Spoof as Comet Lake (i9-10900K)
         }
 
@@ -1413,8 +1556,13 @@ class CloverConfigGenerator extends ConfigGenerator {
             return "0x0906EB"; // Spoof as Comet Lake
         }
 
-        // Rocket Lake (11th Gen)
-        if (codename.includes("Rocket") || cpuName.match(/i\d-11\d{3}/)) {
+        // Rocket Lake (11th Gen Desktop) - K/F suffix or 11x00 pattern
+        if (codename.includes("Rocket") || cpuName.match(/i\d-11\d{2}[KFT]?$/i)) {
+            return "0x0906EB"; // Spoof as Comet Lake
+        }
+
+        // Tiger Lake (11th Gen Mobile) - U/Y/H suffix
+        if (codename.includes("Tiger") || cpuName.match(/i\d-11\d{2}[UHYP]/i)) {
             return "0x0906EB"; // Spoof as Comet Lake
         }
 
