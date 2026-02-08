@@ -1545,15 +1545,22 @@ class CloverConfigGenerator extends ConfigGenerator {
         const isLaptop = platform === "Laptop" || platform === "NUC";
 
         // Start with template fixes and merge with dynamic ones
+        // IMPORTANT: All properties used in the XML template MUST be included here
         return {
             AddDTGP: templateFixes.AddDTGP || false,
             AddHDMI: templateFixes.AddHDMI || false,
             AddIMEI: templateFixes.AddIMEI || false,
-            AddPNLF: templateFixes.AddPNLF || isLaptop, // Brightness for laptops
-            FixADP1: templateFixes.FixADP1 || isLaptop, // AC adapter for laptops
+            AddMCHC: templateFixes.AddMCHC || false,
+            AddPNLF: templateFixes.AddPNLF || isLaptop,
+            DeleteUnused: templateFixes.DeleteUnused || false,
+            FakeLPC: templateFixes.FakeLPC || false,
             FixACST: templateFixes.FixACST || false,
+            FixADP1: templateFixes.FixADP1 || isLaptop,
+            FixAirport: templateFixes.FixAirport || false,
             FixDarwin: templateFixes.FixDarwin || false,
+            FixDarwin7: templateFixes.FixDarwin7 || false,
             FixDisplay: templateFixes.FixDisplay || false,
+            FixFirewire: templateFixes.FixFirewire || false,
             FixHDA: templateFixes.FixHDA || false,
             FixHPET: templateFixes.FixHPET || false,
             FixIDE: templateFixes.FixIDE || false,
@@ -1569,8 +1576,7 @@ class CloverConfigGenerator extends ConfigGenerator {
             FixShutdown: templateFixes.FixShutdown || false,
             FixTMR: templateFixes.FixTMR || true,
             FixUSB: templateFixes.FixUSB || false,
-            FixWAK: templateFixes.FixWAK || false,
-            FakeLPC: templateFixes.FakeLPC || false
+            FixWAK: templateFixes.FixWAK || false
         };
     }
 
@@ -1646,21 +1652,23 @@ class CloverConfigGenerator extends ConfigGenerator {
                 DiscardHibernateMap: false,
                 DummyPowerManagement: cpuMan === "AMD",
                 EnableSafeModeSlide: true,
-                EnableWriteUnprotector: !isIntel12Plus,
+                EnableWriteUnprotector: !isIntel12Plus && !isAMDNewer,
                 ExternalDiskIcons: false,
                 ForceExitBootServices: false,
+                ForceOcWriteFlash: false,
                 FuzzyMatch: true,
                 IncreasePciBarSize: false,
+                KernelCache: "Auto",
                 PowerTimeoutKernelPanic: true,
                 ProtectMemoryRegions: isIntel12Plus,
                 ProtectSecureBoot: false,
                 ProtectUefiServices: isIntel12Plus || isAMDNewer,
-                ProvideCurrentCpuInfo: isIntel12Plus,
+                ProvideCurrentCpuInfo: isIntel12Plus || cpuMan === "AMD",
                 ProvideCustomSlide: true,
                 ProvideMaxSlide: 0,
-                RebuildAppleMemoryMap: isIntel12Plus,
+                RebuildAppleMemoryMap: isIntel12Plus || isAMDNewer,
                 ResizeAppleGpuBars: -1,
-                SetupVirtualMap: true,
+                SetupVirtualMap: cpuMan !== "AMD",
                 SignalAppleOS: false,
                 SyncRuntimePermissions: isIntel12Plus,
                 ThirdPartyDrives: false,
