@@ -4,7 +4,7 @@
 // Uses templates based on Olarila EFIs for accurate configuration
 // ============================================================================
 
-console.log("Clover Generator v18 Loaded");
+console.log("Clover Generator v19 Loaded");
 
 class CloverConfigGenerator extends ConfigGenerator {
     constructor() {
@@ -529,35 +529,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>NoDefaultProperties</key>
         <false/>
         <key>Properties</key>
-        <dict>
-            <key>PciRoot(0x0)/Pci(0x14,0x0)</key>
-            <dict>
-                <key>AAPL,clock-id</key>
-                <data>AA==</data>
-                <key>AAPL,current-available</key>
-                <data>sAQ=</data>
-                <key>AAPL,current-extra</key>
-                <data>vAI=</data>
-                <key>AAPL,current-in-sleep</key>
-                <data>6AM=</data>
-                <key>Comment</key>
-                <string>This is USB3.0</string>
-                <key>built-in</key>
-                <data>AA==</data>
-                <key>device_type</key>
-                <string>XHCI</string>
-            </dict>
-            <key>PciRoot(0x0)/Pci(0x19,0x0)</key>
-            <dict>
-                <key>built-in</key>
-                <data>AQ==</data>
-            </dict>
-            <key>PciRoot(0x0)/Pci(0x1b,0x0)</key>
-            <dict>
-                <key>hda-gfx</key>
-                <string>onboard-1</string>
-            </dict>
-        </dict>
+        ${this.generateDevicePropertiesFromTemplate(hw, template, macOS)}
         <key>SetIntelBacklight</key>
         <false/>
         <key>SetIntelMaxBacklight</key>
@@ -1603,6 +1575,69 @@ class CloverConfigGenerator extends ConfigGenerator {
     }
 
     // Generate Kernel patches from template or fallback to dynamic
+    generateDevicePropertiesFromTemplate(hw, template, macOS) {
+        if (!template?.deviceProperties) return "<dict/>";
+
+        let xml = "<dict>\n";
+
+        const reverseHex = (hex) => {
+            if (!hex) return "";
+            const clean = hex.replace(/^0x/, '');
+            if (clean.length % 2 !== 0) return clean;
+            const pairs = clean.match(/.{1,2}/g);
+            return pairs ? pairs.reverse().join('') : clean;
+        };
+
+        const gfx = this.generateGraphicsConfig(hw);
+        const audio = this.generateAudioProperties(hw);
+        const layoutIdHex = audio?.properties?.["layout-id"]?.value || "01000000";
+
+        for (const [pciPath, props] of Object.entries(template.deviceProperties)) {
+            xml += `            <key>${pciPath}</key>\n`;
+            xml += "            <dict>\n";
+
+            for (const [key, val] of Object.entries(props)) {
+                let finalVal = val;
+                let isData = false;
+
+                if (typeof val === 'string') {
+                    if (val.includes("{{IG_PLATFORM_ID}}")) {
+                        // Ensure we have a valid platform ID, fallback to template default if needed?
+                        // Actually, gfx.igPlatformId comes from dynamic detection.
+                        finalVal = reverseHex(gfx.igPlatformId || "00000000");
+                        isData = true;
+                    } else if (val.includes("{{DEVICE_ID}}")) {
+                        finalVal = "00000000"; // Placeholder default
+                        isData = true;
+                    } else if (val.includes("{{LAYOUT_ID}}")) {
+                        finalVal = layoutIdHex;
+                        isData = true;
+                    } else if (/^[0-9A-Fa-f]+$/.test(val)) {
+                        // Heuristic for hex strings meant to be data
+                        if (key.includes("AAPL") || key.includes("device") || key.includes("framebuffer") || key.includes("data") || key.startsWith("@")) {
+                            isData = true;
+                        }
+                    }
+                }
+
+                xml += `                <key>${key}</key>\n`;
+                if (typeof finalVal === 'number') {
+                    xml += `                <integer>${finalVal}</integer>\n`;
+                } else if (isData) {
+                    // Check if already is hex string, convert to base64
+                    // If it's already base64 (from ConfigGenerator parent), handle it?
+                    // No, parent returns hex value object. We extracted value.
+                    xml += `                <data>${this.hexToBase64(finalVal)}</data>\n`;
+                } else {
+                    xml += `                <string>${finalVal}</string>\n`;
+                }
+            }
+            xml += "            </dict>\n";
+        }
+        xml += "        </dict>";
+        return xml;
+    }
+
     generateKernelPatchesFromTemplate(hw, template) {
         if (!template?.kernel) {
             return this.generateKernelPatches(hw);

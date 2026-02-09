@@ -76,7 +76,26 @@ const CloverTemplates = {
         },
         rtVariables: {
             booterConfig: "0x28",
-            csrActiveConfig: "0x803"
+            csrActiveConfig: "0x0" // SIP enabled for Sequoia? Usually disabled 0x67 for older macOS
+        },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,ig-platform-id": "07009B3E",
+                "device-id": "9B3E0000",
+                "framebuffer-patch-enable": 1,
+                "framebuffer-stolenmem": "00003001"
+            },
+            "PciRoot(0x0)/Pci(0x1F,0x3)": {
+                "layout-id": 1
+            },
+            "PciRoot(0x0)/Pci(0x1,0x0)/Pci(0x0,0x0)/Pci(0x0,0x0)/Pci(0x0,0x0)": {
+                "@0,name": "ATY,Adder",
+                "@1,name": "ATY,Adder",
+                "@2,name": "ATY,Adder",
+                "@3,name": "ATY,Adder",
+                "device_type": "ATY,AdderParent",
+                "model": "AMD Radeon VII"
+            }
         }
     },
 
@@ -212,6 +231,17 @@ const CloverTemplates = {
         rtVariables: {
             booterConfig: "0x28",
             csrActiveConfig: "0x67"
+        },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,ig-platform-id": "{{IG_PLATFORM_ID}}",
+                "device-id": "{{DEVICE_ID}}",
+                "framebuffer-patch-enable": 1,
+                "framebuffer-stolenmem": "00003001"
+            },
+            "PciRoot(0x0)/Pci(0x1F,0x3)": {
+                "layout-id": "{{LAYOUT_ID}}"
+            }
         }
     },
 
@@ -277,6 +307,120 @@ const CloverTemplates = {
         rtVariables: {
             booterConfig: "0x28",
             csrActiveConfig: "0x67"
+        },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,ig-platform-id": "{{IG_PLATFORM_ID}}",
+                "device-id": "{{DEVICE_ID}}",
+                "framebuffer-patch-enable": 1,
+                "framebuffer-stolenmem": "00003001"
+            },
+            "PciRoot(0x0)/Pci(0x1F,0x3)": {
+                "layout-id": "{{LAYOUT_ID}}"
+            }
+        }
+    },
+
+    // Intel 4th/5th Gen (Haswell / Broadwell)
+    "desktop_haswell_broadwell": {
+        platform: "Desktop",
+        chipsets: ["Z97", "H97", "Z87", "H87", "B85", "H81"],
+        cpuGenerations: ["Haswell", "Broadwell"],
+        smbios: "iMac14,2",
+        boot: {
+            args: "alcid=1",
+            timeout: 5
+        },
+        acpi: {
+            autoMerge: false,
+            fixHeaders: true,
+            dsdt: {
+                fixes: {
+                    FixRTC: true,
+                    FixIPIC: true,
+                    FixHPET: true,
+                    FixTMR: true,
+                    FixSBUS: true
+                }
+            },
+            ssdt: {
+                generate: { PStates: true, CStates: true, PluginType: true }
+            }
+        },
+        kernel: {
+            appleIntelCPUPM: true,
+            appleRTC: true,
+            kernelPm: true,
+            panicNoKextDump: true
+        },
+        quirks: {
+            avoidRuntimeDefrag: true,
+            enableWriteUnprotector: true,
+            setupVirtualMap: true
+        },
+        rtVariables: {
+            booterConfig: "0x28",
+            csrActiveConfig: "0x67"
+        },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,ig-platform-id": "0300220D",
+                "device-id": "12040000",
+                "framebuffer-patch-enable": 1,
+                "framebuffer-stolenmem": "00003001"
+            },
+            "PciRoot(0x0)/Pci(0x1B,0x0)": {
+                "layout-id": "{{LAYOUT_ID}}"
+            }
+        }
+    },
+
+    // Intel 2nd/3rd Gen (Sandy Bridge / Ivy Bridge)
+    "desktop_sandy_ivy": {
+        platform: "Desktop",
+        chipsets: ["Z77", "H77", "Z68", "P67", "H67", "H61"],
+        cpuGenerations: ["Sandy Bridge", "Ivy Bridge"],
+        smbios: "iMac13,2",
+        boot: {
+            args: "alcid=1",
+            timeout: 5
+        },
+        acpi: {
+            dsdt: {
+                fixes: {
+                    FixRTC: true,
+                    FixIPIC: true,
+                    FixHPET: true,
+                    FixTMR: true,
+                    FixSBUS: true
+                }
+            },
+            ssdt: {
+                generate: { PStates: true, CStates: true }
+            }
+        },
+        kernel: {
+            appleIntelCPUPM: true,
+            appleRTC: true,
+            kernelPm: true
+        },
+        quirks: {
+            enableWriteUnprotector: true,
+            setupVirtualMap: true
+        },
+        rtVariables: {
+            booterConfig: "0x28",
+            csrActiveConfig: "0x67"
+        },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,snb-platform-id": "10000300",
+                "AAPL,ig-platform-id": "0A006601",
+                "framebuffer-patch-enable": 1
+            },
+            "PciRoot(0x0)/Pci(0x1B,0x0)": {
+                "layout-id": "{{LAYOUT_ID}}"
+            }
         }
     },
 
@@ -1049,6 +1193,8 @@ function selectCloverTemplate(hardwareData) {
     if (cpuCodename.includes("Rocket")) return CloverTemplates["desktop_500"];
     if (cpuCodename.includes("Coffee") || cpuCodename.includes("Comet")) return CloverTemplates["desktop_300_400"];
     if (cpuCodename.includes("Kaby") || cpuCodename.includes("Skylake")) return CloverTemplates["desktop_100_200"];
+    if (cpuCodename.includes("Haswell") || cpuCodename.includes("Broadwell")) return CloverTemplates["desktop_haswell_broadwell"];
+    if (cpuCodename.includes("Ivy") || cpuCodename.includes("Sandy")) return CloverTemplates["desktop_sandy_ivy"];
 
     // Legacy fallback
     if (cpuCodename.includes("Core 2") || cpuCodename.includes("Pentium")) {
