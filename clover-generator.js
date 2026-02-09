@@ -4,7 +4,7 @@
 // Uses templates based on Olarila EFIs for accurate configuration
 // ============================================================================
 
-console.log("Clover Generator v21 Loaded");
+console.log("Clover Generator v22 Loaded");
 
 class CloverConfigGenerator extends ConfigGenerator {
     constructor() {
@@ -1600,10 +1600,15 @@ class CloverConfigGenerator extends ConfigGenerator {
                 let finalVal = val;
                 let isData = false;
 
+                // Force DATA type for specific keys critical for graphics injection
+                if (key.includes("framebuffer-") || ["AAPL,ig-platform-id", "device-id", "layout-id"].includes(key)) {
+                    isData = true;
+                }
+
                 if (typeof val === 'string') {
                     if (val.includes("{{IG_PLATFORM_ID}}")) {
-                        // Ensure we have a valid platform ID, fallback to template default if needed?
-                        // Actually, gfx.igPlatformId comes from dynamic detection.
+                        // Ensure we have a valid platform ID
+                        // Note: gfx.igPlatformId comes from dynamic detection.
                         finalVal = reverseHex(gfx.igPlatformId || "00000000");
                         isData = true;
                     } else if (val.includes("{{DEVICE_ID}}")) {
@@ -1614,20 +1619,23 @@ class CloverConfigGenerator extends ConfigGenerator {
                         isData = true;
                     } else if (/^[0-9A-Fa-f]+$/.test(val)) {
                         // Heuristic for hex strings meant to be data
-                        if (key.includes("AAPL") || key.includes("device") || key.includes("framebuffer") || key.includes("data") || key.startsWith("@")) {
+                        if (key.includes("AAPL") || key.includes("device") || key.includes("data") || key.startsWith("@")) {
                             isData = true;
                         }
                     }
                 }
 
+                // Convert numbers to 4-byte Little Endian Hex if marked as DATA
+                if (isData && typeof finalVal === 'number') {
+                    const hex = finalVal.toString(16).padStart(8, '0');
+                    finalVal = hex.match(/../g).reverse().join('');
+                }
+
                 xml += `                <key>${key}</key>\n`;
-                if (typeof finalVal === 'number') {
-                    xml += `                <integer>${finalVal}</integer>\n`;
-                } else if (isData) {
-                    // Check if already is hex string, convert to base64
-                    // If it's already base64 (from ConfigGenerator parent), handle it?
-                    // No, parent returns hex value object. We extracted value.
+                if (isData) {
                     xml += `                <data>${this.hexToBase64(finalVal)}</data>\n`;
+                } else if (typeof finalVal === 'number') {
+                    xml += `                <integer>${finalVal}</integer>\n`;
                 } else {
                     xml += `                <string>${finalVal}</string>\n`;
                 }
