@@ -959,6 +959,17 @@ const CloverTemplates = {
             injectIntel: true,
             backlight: true
         },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,ig-platform-id": "{{IG_PLATFORM_ID}}",
+                "device-id": "{{DEVICE_ID}}",
+                "framebuffer-patch-enable": 1,
+                "framebuffer-stolenmem": "00003001",
+                "framebuffer-fbmem": "00009000",
+                "hda-gfx": "onboard-1"
+            },
+            "PciRoot(0x0)/Pci(0x1F,0x3)": { "layout-id": "{{LAYOUT_ID}}" }
+        },
         rtVariables: {
             csrActiveConfig: "0x803"
         }
@@ -1010,6 +1021,17 @@ const CloverTemplates = {
             igPlatformId: "0x3EA50009",
             injectIntel: true,
             backlight: true
+        },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,ig-platform-id": "{{IG_PLATFORM_ID}}",
+                "device-id": "{{DEVICE_ID}}",
+                "framebuffer-patch-enable": 1,
+                "framebuffer-stolenmem": "00003001",
+                "framebuffer-fbmem": "00009000",
+                "hda-gfx": "onboard-1"
+            },
+            "PciRoot(0x0)/Pci(0x1F,0x3)": { "layout-id": "{{LAYOUT_ID}}" }
         },
         rtVariables: {
             csrActiveConfig: "0x67"
@@ -1065,6 +1087,17 @@ const CloverTemplates = {
             injectIntel: true,
             backlight: true
         },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,ig-platform-id": "{{IG_PLATFORM_ID}}",
+                "device-id": "{{DEVICE_ID}}",
+                "framebuffer-patch-enable": 1,
+                "framebuffer-stolenmem": "00003001",
+                "framebuffer-fbmem": "00009000",
+                "hda-gfx": "onboard-1"
+            },
+            "PciRoot(0x0)/Pci(0x1F,0x3)": { "layout-id": "{{LAYOUT_ID}}" }
+        },
         rtVariables: {
             csrActiveConfig: "0x67"
         }
@@ -1114,9 +1147,74 @@ const CloverTemplates = {
             injectIntel: true,
             backlight: true
         },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,ig-platform-id": "{{IG_PLATFORM_ID}}",
+                "device-id": "{{DEVICE_ID}}",
+                "framebuffer-patch-enable": 1,
+                "framebuffer-stolenmem": "00003001",
+                "framebuffer-fbmem": "00009000",
+                "hda-gfx": "onboard-1"
+            },
+            "PciRoot(0x0)/Pci(0x1F,0x3)": { "layout-id": "{{LAYOUT_ID}}" }
+        },
         rtVariables: {
             csrActiveConfig: "0x67"
         }
+    },
+
+    // Notebook Tiger Lake (11th Gen - iGPU Not Supported)
+    "notebook_tigerlake": {
+        platform: "Laptop",
+        cpuGenerations: ["Tiger Lake"],
+        smbios: "MacBookPro16,3",
+        boot: { args: "alcid=1 -vi2c-force-polling -igfxblr", timeout: 5 },
+        acpi: { fixHeaders: true, dsdt: { fixes: { FixIPIC: true, FixRTC: true, FixTMR: true } } },
+        kernel: { panicNoKextDump: true },
+        quirks: { avoidRuntimeDefrag: true, devirtualiseMmio: true, disableIoMapper: true, rebuildAppleMemoryMap: true, setupVirtualMap: false, syncRuntimePermissions: true },
+        rtVariables: { csrActiveConfig: "0x67" }
+    },
+
+    // Notebook Haswell (4th Gen)
+    "notebook_haswell": {
+        platform: "Laptop",
+        chipsets: ["8 Series"],
+        cpuGenerations: ["Haswell"],
+        smbios: "MacBookPro11,1",
+        boot: { args: "alcid=1", timeout: 5 },
+        acpi: { fixHeaders: true, dsdt: { fixes: { FixIPIC: true, FixRTC: true, FixHPET: true } } },
+        kernel: { appleIntelCPUPM: true, appleRTC: true, kernelPm: true },
+        quirks: { enableWriteUnprotector: true },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,ig-platform-id": "0600260A", // 0x0A260006
+                "device-id": "{{DEVICE_ID}}",
+                "hda-gfx": "onboard-1"
+            },
+            "PciRoot(0x0)/Pci(0x1B,0x0)": { "layout-id": "{{LAYOUT_ID}}" }
+        },
+        rtVariables: { csrActiveConfig: "0x67" }
+    },
+
+    // Notebook Ivy Bridge (3rd Gen)
+    "notebook_ivy_bridge": {
+        platform: "Laptop",
+        chipsets: ["7 Series"],
+        cpuGenerations: ["Ivy Bridge"],
+        smbios: "MacBookPro9,2",
+        boot: { args: "alcid=1", timeout: 5 },
+        acpi: { fixHeaders: true, dsdt: { fixes: { FixIPIC: true, FixRTC: true, FixHPET: true } } },
+        kernel: { appleIntelCPUPM: true, appleRTC: true, kernelPm: true },
+        quirks: { enableWriteUnprotector: true },
+        deviceProperties: {
+            "PciRoot(0x0)/Pci(0x2,0x0)": {
+                "AAPL,ig-platform-id": "03006601", // 0x01660003
+                "device-id": "{{DEVICE_ID}}",
+                "hda-gfx": "onboard-1"
+            },
+            "PciRoot(0x0)/Pci(0x1B,0x0)": { "layout-id": "{{LAYOUT_ID}}" }
+        },
+        rtVariables: { csrActiveConfig: "0x67" }
     }
 };
 
@@ -1138,6 +1236,9 @@ function selectCloverTemplate(hardwareData) {
         if (cpuCodename.includes("Kaby Lake") || cpuCodename.includes("Skylake")) {
             return CloverTemplates["notebook_100_200"];
         }
+        if (cpuCodename.includes("Haswell")) return CloverTemplates["notebook_haswell"];
+        if (cpuCodename.includes("Ivy") || cpuCodename.includes("Sandy")) return CloverTemplates["notebook_ivy_bridge"];
+
         return CloverTemplates["notebook_5_9_gen"];
     }
 
