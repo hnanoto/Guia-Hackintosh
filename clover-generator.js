@@ -4,7 +4,7 @@
 // Uses templates based on Olarila EFIs for accurate configuration
 // ============================================================================
 
-console.log("Clover Generator v19 Loaded");
+console.log("Clover Generator v20 Loaded");
 
 class CloverConfigGenerator extends ConfigGenerator {
     constructor() {
@@ -529,7 +529,7 @@ class CloverConfigGenerator extends ConfigGenerator {
         <key>NoDefaultProperties</key>
         <false/>
         <key>Properties</key>
-        ${this.generateDevicePropertiesFromTemplate(hw, template, macOS)}
+        ${this.generateDevicePropertiesFromTemplate(hardwareData, template, macOSVersion)}
         <key>SetIntelBacklight</key>
         <false/>
         <key>SetIntelMaxBacklight</key>
